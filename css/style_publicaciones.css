@@ -51,93 +51,103 @@ body{
 .icon-btn:hover{background:var(--hover);transform:translateY(-1px)}
 .icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
 
-.logo-ceu {
-  width: 26px;            /* tamaño base del contenedor */
-  height: 26px;
-  object-fit: contain;
-  display: inline-block;
-  transform: scale(2);   /* la hace visualmente más grande */
-  transform-origin: center;
+.logo-ceu{
+  width:26px;height:26px;object-fit:contain;display:inline-block;
+  transform:scale(2);transform-origin:center;
 }
-
-
 
 /* ===================
    Layout
 ==================== */
 .wrap{
-  max-width:1200px;margin:24px auto;
-  display:grid;grid-template-columns:260px minmax(0,1fr) 300px;
-  gap:20px;padding:0 16px
+  max-width:1200px;
+  margin:24px auto;
+  display:grid;
+  grid-template-columns:350px minmax(0,1fr) 300px; /* ancho del anuncio (1ª col) */
+  gap:20px;
+  padding:0 16px;
+  padding-left:8px; /* ⬅️ margen izquierdo más pequeño */
 }
-@media (max-width: 1024px){
-  .wrap{grid-template-columns: 1fr;}
+@media (max-width:1024px){
+  .wrap{grid-template-columns:1fr;}
 }
 
 /* ===================
-   Paneles laterales
+   Paneles
 ==================== */
-/* Fijar anuncio y buscador al hacer scroll */
-.ad,
-.search {
-  position: sticky;
-  top: 90px;        /* ajusta según la altura del header */
-  height: fit-content;
-  z-index: 8;
-}
-
 .panel{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:var(--radius);
-  box-shadow:var(--shadow)
+  box-shadow:var(--shadow);
 }
-.ad{display:flex;flex-direction:column}
-.ad h3{margin:16px 16px 0 16px}
-.ad-box{
-  margin:12px 16px 16px 16px;
-  height:360px;border:2px dashed #cbd5e1;border-radius:14px;
-  display:grid;place-items:center;color:#64748b
+
+/* Anuncio (fijo) */
+.ad{
+  position:sticky;top:90px;z-index:8;
+  height:fit-content;
+  display:flex;flex-direction:column;
+  padding:10px;
+  gap:12px;
 }
+.ad h3{margin:0 0 12px 0}
+
+/* Video anuncio */
+.video-wrapper{
+  margin:0;
+  width:100%;
+  aspect-ratio:16/9;          /* cambia a 16/8 o 16/7 si quieres más alto */
+  position:relative;
+  overflow:hidden;
+  border-radius:12px;
+  background:#000;
+  box-shadow:var(--shadow);
+}
+.ad-video{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;border:0;
+  object-fit:cover;           /* usa 'contain' si no quieres recorte */
+}
+
+/* Buscador (fijo) */
+.search{
+  position:sticky;top:90px;z-index:8;
+  height:fit-content;
+  padding:14px;
+}
+
+/* (Eliminado el placeholder viejo) */
+.ad-box{display:none}
 
 /* ===================
    Feed de publicaciones
 ==================== */
-.post-media {
-  width: 100%;
-  max-height: 420px;       /* evita imágenes demasiado grandes */
-  overflow: hidden;        /* corta lo que sobresalga */
-  position: relative;
-  background: #f7f7f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.post-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;        /* evita deformación y asegura proporción */
-  border-radius: 4px;       /* opcional para acabados más suaves */
-}
-
-.feed{background:transparent;border:none;box-shadow:none}
 .post{
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  overflow:hidden
+  overflow:hidden;
 }
 .post + .post{margin-top:16px}
 .post-head{display:flex;align-items:center;gap:12px;padding:14px 16px}
 .avatar{width:36px;height:36px;border-radius:999px;background:linear-gradient(135deg,#93c5fd,#e9d5ff)}
 .username{font-weight:700}
-.post-media{aspect-ratio:1/1;background:linear-gradient(135deg,#e5e7eb,#f8fafc);display:grid;place-items:center}
+
+/* Unificamos post-media: contenedor cuadrado tipo Instagram */
+.post-media{
+  aspect-ratio:1/1;
+  background:linear-gradient(135deg,#e5e7eb,#f8fafc);
+  display:grid;place-items:center;
+}
+.post-media img{
+  width:100%;height:100%;object-fit:cover;border-radius:4px;
+}
 .post-media .ph{font-size:40px;color:#c4c7cf}
 
 .post-actions{display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
-.left-actions, .right-actions{display:flex;align-items:center;gap:8px}
+.left-actions,.right-actions{display:flex;align-items:center;gap:8px}
 .action{
   border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;
   padding:8px;border-radius:10px;cursor:pointer;
@@ -154,7 +164,6 @@ body{
 /* ===================
    Buscador de alumnos
 ==================== */
-.search{padding:14px}
 .search h3{margin:0 0 10px 0}
 .searchbar{position:relative}
 .searchbar input{
