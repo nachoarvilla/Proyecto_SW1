@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Tienda (Material escolar)</title>
+  <link rel="stylesheet" href="css/style_tienda_escolar.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a href="Index.html" class="logo">ConoCEU</a>
+      <div class="nav-center">
+        <span>Tienda</span>
+        <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
+      </div>
+      <div class="nav-actions">
+        <a class="icon-btn" href="Chats.html" aria-label="Mensajes" title="Mensajes">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"></path></svg>
+        </a>
+        <a class="icon-btn" href="Notificaciones.html" aria-label="Notificaciones" title="Notificaciones">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"></path></svg>
+        </a>
+        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenido -->
+  <main class="wrap">
+    <!-- Lado izquierdo: Anuncio -->
+    <aside class="panel ad">
+      <h3>Anuncio</h3>
+      <div class="video-wrapper">
+        <video
+          class="ad-video"
+          src="anuncios/AnuncioNike.mp4"
+          playsinline
+          controls
+          preload="metadata"
+          poster="anuncios/poster_anuncio.jpg">
+        </video>
+      </div>
+    </aside>
+
+    <!-- Centro: Lista de objetos en venta -->
+    <section class="feed">
+      <!-- Item 1 -->
+      <article class="post" data-item="Bolígrafo azul">
+        <header class="post-head">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="username">libreriaCampus</div>
+            <div class="muted" style="font-size:12px">Edificio A · hace 1 h</div>
+          </div>
+        </header>
+
+        <div class="post-media" aria-label="Imagen del producto">
+          <div class="ph">
+            <img src="img/Boligrafo.jpg" alt="Bolígrafo azul" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Bolígrafo azul</span>
+          <span class="item-price">PVP: 1,50 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="1.00" title="Enviar oferta">Ofertar 1,00 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Bolígrafo BIC azul nuevo, tinta de 1.0 mm.</div>
+        </div>
+      </article>
+
+      <!-- Item 2 -->
+      <article class="post" data-item="Regla 30 cm">
+        <header class="post-head">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="username">mariaP</div>
+            <div class="muted" style="font-size:12px">Biblioteca · hace 3 h</div>
+          </div>
+        </header>
+
+        <div class="post-media">
+          <div class="ph">
+            <img src="img/ReglaFoto.jpg" alt="Regla 30 cm" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Regla 30 cm</span>
+          <span class="item-price">PVP: 2,00 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="1.50" title="Enviar oferta">Ofertar 1,50 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Regla de plástico transparente, marcas en mm/cm.</div>
+        </div>
+      </article>
+
+      <!-- Item 3 -->
+      <article class="post" data-item="Estuche doble">
+        <header class="post-head">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="username">papeleriaNorte</div>
+            <div class="muted" style="font-size:12px">Hall · hace 6 h</div>
+          </div>
+        </header>
+
+        <div class="post-media">
+          <div class="ph">
+            <img src="img/EstucheBetis.jpg" alt="Estuche doble cremallera" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Estuche doble</span>
+          <span class="item-price">PVP: 6,00 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="5.00" title="Enviar oferta">Ofertar 5,00 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Estuche con dos compartimentos y tiradores metálicos.</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Lado derecho: Buscador de objetos -->
+    <aside class="panel search">
+      <h3>Buscar objeto</h3>
+      <div class="searchbar">
+        <input type="text" placeholder="Buscar objeto (p. ej. 'regla')" aria-label="Buscar objeto" />
+        <span class="magnify" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+        </span>
+      </div>
+      <ul class="results">
+        <li tabindex="0">Bolígrafo</li>
+        <li tabindex="0">Regla</li>
+        <li tabindex="0">Estuche</li>
+        <li tabindex="0">Lápiz</li>
+        <li tabindex="0">Compás</li>
+        <li tabindex="0">Carpeta</li>
+        <li tabindex="0">Mochila</li>
+        <li tabindex="0">Cuaderno</li>
+      </ul>
+    </aside>
+  </main>
+
+  <!-- Modal de oferta -->
+  <dialog id="offerDialog" class="modal">
+    <form method="dialog" class="modal-card" id="offerForm" novalidate>
+      <h3 class="modal-title">Enviar oferta</h3>
+      <div class="modal-subtitle" id="offerItem">Artículo</div>
+      <label class="price-label" for="offerInput">Importe (€)</label>
+      <div class="price-input">
+        <span>€</span>
+        <input id="offerInput" name="importe" type="number" min="0.10" step="0.10" inputmode="decimal" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="cancelOffer">Cancelar</button>
+        <button type="submit" class="btn primary">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // --- Oferta modal ---
+    const dialog = document.getElementById('offerDialog');
+    const offerForm = document.getElementById('offerForm');
+    const offerInput = document.getElementById('offerInput');
+    const offerItem = document.getElementById('offerItem');
+    const cancelOffer = document.getElementById('cancelOffer');
+
+    let lastOfferBtn = null; // botón que abrió el modal
+
+    // Abrir modal al pulsar cualquier .offer-btn
+    document.querySelectorAll('.offer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        lastOfferBtn = btn;
+        const article = btn.closest('.post');
+        const itemName = article?.dataset.item || 'Artículo';
+        const def = parseFloat(btn.dataset.default || '1.00');
+
+        offerItem.textContent = itemName;
+        offerInput.value = def.toFixed(2);
+
+        if (typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        } else {
+          // Fallback muy básico si <dialog> no existe (navegadores antiguos)
+          dialog.setAttribute('open', '');
+        }
+        offerInput.focus();
+        offerInput.select();
+      });
+    });
+
+    // Cerrar modal sin cambios
+    cancelOffer.addEventListener('click', () => {
+      dialog.close();
+    });
+
+    // Confirmar oferta -> actualizar botón
+    offerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = parseFloat(offerInput.value);
+      if (isNaN(value) || value < 0.10) {
+        offerInput.focus();
+        return;
+      }
+      if (lastOfferBtn) {
+        lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
+        lastOfferBtn.classList.add('offered');
+        lastOfferBtn.dataset.default = value.toFixed(2);
+        lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${value.toFixed(2)} euros`);
+      }
+      dialog.close();
+    });
+
+    // Cerrar con click fuera del modal-card
+    dialog.addEventListener('click', (e) => {
+      const rect = offerForm.getBoundingClientRect();
+      const inDialog = (
+        e.clientX >= rect.left && e.clientX <= rect.right &&
+        e.clientY >= rect.top && e.clientY <= rect.bottom
+      );
+      if (!inDialog) dialog.close();
+    });
+  </script>
+</body>
+</html>
