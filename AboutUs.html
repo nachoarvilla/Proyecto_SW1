@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU — Sobre nosotros</title>
+
+  <!-- Usa SOLO este CSS para evitar conflictos -->
+  <link rel="stylesheet" href="css/style_aboutus.css">
+</head>
+<body class="aboutus-page">
+  <!-- Header -->
+  <header class="au-header" role="banner">
+    <!-- logo CEU + marca (click -> Inicio) -->
+    <a href="Index.html" class="au-brand" aria-label="Ir a inicio">
+      <img src="img/logoceu.png" alt="Logo CEU" class="au-logo">
+      <span class="au-brand-cono">Cono</span><span class="au-brand-ceu">CEU</span>
+    </a>
+
+    <h1 class="au-title">Sobre nosotros</h1>
+
+    <nav class="au-actions" aria-label="Acciones">
+      <a class="au-iconbtn" href="#" aria-label="Chats">
+        <img src="img/Chats.png" alt="" class="au-icon">
+      </a>
+      <a class="au-iconbtn" href="#" aria-label="Notificaciones">
+        <img src="img/Campanita.png" alt="" class="au-icon">
+      </a>
+      <a class="au-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
+        <img src="img/Perfil.png" alt="" class="au-icon">
+      </a>
+    </nav>
+  </header>
+
+  <!-- Contenido: 3 columnas (anuncio / contenido / anuncio) -->
+  <main class="au-layout" id="contenido" tabindex="-1">
+    <!-- Anuncio izquierda -->
+    <aside class="au-card au-ad" aria-label="Anuncio">
+      <h2 class="au-card-title">Anuncio</h2>
+      <video class="au-ad-video" controls muted autoplay loop playsinline>
+        <source src="anuncios/AnuncioAdidas.mp4" type="video/mp4">
+        <source src="anuncios/AnuncioNike.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </aside>
+
+    <!-- Centro -->
+    <section class="au-card au-about">
+      <div class="au-about-grid">
+        <div class="au-about-text">
+          <h2 class="au-section-title">Resumen</h2>
+          <p>
+            ConoCEU es la primera red social exclusiva para los estudiantes de la
+            Universidad CEU San Pablo. Nuestro propósito es crear un canal de
+            comunicación y colaboración único dentro de la comunidad universitaria,
+            en un entorno privado y seguro.
+          </p>
+          <p>
+            Más que una red social, somos un ecosistema digital que conecta a los
+            alumnos en su día a día: grupos, eventos, iniciativas y apoyo académico.
+          </p>
+        </div>
+
+        <figure class="au-about-media">
+          <!-- Cambia el src por la foto que tengas (ej. img/about.jpg) -->
+            <img src="img/AboutUs.jpg" alt="Estudiantes colaborando en ConoCEU">
+
+        </figure>
+      </div>
+    </section>
+
+    <!-- Anuncio derecha -->
+    <aside class="au-card au-ad" aria-label="Anuncio">
+      <h2 class="au-card-title">Anuncio</h2>
+      <video class="au-ad-video" controls muted autoplay loop playsinline>
+        <source src="anuncios/AnuncioNike.mp4" type="video/mp4">
+        <source src="anuncios/AnuncioAdidas.mp4" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </aside>
+  </main>
+
+  <footer class="au-footer">
+    <small>© <span id="year"></span> ConoCEU</small>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
