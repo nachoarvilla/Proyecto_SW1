@@ -104,7 +104,8 @@ body{
   box-shadow:var(--shadow);
 }
 .ad-video{
-  position:absolute;inset:0;
+  position:absolute;
+  inset:0;
   width:100%;height:100%;
   display:block;border:0;
   object-fit:cover;           /* usa 'contain' si no quieres recorte */

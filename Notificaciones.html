@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Notificaciones</title>
+  <link rel="stylesheet" href="css/style_notificaciones.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a class="logo" href="index.html">ConoCEU</a>
+      <h1 class="page-title">Tus notificaciones</h1>
+      <div class="nav-actions">
+        <a class="icon-btn" href="mensajes.html" title="Mensajes" aria-label="Mensajes">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"/></svg>
+        </a>
+        <a class="icon-btn" href="notificaciones.html" title="Notificaciones" aria-label="Notificaciones">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"/></svg>
+        </a>
+        <a class="icon-btn" href="perfil.html" title="Perfil" aria-label="Perfil">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Layout -->
+  <main class="wrap">
+    <!-- Centro: listado -->
+    <section class="panel content">
+      <div class="toolbar">
+        <button id="markAll" class="primary">Marcar todo como leído</button>
+      </div>
+
+      <ul id="notifList" class="notifs" role="list">
+        <!-- Ejemplos -->
+        <li class="notif unread">
+          <div class="title">Notificación 1</div>
+          <div class="meta">hace 5 min · Nuevos comentarios en tu post</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif unread">
+          <div class="title">Notificación 2</div>
+          <div class="meta">hoy · Manuel X empezó a seguirte</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif">
+          <div class="title">Notificación 3</div>
+          <div class="meta">ayer · Tu contraseña fue cambiada</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif unread">
+          <div class="title">Notificación 4</div>
+          <div class="meta">ayer · Evento “HackCEU” mañana a las 10:00</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <!-- Más notificaciones añadidas -->
+        <li class="notif unread">
+          <div class="title">Notificación 5</div>
+          <div class="meta">hace 2 horas · Álvaro comentó: “Buen trabajo”</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif">
+          <div class="title">Notificación 6</div>
+          <div class="meta">hoy · Tu publicación fue compartida 3 veces</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif unread">
+          <div class="title">Notificación 7</div>
+          <div class="meta">hace 1 día · Nueva encuesta disponible en tu grupo</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif">
+          <div class="title">Notificación 8</div>
+          <div class="meta">hace 3 días · Actualización de términos y condiciones</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif unread">
+          <div class="title">Notificación 9</div>
+          <div class="meta">ahora · Oferta: 20% en cursos CEU</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+        <li class="notif">
+          <div class="title">Notificación 10</div>
+          <div class="meta">hoy · Respaldo automático completado</div>
+          <button class="pill" aria-label="Marcar como leído"></button>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Derecha: anuncio (vídeo local, fijo) -->
+    <aside class="col-right">
+        <div class="ad video-container">
+          <video
+            src="anuncios/AnuncioAdidas.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            controlslist="nodownload noplaybackrate"
+            disablepictureinpicture
+            oncontextmenu="return false;"
+          ></video>
+        </div>
+      </aside>
+  </main>
+
+  <script>
+    // Toggle leído/no leído por item
+    const list = document.getElementById('notifList');
+    list.addEventListener('click', (e) => {
+      const li = e.target.closest('.notif');
+      if (!li) return;
+      if (e.target.classList.contains('pill')) {
+        li.classList.toggle('unread');
+        return;
+      }
+      // Opcional: abrir detalle
+      // location.href = 'detalle_notificacion.html';
+    });
+
+    // Marcar todo como leído
+    document.getElementById('markAll').addEventListener('click', () => {
+      document.querySelectorAll('.notif.unread').forEach(n => n.classList.remove('unread'));
+    });
+  </script>
+</body>
+</html>
