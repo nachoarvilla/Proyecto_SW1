@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Configuración</title>
+  <link rel="stylesheet" href="css/style_configuracion.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a class="logo" href="index.html">ConoCEU</a>
+      <h1 class="page-title">Configuración</h1>
+      <div class="nav-actions">
+        <a class="icon-btn" href="mensajes.html" title="Mensajes" aria-label="Mensajes">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"/></svg>
+        </a>
+        <a class="icon-btn" href="notificaciones.html" title="Notificaciones" aria-label="Notificaciones">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"/></svg>
+        </a>
+        <a class="icon-btn" href="perfil.html" title="Perfil" aria-label="Perfil">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Layout -->
+  <main class="wrap">
+    <section class="panel settings">
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="perfil" role="tab" aria-selected="true">Perfil</button>
+        <button class="tab" data-tab="seguridad" role="tab">Seguridad y privacidad</button>
+        <button class="tab" data-tab="notis" role="tab">Notificaciones</button>
+        <button class="tab" data-tab="apariencia" role="tab">Apariencia</button>
+        <button class="tab" data-tab="cuenta" role="tab">Cuenta</button>
+      </div>
+
+      <!-- Contenido de tabs -->
+      <div class="tabpanels">
+        <!-- PERFIL -->
+        <section class="tabpanel show" id="perfil" role="tabpanel">
+          <div class="grid-2">
+            <div>
+              <label class="label">Foto de perfil</label>
+              <div class="avatar-row">
+                <img id="avatarPreview" class="avatar" src="img/avatar_placeholder.png" alt="Avatar" />
+                <label class="btn" for="avatarInput">Cambiar imagen</label>
+                <input id="avatarInput" type="file" accept="image/*" hidden />
+              </div>
+            </div>
+            <div>
+              <label class="label">Nombre y apellidos</label>
+              <input id="nombre" class="input" type="text" placeholder="Nombre Apellidos" />
+            </div>
+            <div>
+              <label class="label">Carrera / Curso</label>
+              <input id="carrera" class="input" type="text" placeholder="Ing. Sistemas · 3º" />
+            </div>
+            <div>
+              <label class="label">País / Intercambio</label>
+              <input id="pais" class="input" type="text" placeholder="España / Erasmus" />
+            </div>
+            <div class="grid-span-2">
+              <label class="label">Biografía <span id="bioCount" class="muted">(0/240)</span></label>
+              <textarea id="bio" class="textarea" rows="4" maxlength="240" placeholder="Cuéntanos algo sobre ti..."></textarea>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="savePerfil" class="primary">Guardar perfil</button>
+            <span id="perfilMsg" class="msg"></span>
+          </div>
+        </section>
+
+        <!-- SEGURIDAD Y PRIVACIDAD -->
+        <section class="tabpanel" id="seguridad" role="tabpanel">
+          <div class="grid-2">
+            <div>
+              <label class="label">Nueva contraseña</label>
+              <input id="pass1" class="input" type="password" placeholder="••••••••" />
+              <div class="meter"><div id="meterBar"></div></div>
+              <small class="muted">Usa mayúsculas, minúsculas, números y símbolos.</small>
+            </div>
+            <div>
+              <label class="label">Repite la contraseña</label>
+              <input id="pass2" class="input" type="password" placeholder="••••••••" />
+              <small id="passMsg" class="msg"></small>
+            </div>
+
+            <div class="grid-span-2 card">
+              <div class="row">
+                <div>
+                  <h4>Autenticación en dos pasos (2FA)</h4>
+                  <p class="muted">Actívalo para mayor seguridad. Recibirás un código temporal.</p>
+                </div>
+                <label class="switch">
+                  <input id="twofa" type="checkbox" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div id="twofaBox" class="twofa-box hidden">
+                <div class="row">
+                  <input id="twofaCode" class="input small" type="text" placeholder="Código 6 dígitos" />
+                  <button id="sendTwofa" class="btn">Enviar código</button>
+                </div>
+                <small class="muted">* Simulado para demo: el código se genera localmente.</small>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="saveSecurity" class="primary">Guardar seguridad</button>
+            <span id="secMsg" class="msg"></span>
+          </div>
+        </section>
+
+        <!-- NOTIFICACIONES -->
+        <section class="tabpanel" id="notis" role="tabpanel">
+          <div class="list">
+            <label class="check"><input type="checkbox" id="n_coment" /> Comentarios en mis publicaciones</label>
+            <label class="check"><input type="checkbox" id="n_mensajes" /> Mensajes directos</label>
+            <label class="check"><input type="checkbox" id="n_seguidores" /> Nuevos seguidores</label>
+            <label class="check"><input type="checkbox" id="n_eventos" /> Eventos y recordatorios</label>
+            <label class="check"><input type="checkbox" id="n_boletin" /> Boletín CEU por email</label>
+          </div>
+          <div class="actions">
+            <button id="saveNotis" class="primary">Guardar notificaciones</button>
+            <span id="notMsg" class="msg"></span>
+          </div>
+        </section>
+
+        <!-- APARIENCIA -->
+        <section class="tabpanel" id="apariencia" role="tabpanel">
+          <div class="list">
+            <label class="radio">
+              <input type="radio" name="theme" value="light" /> Tema claro
+            </label>
+            <label class="radio">
+              <input type="radio" name="theme" value="dark" /> Tema oscuro
+            </label>
+            <label class="radio">
+              <input type="radio" name="theme" value="system" checked /> Seguir sistema
+            </label>
+          </div>
+          <div class="actions">
+            <button id="saveTheme" class="primary">Guardar apariencia</button>
+            <span id="themeMsg" class="msg"></span>
+          </div>
+        </section>
+
+        <!-- CUENTA -->
+        <section class="tabpanel" id="cuenta" role="tabpanel">
+          <div class="card">
+            <h4>Eliminar cuenta</h4>
+            <p class="muted">Esta acción es irreversible. Se eliminarán tus datos y publicaciones.</p>
+            <div class="row">
+              <input id="confirmText" class="input small" type="text" placeholder="Escribe: ELIMINAR" />
+              <button id="deleteBtn" class="danger">Eliminar</button>
+            </div>
+          </div>
+          <div class="actions">
+            <span id="delMsg" class="msg"></span>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /* ========= util ========= */
+    const $ = (s, p=document) => p.querySelector(s);
+    const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+    const store = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+    const read  = (k,d=null) => JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
+
+    /* ========= Tabs ========= */
+    $$('.tab').forEach(t => t.addEventListener('click', () => {
+      $$('.tab').forEach(b => b.classList.remove('active'));
+      t.classList.add('active');
+      const id = t.dataset.tab;
+      $$('.tabpanel').forEach(tp => tp.classList.toggle('show', tp.id === id));
+      history.replaceState(null, '', `#${id}`); // deep-link
+    }));
+    // abrir por hash
+    window.addEventListener('load', () => {
+      const hash = location.hash.replace('#','');
+      const btn = hash && $(`.tab[data-tab="${hash}"]`);
+      if(btn) btn.click();
+    });
+
+    /* ========= Perfil ========= */
+    const avatarInput = $('#avatarInput');
+    const avatarPreview = $('#avatarPreview');
+    avatarInput?.addEventListener('change', e => {
+      const f = e.target.files?.[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      avatarPreview.src = url;
+      // guardamos como dataURL para persistir
+      const reader = new FileReader();
+      reader.onload = () => store('cfg_avatar', reader.result);
+      reader.readAsDataURL(f);
+    });
+
+    const bio = $('#bio'), bioCount = $('#bioCount');
+    bio?.addEventListener('input', () => {
+      bioCount.textContent = `(${bio.value.length}/240)`;
+    });
+
+    $('#savePerfil')?.addEventListener('click', () => {
+      const data = {
+        nombre: $('#nombre').value.trim(),
+        carrera: $('#carrera').value.trim(),
+        pais: $('#pais').value.trim(),
+        bio: $('#bio').value.trim(),
+      };
+      if(!data.nombre){ $('#perfilMsg').textContent = 'Añade tu nombre.'; return; }
+      store('cfg_perfil', data);
+      $('#perfilMsg').textContent = 'Perfil guardado.';
+      setTimeout(()=>$('#perfilMsg').textContent='',1500);
+    });
+
+    // cargar
+    (function loadPerfil(){
+      const p = read('cfg_perfil', null);
+      const av = read('cfg_avatar', null);
+      if(p){
+        $('#nombre').value = p.nombre || '';
+        $('#carrera').value = p.carrera || '';
+        $('#pais').value = p.pais || '';
+        $('#bio').value = p.bio || '';
+        bioCount.textContent = `(${($('#bio').value||'').length}/240)`;
+      }
+      if(av) avatarPreview.src = av;
+    })();
+
+    /* ========= Seguridad ========= */
+    const strength = v => {
+      let s = 0;
+      if(v.length >= 8) s++;
+      if(/[A-Z]/.test(v)) s++;
+      if(/[a-z]/.test(v)) s++;
+      if(/[0-9]/.test(v)) s++;
+      if(/[^A-Za-z0-9]/.test(v)) s++;
+      return Math.min(s,5);
+    };
+    $('#pass1')?.addEventListener('input', e => {
+      const s = strength(e.target.value);
+      const w = (s/5)*100;
+      $('#meterBar').style.width = w + '%';
+      $('#meterBar').dataset.level = s;
+    });
+    $('#saveSecurity')?.addEventListener('click', () => {
+      const p1 = $('#pass1').value, p2 = $('#pass2').value;
+      if(!p1 || p1 !== p2){ $('#passMsg').textContent = 'Las contraseñas no coinciden.'; return; }
+      if(strength(p1) < 3){ $('#passMsg').textContent = 'Contraseña débil.'; return; }
+      $('#passMsg').textContent = '';
+      store('cfg_security', {changed:true});
+      $('#secMsg').textContent = 'Seguridad guardada.';
+      setTimeout(()=>$('#secMsg').textContent='',1500);
+      $('#pass1').value=''; $('#pass2').value='';
+      $('#meterBar').style.width='0%';
+    });
+
+    // 2FA simulado
+    $('#twofa')?.addEventListener('change', (e)=>{
+      $('#twofaBox').classList.toggle('hidden', !e.target.checked);
+      if(e.target.checked){
+        const code = (''+Math.floor(Math.random()*1e6)).padStart(6,'0');
+        store('cfg_twofa_code', code);
+        alert('Tu código 2FA (demo): ' + code);
+      }
+    });
+    $('#sendTwofa')?.addEventListener('click', ()=>{
+      const code = read('cfg_twofa_code','000000');
+      if($('#twofaCode').value === code){
+        alert('2FA verificado ✅');
+      }else{
+        alert('Código incorrecto ❌');
+      }
+    });
+
+    /* ========= Notificaciones ========= */
+    $('#saveNotis')?.addEventListener('click', () => {
+      const data = {
+        coment: $('#n_coment').checked,
+        mensajes: $('#n_mensajes').checked,
+        seguidores: $('#n_seguidores').checked,
+        eventos: $('#n_eventos').checked,
+        boletin: $('#n_boletin').checked,
+      };
+      store('cfg_notis', data);
+      $('#notMsg').textContent = 'Preferencias guardadas.';
+      setTimeout(()=>$('#notMsg').textContent='',1500);
+    });
+    (function loadNotis(){
+      const n = read('cfg_notis', null);
+      if(!n) return;
+      $('#n_coment').checked = !!n.coment;
+      $('#n_mensajes').checked = !!n.mensajes;
+      $('#n_seguidores').checked = !!n.seguidores;
+      $('#n_eventos').checked = !!n.eventos;
+      $('#n_boletin').checked = !!n.boletin;
+    })();
+
+    /* ========= Apariencia (tema) ========= */
+    const applyTheme = (t) => {
+      document.documentElement.dataset.theme = t;
+      store('cfg_theme', t);
+    };
+    $('#saveTheme')?.addEventListener('click', ()=>{
+      const sel = document.querySelector('input[name="theme"]:checked').value;
+      applyTheme(sel);
+      $('#themeMsg').textContent = 'Tema aplicado.';
+      setTimeout(()=>$('#themeMsg').textContent='',1500);
+    });
+    (function loadTheme(){
+      const t = read('cfg_theme','system');
+      document.documentElement.dataset.theme = t;
+      const r = document.querySelector(`input[name="theme"][value="${t}"]`);
+      if(r) r.checked = true;
+      // sistema
+      if(t==='system'){
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        document.documentElement.dataset.theme = mq.matches?'dark':'light';
+        mq.addEventListener('change', e=>{
+          if(read('cfg_theme','system')==='system'){
+            document.documentElement.dataset.theme = e.matches?'dark':'light';
+          }
+        });
+      }
+    })();
+
+    /* ========= Cuenta ========= */
+    $('#deleteBtn')?.addEventListener('click', ()=>{
+      if($('#confirmText').value.trim() !== 'ELIMINAR'){
+        $('#delMsg').textContent = 'Escribe ELIMINAR para confirmar.'; return;
+      }
+      // Limpieza demo
+      ['cfg_perfil','cfg_avatar','cfg_notis','cfg_theme','cfg_security','cfg_twofa_code']
+        .forEach(k => localStorage.removeItem(k));
+      alert('Cuenta eliminada (demo).');
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
