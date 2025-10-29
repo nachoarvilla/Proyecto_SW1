@@ -1,0 +1,169 @@
+:root{
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --brand: #3b82f6;
+  --radius: 18px;
+  --shadow: 0 10px 26px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+
+  --icon-size: 22px;
+  --icon-btn: 40px;
+
+  --sidebar-w: 300px;
+  --container: 1280px;
+}
+
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body.ch-page{
+  margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 200px at 80% -200px, rgba(16,185,129,.06), transparent 60%),
+    radial-gradient(1200px 200px at 20% -200px, rgba(59,130,246,.06), transparent 60%),
+    var(--bg);
+}
+
+/* Header */
+.ch-header{
+  position: sticky; top: 0; z-index: 10;
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+  gap:12px; padding:14px 20px; background:var(--surface);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.ch-brand{ justify-self:start; display:inline-flex; align-items:center; gap:10px; text-decoration:none }
+.ch-logo{ width:34px; height:34px; object-fit:contain }
+.ch-brand-cono,.ch-brand-ceu{ font-weight:900; font-size:28px; letter-spacing:.2px }
+.ch-brand-cono{ color:var(--brand) } .ch-brand-ceu{ color:#0f172a }
+.ch-title{ margin:0; justify-self:center; font-size:28px; font-weight:800; letter-spacing:.3px }
+.ch-actions{ justify-self:end; display:flex; align-items:center; gap:10px }
+.ch-iconbtn{
+  width:var(--icon-btn); height:var(--icon-btn); border-radius:999px;
+  display:grid; place-items:center; background:#fff; border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 2px 6px rgba(0,0,0,.04); text-decoration:none
+}
+.ch-iconbtn:hover{ background:#f4f6fa }
+.ch-icon{ width:var(--icon-size); height:var(--icon-size); display:block }
+
+/* Layout */
+.ch-layout{
+  max-width:var(--container); margin:24px auto; padding:0 18px;
+  display:grid; gap:18px; grid-template-columns: var(--sidebar-w) 1fr;
+}
+
+/* Sidebar */
+.ch-sidebar{
+  background:var(--surface); border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow);
+  padding:16px;
+}
+.ch-tabs{
+  display:flex; gap:8px; background:#f0f3f9; border-radius:999px; padding:6px; margin-bottom:12px;
+}
+.ch-tab{
+  flex:1; padding:8px 12px; border-radius:999px; border:none; cursor:pointer;
+  background:transparent; font-weight:700;
+}
+.ch-tab.is-active{ background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.06); }
+.ch-list{ display:grid; gap:8px; margin-bottom:12px; }
+.ch-item{
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:10px 12px; border:none; border-radius:12px; background:#e8eefb; cursor:pointer; text-align:left; font-weight:600;
+}
+.ch-item.is-active, .ch-item:hover{ background:#d6e5ff; }
+.ch-item-avatar{ width:22px; height:22px; }
+
+/* Nuevo chat */
+.ch-new{
+  width:100%; padding:10px 12px; border-radius:999px; border:1px solid rgba(0,0,0,.2);
+  background:#fff; cursor:pointer; font-weight:600;
+}
+
+/* Panel de chat */
+.ch-panel{
+  background:var(--surface); border:1px solid rgba(0,0,0,.06); border-radius:var(--radius); box-shadow:var(--shadow);
+  display:grid; grid-template-rows:auto 1fr auto;
+}
+.ch-panel-hd{
+  display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid rgba(0,0,0,.06);
+}
+.ch-user-avatar{ width:36px; height:36px }
+.ch-user strong{ display:block }
+.ch-user-status{ color:var(--muted); font-size:.9rem }
+
+.ch-thread{
+  padding:18px; display:flex; flex-direction:column; gap:12px; overflow:auto;
+  background:linear-gradient(180deg, #eaf2ff 0%, #eaf2ff 220px, #f7f9ff 220px);
+  border-radius:0 0 var(--radius) var(--radius);
+}
+.msg{
+  max-width:70%; padding:10px 12px; border-radius:16px; position:relative; display:inline-block;
+  background:#fff; border:1px solid rgba(0,0,0,.06); box-shadow:0 2px 6px rgba(0,0,0,.04);
+}
+.msg p{ margin:0 }
+.msg time{ display:block; margin-top:4px; font-size:.75rem; color:var(--muted) }
+.msg-in{ align-self:flex-start; background:#e1efff; border-color: transparent; }
+.msg-in::after{
+  content:""; position:absolute; left:-6px; bottom:10px; width:10px; height:10px; background:#e1efff; border-radius:2px; transform:rotate(45deg);
+}
+.msg-out{ align-self:flex-end; background:#d7f4e7; border-color:transparent; }
+.msg-out::after{
+  content:""; position:absolute; right:-6px; bottom:10px; width:10px; height:10px; background:#d7f4e7; border-radius:2px; transform:rotate(45deg);
+}
+
+/* Input (solo decorativo) */
+.ch-input{ display:flex; gap:8px; padding:12px; border-top:1px solid rgba(0,0,0,.06) }
+.ch-input input{
+  flex:1; padding:12px 14px; border:1px solid rgba(0,0,0,.15); border-radius:12px;
+}
+.ch-input button{
+  padding:12px 16px; border-radius:12px; border:none; background:#9aa7bd; color:#fff; font-weight:700
+  ; cursor: not-allowed; opacity:.7;
+}
+
+/* Accesibilidad: foco visible */
+.ch-tab:focus-visible,
+.ch-item:focus-visible,
+.ch-new:focus-visible,
+.ch-iconbtn:focus-visible,
+.ch-input input:focus-visible,
+.ch-input button:focus-visible{
+  outline:3px solid rgba(59,130,246,.4);
+  outline-offset:3px;
+}
+
+/* Estados disabled decorativos (no funcional) */
+.ch-input input:disabled,
+.ch-input button:disabled{
+  filter:grayscale(.2);
+  opacity:.8;
+  cursor:not-allowed;
+}
+
+/* Scroll suave dentro del hilo */
+.ch-thread{ scrollbar-width: thin; scrollbar-color: #c7d2fe transparent; }
+.ch-thread::-webkit-scrollbar{ height:8px; width:8px; }
+.ch-thread::-webkit-scrollbar-thumb{ background:#c7d2fe; border-radius:999px; }
+
+/* --------- Responsive --------- */
+@media (max-width: 1024px){
+  :root{ --sidebar-w: 260px; }
+}
+
+@media (max-width: 860px){
+  .ch-layout{ grid-template-columns: 1fr; }
+  .ch-title{ font-size:24px; }
+  .ch-header{ grid-template-columns: auto 1fr auto; }
+  .ch-brand-cono, .ch-brand-ceu{ font-size:26px; }
+}
+
+@media (max-width: 520px){
+  :root{ --icon-size:20px; --icon-btn:36px; }
+  .ch-logo{ width:30px; height:30px; }
+  .ch-title{ font-size:22px; }
+  .ch-tabs{ padding:4px; }
+  .msg{ max-width:85%; }
+}
+
+[hidden]{ display:none !important; }
+    
