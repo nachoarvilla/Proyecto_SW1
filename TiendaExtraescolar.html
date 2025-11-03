@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Tienda ExtraEscolar</title>
+  <link rel="stylesheet" href="css/style_tienda_extraescolar.css" />
+  <!-- Tipografía para el distintivo ExtraEscolar -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a href="Index.html" class="logo">ConoCEU</a>
+
+      <div class="nav-center">
+        <span>Tienda</span>
+        <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
+        <span class="tag-extra" aria-label="Sección ExtraEscolar">ExtraEscolar</span>
+      </div>
+
+      <div class="nav-actions">
+        <a class="icon-btn" href="Chats.html" aria-label="Mensajes" title="Mensajes">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"></path></svg>
+        </a>
+        <a class="icon-btn" href="Notificaciones.html" aria-label="Notificaciones" title="Notificaciones">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"></path></svg>
+        </a>
+        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenido -->
+  <main class="wrap">
+    <!-- Lado izquierdo: Anuncio -->
+    <aside class="panel ad">
+      <h3>Anuncio</h3>
+      <div class="video-wrapper">
+        <video
+          class="ad-video"
+          src="anuncios/AnuncioNike.mp4"
+          playsinline
+          controls
+          preload="metadata"
+          poster="anuncios/poster_anuncio.jpg">
+        </video>
+      </div>
+    </aside>
+
+    <!-- Centro: Lista de objetos en venta (extraescolar) -->
+    <section class="feed">
+      <!-- Item 1 -->
+      <article class="post" data-item="Balón de fútbol">
+        <header class="post-head">
+          <div class="avatar"></div>
+          <div>
+            <div class="username">deportesCEU</div>
+            <div class="muted" style="font-size:12px">Pabellón · hace 1 h</div>
+          </div>
+        </header>
+
+        <div class="post-media">
+          <div class="ph">
+            <img src="img/pelota_producto.jpg" alt="Balón de fútbol" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Balón de fútbol</span>
+          <span class="item-price">PVP: 12,00 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="8.00" title="Enviar oferta">Ofertar 8,00 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Talla 5, cosido híbrido, apto para césped artificial.</div>
+        </div>
+      </article>
+
+      <!-- Item 2 -->
+      <article class="post" data-item="Set pinceles y témperas">
+        <header class="post-head">
+          <div class="avatar"></div>
+          <div>
+            <div class="username">arteClub</div>
+            <div class="muted" style="font-size:12px">Aula de Arte · hace 3 h</div>
+          </div>
+        </header>
+
+        <div class="post-media">
+          <div class="ph">
+            <img src="img/pinturas_producto.jpg" alt="Set pinceles y témperas" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Set pinceles y témperas</span>
+          <span class="item-price">PVP: 9,00 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="6.50" title="Enviar oferta">Ofertar 6,50 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Incluye 6 pinceles y 8 botes de témpera lavable.</div>
+        </div>
+      </article>
+
+      <!-- Item 3 -->
+      <article class="post" data-item="Raqueta de bádminton">
+        <header class="post-head">
+          <div class="avatar"></div>
+          <div>
+            <div class="username">clubBadminton</div>
+            <div class="muted" style="font-size:12px">Polideportivo · hace 6 h</div>
+          </div>
+        </header>
+
+        <div class="post-media">
+          <div class="ph">
+            <img src="img/raqueta_producto.jpg" alt="Raqueta de bádminton" />
+          </div>
+        </div>
+
+        <div class="product-header">
+          <span class="item-name">Raqueta de bádminton</span>
+          <span class="item-price">PVP: 15,00 €</span>
+        </div>
+
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="offer-btn" data-default="12.00" title="Enviar oferta">Ofertar 12,00 €</button>
+            <button class="action bookmark" aria-label="Guardar" title="Guardar">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="post-meta">
+          <div><b>Descripción</b> Peso ligero, cuerda media, perfecta para iniciación.</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Lado derecho: Buscador de objetos -->
+    <aside class="panel search">
+      <h3>Buscar objeto</h3>
+      <div class="searchbar">
+        <input type="text" placeholder="Buscar objeto (p. ej. 'balón')" aria-label="Buscar objeto" />
+        <span class="magnify" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+        </span>
+      </div>
+      <ul class="results">
+        <li tabindex="0">Balón</li>
+        <li tabindex="0">Raqueta</li>
+        <li tabindex="0">Pinturas</li>
+        <li tabindex="0">Cepillo artes</li>
+        <li tabindex="0">Zapatillas</li>
+        <li tabindex="0">Camiseta equipo</li>
+        <li tabindex="0">Sudadera</li>
+        <li tabindex="0">Bidón</li>
+      </ul>
+    </aside>
+  </main>
+
+  <!-- Modal de oferta (mismo comportamiento que tienda escolar) -->
+  <dialog id="offerDialog" class="modal">
+    <form method="dialog" class="modal-card" id="offerForm" novalidate>
+      <h3 class="modal-title">Enviar oferta</h3>
+      <div class="modal-subtitle" id="offerItem">Artículo</div>
+      <label class="price-label" for="offerInput">Importe (€)</label>
+      <div class="price-input">
+        <span>€</span>
+        <input id="offerInput" name="importe" type="number" min="0.10" step="0.10" inputmode="decimal" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="cancelOffer">Cancelar</button>
+        <button type="submit" class="btn primary">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // --- Misma lógica de ofertas que en tienda escolar ---
+    const dialog = document.getElementById('offerDialog');
+    const offerForm = document.getElementById('offerForm');
+    const offerInput = document.getElementById('offerInput');
+    const offerItem = document.getElementById('offerItem');
+    const cancelOffer = document.getElementById('cancelOffer');
+    let lastOfferBtn = null;
+
+    document.querySelectorAll('.offer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        lastOfferBtn = btn;
+        const article = btn.closest('.post');
+        const itemName = article?.dataset.item || 'Artículo';
+        const def = parseFloat(btn.dataset.default || '1.00');
+        offerItem.textContent = itemName;
+        offerInput.value = def.toFixed(2);
+        if (typeof dialog.showModal === 'function') { dialog.showModal(); }
+        else { dialog.setAttribute('open',''); }
+        offerInput.focus(); offerInput.select();
+      });
+    });
+
+    cancelOffer.addEventListener('click', () => dialog.close());
+
+    offerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = parseFloat(offerInput.value);
+      if (isNaN(value) || value < 0.10) { offerInput.focus(); return; }
+      if (lastOfferBtn) {
+        lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
+        lastOfferBtn.classList.add('offered');
+        lastOfferBtn.dataset.default = value.toFixed(2);
+        lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${value.toFixed(2)} euros`);
+      }
+      dialog.close();
+    });
+
+    dialog.addEventListener('click', (e) => {
+      const rect = offerForm.getBoundingClientRect();
+      const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                     e.clientY >= rect.top  && e.clientY <= rect.bottom;
+      if (!inside) dialog.close();
+    });
+  </script>
+</body>
+</html>
