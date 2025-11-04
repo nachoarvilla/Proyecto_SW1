@@ -24,16 +24,16 @@ body{
   line-height:1.45;
 }
 
-/* Marco general como ventana de navegador */
+
 .app-frame{
-  max-width: 1160px;
-  margin: 24px auto;
-  padding: 12px 12px 64px;
-  border: 2px solid #dfe3f1;
-  border-radius: 18px;
-  background:#fff;
-  box-shadow: 0 8px 30px rgba(0,0,0,.04);
-  position:relative;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  position:relative; /* déjalo para que el engranaje siga anclado al borde */
 }
 
 /* Barra superior */
@@ -43,16 +43,9 @@ body{
   justify-content:space-between;
   gap:16px;
   padding:8px 10px 14px;
-  border-bottom:1px dashed #e2e6f4;
+  border-bottom: 0;
 }
 
-.window-dots{
-  display:flex; gap:6px; align-items:center;
-}
-.window-dots span{
-  width:10px; height:10px; border-radius:50%;
-  background:#e5e7eb; display:inline-block;
-}
 .brand{
   margin-left: 6px;
   text-decoration:none;
@@ -68,8 +61,10 @@ body{
   width:40px; height:40px; border-radius:50%;
   display:grid; place-items:center; cursor:pointer;
   box-shadow: var(--shadow);
+  width:40px; height:40px;
 }
-.icon-btn:hover{background:#f7f9ff}
+.icon-btn .icon{ width:22px; height:22px; display:block; } /* << añade esto */
+
 
 /* Título "Perfil" */
 .page-title{
@@ -219,9 +214,16 @@ body{
 
 /* Engranaje decorativo */
 .gear{
-  position:absolute; left:16px; bottom:12px;
-  background:#fff; border:1px solid #e5e7ef; color:#2b2f77;
-  width:44px; height:44px; border-radius:12px; display:grid; place-items:center;
+  position: fixed;       /* antes: absolute */
+  left: 24px;            /* separado del contenido */
+  bottom: 24px;          /* separado del contenido */
+  z-index: 20;           /* por encima del fondo, pero no molesta */
+  background:#fff;
+  border:1px solid #e5e7ef;
+  color:#2b2f77;
+  width:44px; height:44px;
+  border-radius:12px;
+  display:grid; place-items:center;
   box-shadow: var(--shadow);
   cursor:pointer;
 }
