@@ -28,6 +28,15 @@ function auth(req, res, next) {
   }
 }
 
+// Helper: comprobar si un usuario pertenece a un chat
+async function userIsMemberOfChat(chatId, userId) {
+  const [rows] = await db.query(
+    "SELECT 1 FROM chat_miembros WHERE chat_id = ? AND user_id = ?",
+    [chatId, userId]
+  );
+  return rows.length > 0;
+}
+
 // Ruta de prueba
 app.get('/', async (req, res) => {
   try {
@@ -583,6 +592,186 @@ app.get('/api/tienda-extraescolar/:id/ofertas', auth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener ofertas extraescolares" });
+  }
+});
+
+// ------------- CHATS: crear chat privado -------------------------------
+app.post('/api/chats/privado', auth, async (req, res) => {
+  const { destinatario_id } = req.body;
+
+  if (!destinatario_id) {
+    return res.status(400).json({ error: "Falta destinatario_id" });
+  }
+
+  if (destinatario_id === req.user.id) {
+    return res.status(400).json({ error: "No puedes crear un chat contigo mismo" });
+  }
+
+  try {
+    // Comprobar que el destinatario existe
+    const [userRows] = await db.query(
+      "SELECT id FROM users WHERE id = ?",
+      [destinatario_id]
+    );
+
+    if (userRows.length === 0) {
+      return res.status(404).json({ error: "Usuario destinatario no encontrado" });
+    }
+
+    // Crear chat
+    const [chatResult] = await db.query(
+      "INSERT INTO chats (es_grupo) VALUES (0)"
+    );
+
+    const chatId = chatResult.insertId;
+
+    // Insertar miembros (emisor + destinatario)
+    await db.query(
+      `INSERT INTO chat_miembros (chat_id, user_id)
+       VALUES (?, ?), (?, ?)`,
+      [chatId, req.user.id, chatId, destinatario_id]
+    );
+
+    return res.status(201).json({
+      message: "Chat privado creado",
+      chat_id: chatId
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Error creando chat privado" });
+  }
+});
+
+// ------------- CHATS: crear chat de grupo ------------------------------
+app.post('/api/chats/grupo', auth, async (req, res) => {
+  const { nombre, miembros_ids } = req.body;
+  // miembros_ids: array de IDs de usuarios (sin incluir al propio usuario, lo añadimos nosotros)
+
+  if (!nombre || !Array.isArray(miembros_ids) || miembros_ids.length === 0) {
+    return res.status(400).json({ error: "Nombre y miembros_ids son obligatorios" });
+  }
+
+  // Evitar duplicados y asegurarnos de que el creador está incluido
+  const miembrosUnicos = Array.from(new Set([...miembros_ids, req.user.id]));
+
+  try {
+    // Crear chat
+    const [chatResult] = await db.query(
+      "INSERT INTO chats (nombre, es_grupo) VALUES (?, 1)",
+      [nombre]
+    );
+
+    const chatId = chatResult.insertId;
+
+    // Insertar miembros
+    const values = miembrosUnicos.map(id => [chatId, id]);
+    await db.query(
+      "INSERT INTO chat_miembros (chat_id, user_id) VALUES ?",
+      [values]
+    );
+
+    return res.status(201).json({
+      message: "Chat de grupo creado",
+      chat_id: chatId
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Error creando chat de grupo" });
+  }
+});
+
+// ------------- CHATS: listar chats del usuario -------------------------
+app.get('/api/chats', auth, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT 
+         c.id,
+         c.nombre,
+         c.es_grupo,
+         c.created_at
+       FROM chats c
+       JOIN chat_miembros cm ON c.id = cm.chat_id
+       WHERE cm.user_id = ?
+       ORDER BY c.created_at DESC`,
+      [req.user.id]
+    );
+
+    res.json(rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener chats" });
+  }
+});
+
+// ------------- MENSAJES: enviar mensaje en un chat ---------------------
+app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
+  const chatId = req.params.id;
+  const { contenido } = req.body;
+
+  if (!contenido) {
+    return res.status(400).json({ error: "El contenido del mensaje es obligatorio" });
+  }
+
+  try {
+    // Comprobar que el usuario pertenece al chat
+    const esMiembro = await userIsMemberOfChat(chatId, req.user.id);
+    if (!esMiembro) {
+      return res.status(403).json({ error: "No perteneces a este chat" });
+    }
+
+    const [result] = await db.query(
+      `INSERT INTO mensajes (chat_id, user_id, contenido)
+       VALUES (?, ?, ?)`,
+      [chatId, req.user.id, contenido]
+    );
+
+    return res.status(201).json({
+      message: "Mensaje enviado",
+      id: result.insertId
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Error enviando mensaje" });
+  }
+});
+
+// ------------- MENSAJES: listar mensajes de un chat --------------------
+app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
+  const chatId = req.params.id;
+  const limit = parseInt(req.query.limit, 10) || 50;
+
+  try {
+    // Comprobar que el usuario pertenece al chat
+    const esMiembro = await userIsMemberOfChat(chatId, req.user.id);
+    if (!esMiembro) {
+      return res.status(403).json({ error: "No perteneces a este chat" });
+    }
+
+    const [rows] = await db.query(
+      `SELECT 
+         m.id,
+         m.contenido,
+         m.fecha_envio,
+         u.id AS user_id,
+         u.username,
+         u.foto_perfil
+       FROM mensajes m
+       JOIN users u ON m.user_id = u.id
+       WHERE m.chat_id = ?
+       ORDER BY m.fecha_envio ASC
+       LIMIT ?`,
+      [chatId, limit]
+    );
+
+    res.json(rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener mensajes" });
   }
 });
 
