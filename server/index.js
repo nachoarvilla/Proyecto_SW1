@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+const http = require('http');
+const { Server } = require('socket.io');
+
 
 // Middlewares
 app.use(cors());
@@ -778,6 +781,44 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
 
 // Lanzar servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Puedes limitarlo a tu frontend
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("Nuevo usuario conectado:", socket.id);
+
+  // Unirse a un chat
+  socket.on("join_chat", (chatId) => {
+    socket.join("chat_" + chatId);
+    console.log(`Socket ${socket.id} unido al chat ${chatId}`);
+  });
+
+  // Enviar mensaje realtime
+  socket.on("send_message", (data) => {
+    const { chatId, mensaje, user } = data;
+
+    // reenviar a los clientes del mismo chat
+    io.to("chat_" + chatId).emit("new_message", {
+      chatId,
+      mensaje,
+      user,
+      fecha_envio: new Date()
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Usuario desconectado:", socket.id);
+  });
+});
+
+// Iniciar servidor
+server.listen(PORT, () => {
   console.log("Servidor arrancado en el puerto " + PORT);
 });
+

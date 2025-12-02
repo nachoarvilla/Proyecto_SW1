@@ -17,7 +17,6 @@
     <h1 class="ch-title">Chats</h1>
 
     <nav class="ch-actions" aria-label="Acciones">
-      <!-- Icono chats (no navega) -->
       <span class="ch-iconbtn" aria-label="Chats">
         <img src="img/Chats.png" alt="" class="ch-icon">
       </span>
@@ -34,67 +33,38 @@
   <main class="ch-layout">
     <!-- Sidebar -->
     <aside class="ch-sidebar">
-    <div class="ch-tabs" role="tablist" aria-label="Tipo de chat">
+      <div class="ch-tabs" role="tablist" aria-label="Tipo de chat">
         <button class="ch-tab is-active" role="tab" aria-selected="true"
                 id="tab-ind" data-target="#list-ind">Individuales</button>
         <button class="ch-tab" role="tab" aria-selected="false"
                 id="tab-grp" data-target="#list-grp">Grupales</button>
-    </div>
+      </div>
 
-    <!-- SOLO individuales -->
-    <div id="list-ind" class="ch-list" role="tabpanel" aria-labelledby="tab-ind">
-        <button class="ch-item is-active">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Pepito</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>María</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Carlos</span>
-        </button>
-    </div>
+      <!-- Lists populated dynamically -->
+      <div id="list-ind" class="ch-list" role="tabpanel" aria-labelledby="tab-ind"></div>
+      <div id="list-grp" class="ch-list" role="tabpanel" aria-labelledby="tab-grp" hidden></div>
 
-    <!-- SOLO grupales -->
-    <div id="list-grp" class="ch-list" role="tabpanel" aria-labelledby="tab-grp" hidden>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Proyecto IS · Grupo 3</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Club Running CEU</span>
-        </button>
-    </div>
-
-    <button class="ch-new" type="button">Nuevo chat</button>
+      <button id="btn-new-chat" class="ch-new" type="button">Nuevo chat</button>
     </aside>
 
-    <!-- Panel de chat (solo ejemplo visual) -->
+    <!-- Panel de chat -->
     <section class="ch-panel" aria-label="Conversación">
-      <header class="ch-panel-hd">
-        <img src="img/Perfil.png" alt="" class="ch-user-avatar">
+      <header class="ch-panel-hd" id="panel-header">
+        <img src="img/Perfil.png" alt="" class="ch-user-avatar" id="panel-avatar">
         <div class="ch-user">
-          <strong>Pepito</strong>
-          <span class="ch-user-status">en línea</span>
+          <strong id="panel-name">Selecciona un chat</strong>
+          <span class="ch-user-status" id="panel-status">offline</span>
         </div>
       </header>
 
-      <div class="ch-thread" aria-live="polite">
-        <div class="msg msg-in">
-          <p>¡Hola! ¿Tienes el resumen de la unidad 2?</p>
-          <time>12:03</time>
-        </div>
-        <div class="msg msg-out">
-          <p>Sí, te lo paso ahora mismo. ¿Lo quieres en PDF?</p>
-          <time>12:04</time>
-        </div>
-        <div class="msg msg-in">
-          <p>Perfecto, ¡gracias!</p>
-          <time>12:05</time>
-        </div>
+      <div class="ch-thread" aria-live="polite" id="thread">
+        <!-- Mensajes se añadiran aquí -->
+        <div class="placeholder">Selecciona un chat en la columna izquierda para ver los mensajes.</div>
       </div>
 
-      <form class="ch-input" action="#" onsubmit="return false;">
-        <input type="text" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" disabled>
-        <button type="button" disabled>Enviar</button>
+      <form class="ch-input" id="form-send" action="#" onsubmit="return false;">
+        <input id="input-msg" type="text" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" disabled>
+        <button id="btn-send" type="button" disabled>Enviar</button>
       </form>
     </section>
   </main>
@@ -103,32 +73,254 @@
     <small>© <span id="year"></span> ConoCEU</small>
   </footer>
 
+  <!-- Socket.IO client CDN -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
   <script>
-    // Año
-    document.getElementById('year').textContent = new Date().getFullYear();
+  // ------------- CONFIG -------------
+  // Cambia si tu backend corre en otra URL / puerto (produce CORS si no coincide)
+  const API_BASE = "http://localhost:3000"; // tu API
+  const SOCKET_URL = API_BASE;
 
-    // Tabs: alternar Individuales / Grupales
-    const tabs = document.querySelectorAll('.ch-tab');
-    const lists = {
-        '#list-ind': document.querySelector('#list-ind'),
-        '#list-grp': document.querySelector('#list-grp')
-    };
+  // ------------- HELPERS -------------
+  const token = localStorage.getItem('token'); // se asume que el login guarda JWT aquí
+  function authHeaders() {
+    return token ? { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
+  }
+  function qs(sel){ return document.querySelector(sel); }
+  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
 
-    function showList(targetSel){
-        Object.values(lists).forEach(el => el.hidden = true);
-        lists[targetSel].hidden = false;
-    }
+  // ------------- UI refs -------------
+  const yearEl = qs('#year');
+  const listInd = qs('#list-ind');
+  const listGrp = qs('#list-grp');
+  const tabs = document.querySelectorAll('.ch-tab');
+  const threadEl = qs('#thread');
+  const inputMsg = qs('#input-msg');
+  const btnSend = qs('#btn-send');
+  const formSend = qs('#form-send');
+  const panelName = qs('#panel-name');
+  const panelStatus = qs('#panel-status');
+  const panelAvatar = qs('#panel-avatar');
 
-    tabs.forEach(btn => {
-        btn.addEventListener('click', () => {
+  yearEl.textContent = new Date().getFullYear();
+
+  // ------------- Tabs -------------
+  const lists = { '#list-ind': listInd, '#list-grp': listGrp };
+  function showList(targetSel){
+      Object.values(lists).forEach(el => el.hidden = true);
+      lists[targetSel].hidden = false;
+  }
+  tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
         tabs.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected','false'); });
         btn.classList.add('is-active'); btn.setAttribute('aria-selected','true');
         showList(btn.dataset.target);
-        });
-    });
+      });
+  });
+  showList('#list-ind');
 
-    // estado inicial
-    showList('#list-ind');
+  // ------------- Socket.IO -------------
+  const socket = io(SOCKET_URL, { auth: token ? { token } : {} });
+
+  socket.on('connect', () => {
+    console.log("Socket conectado:", socket.id);
+  });
+
+  socket.on('new_message', (msg) => {
+    // Si el mensaje pertenece al chat abierto, lo mostramos.
+    if (msg.chatId && +msg.chatId === +currentChatId) {
+      appendMessageToThread(msg, msg.user && msg.user.id === currentUserId ? 'out' : 'in');
+    } else {
+      // Opcional: mostrar notificación en la lista de chats (no implementado aquí)
+      console.log("Mensaje para otro chat:", msg);
+    }
+  });
+
+  // ------------- Estado -------------
+  let currentChatId = null;
+  let currentUserId = null; // opcional: si guardas id del usuario
+  let chatsCache = []; // almacenar lista de chats
+
+  // ------------- Funciones UI -------------
+  function clearThread(){ threadEl.innerHTML = ''; }
+  function formatTime(dateStr){
+    const d = new Date(dateStr);
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
+
+  function appendMessageToThread(msg, dir='in'){
+    // msg: { chatId, mensaje, user, fecha_envio } or DB shape
+    const div = document.createElement('div');
+    div.className = 'msg msg-' + (dir === 'out' ? 'out' : 'in');
+
+    const p = document.createElement('p');
+    // Texto del mensaje (varía segun formato)
+    const text = msg.contenido || msg.mensaje || msg.text || '';
+    p.textContent = text;
+    const time = document.createElement('time');
+    time.textContent = formatTime(msg.fecha_envio || msg.created_at || new Date().toISOString());
+    div.appendChild(p);
+    div.appendChild(time);
+    threadEl.appendChild(div);
+    // scrollear abajo
+    threadEl.scrollTop = threadEl.scrollHeight;
+  }
+
+  function renderChatList(chats){
+    // chats: [{id,nombre,es_grupo,created_at}, ...]
+    listInd.innerHTML = '';
+    listGrp.innerHTML = '';
+
+    chats.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'ch-item';
+      btn.dataset.chatId = c.id;
+      const img = document.createElement('img');
+      img.className = 'ch-item-avatar';
+      img.src = 'img/Perfil.png'; // puedes mejorar con foto del chat
+      img.alt = '';
+      const span = document.createElement('span');
+      span.textContent = c.es_grupo ? (c.nombre || 'Grupo') : (c.nombre || 'Usuario');
+      btn.appendChild(img);
+      btn.appendChild(span);
+
+      btn.addEventListener('click', () => openChat(c.id, c));
+      if (c.es_grupo) listGrp.appendChild(btn); else listInd.appendChild(btn);
+    });
+  }
+
+  // ------------- API Calls -------------
+  async function apiGET(path){
+    const res = await fetch(API_BASE + path, { headers: authHeaders() });
+    if (res.status === 401) { handleUnauthorized(); throw new Error('Unauthorized'); }
+    return res.json();
+  }
+  async function apiPOST(path, body){
+    const res = await fetch(API_BASE + path, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify(body)
+    });
+    if (res.status === 401) { handleUnauthorized(); throw new Error('Unauthorized'); }
+    return res.json();
+  }
+
+  function handleUnauthorized(){
+    alert('No estás autenticado. Haz login primero.');
+    // redirigir a login si existe
+    // location.href = '/login.html';
+  }
+
+  // ------------- Cargar chats al inicio -------------
+  async function loadChats(){
+    try {
+      const data = await apiGET('/api/chats');
+      // data es array de chats
+      chatsCache = data;
+      renderChatList(data);
+    } catch (err){
+      console.error('Error cargando chats', err);
+    }
+  }
+
+  // ------------- Abrir chat -------------
+  async function openChat(chatId, chatMeta = {}) {
+    currentChatId = chatId;
+    clearThread();
+    // UI header
+    panelName.textContent = chatMeta.nombre || ('Chat ' + chatId);
+    panelStatus.textContent = 'recuperando...';
+    inputMsg.disabled = true;
+    btnSend.disabled = true;
+
+    // Unirse por socket
+    socket.emit('join_chat', chatId);
+
+    try {
+      const msgs = await apiGET(`/api/chats/${chatId}/mensajes?limit=200`);
+      // msgs: array ordenada asc (segun backend)
+      if (!Array.isArray(msgs)) { threadEl.innerHTML = '<div class="placeholder">No hay mensajes.</div>'; return; }
+      threadEl.innerHTML = '';
+      msgs.forEach(m => {
+        const dir = (m.user_id && currentUserId && +m.user_id === +currentUserId) ? 'out' : 'in';
+        // si tu API devuelve username/foto en 'm', también puedes usar m.username
+        appendMessageToThread({
+          contenido: m.contenido,
+          fecha_envio: m.fecha_envio || m.created_at,
+          user: { id: m.user_id, username: m.username }
+        }, dir);
+      });
+
+      panelStatus.textContent = 'en línea';
+      inputMsg.disabled = false;
+      btnSend.disabled = false;
+      inputMsg.focus();
+    } catch (err) {
+      console.error('Error al abrir chat', err);
+      panelStatus.textContent = 'error';
+    }
+  }
+
+  // ------------- Enviar mensaje -------------
+  async function sendMessageToAPI(chatId, contenido) {
+    // 1) Guardar en DB vía API POST
+    try {
+      const res = await apiPOST(`/api/chats/${chatId}/mensajes`, { contenido });
+      // 2) Emitir por socket para difusión inmediata (el backend no hace emit automático)
+      socket.emit('send_message', {
+        chatId,
+        mensaje: contenido,
+        user: { id: currentUserId, username: 'yo' } // opcional: mejora tomando datos reales
+      });
+      return res;
+    } catch (err) {
+      console.error('Error enviando msg', err);
+      throw err;
+    }
+  }
+
+  // ------------- Handlers UI -------------
+  btnSend.addEventListener('click', async () => {
+    const text = inputMsg.value.trim();
+    if (!text || !currentChatId) return;
+    // Desactivar botón momentáneamente
+    btnSend.disabled = true;
+    try {
+      await sendMessageToAPI(currentChatId, text);
+      // Añadir localmente (optimista)
+      appendMessageToThread({ contenido: text, fecha_envio: new Date().toISOString(), user: { id: currentUserId } }, 'out');
+      inputMsg.value = '';
+    } catch (err) {
+      alert('No se ha podido enviar el mensaje.');
+    } finally {
+      btnSend.disabled = false;
+    }
+  });
+
+  // Enter para enviar
+  inputMsg.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      btnSend.click();
+      e.preventDefault();
+    }
+  });
+
+  // ------------- Inicialización -------------
+  (function init(){
+    // Si tu login guarda además el user id, puedes leerlo:
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try { currentUserId = JSON.parse(savedUser).id; } catch(e){}
+    }
+    // Cargar chats
+    loadChats();
+  })();
+
+  // ------------- Para pruebas (si todavía no tienes login) -------------
+  // Si aún no tienes un token JWT para probar, puedes crear uno temporal aquí:
+  // localStorage.setItem('token', 'TU_JWT_AQUI');
+  // localStorage.setItem('user', JSON.stringify({ id: 1, username: 'Pepito' }));
   </script>
 </body>
 </html>
