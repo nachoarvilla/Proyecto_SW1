@@ -3,25 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ConoCEU · Tienda ExtraEscolar</title>
-  <link rel="stylesheet" href="../css/style_tienda_extraescolar.css" />
-  <!-- Tipografía para el distintivo ExtraEscolar -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+  <title>ConoCEU · Tienda (Material escolar)</title>
+  <link rel="stylesheet" href="css/style_tienda_escolar.css" />
 </head>
 <body>
   <!-- Header -->
   <header class="header">
     <nav class="nav">
       <a href="index.html" class="logo">ConoCEU</a>
-
       <div class="nav-center">
-        <img src="../img/logoceu.png" alt="Logo CEU" class="logo-ceu">
         <span>Tienda</span>
-        <span class="tag-extra" aria-label="Sección ExtraEscolar">ExtraEscolar</span>
+        <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
       </div>
-
       <div class="nav-actions">
         <a class="icon-btn" href="Chats.html" aria-label="Mensajes" title="Mensajes">
           <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"></path></svg>
@@ -44,36 +37,36 @@
       <div class="video-wrapper">
         <video
           class="ad-video"
-          src="../anuncios/AnuncioNike.mp4"
+          src="anuncios/AnuncioNike.mp4"
           playsinline
           controls
           preload="metadata"
-          poster="../anuncios/poster_anuncio.jpg">
+          poster="anuncios/poster_anuncio.jpg">
         </video>
       </div>
     </aside>
 
-    <!-- Centro: Lista de objetos en venta (extraescolar) -->
+    <!-- Centro: Lista de objetos en venta -->
     <section class="feed">
       <!-- Item 1 -->
-      <article class="post" data-item="Balón de fútbol">
+      <article class="post" data-item="Bolígrafo azul">
         <header class="post-head">
-          <div class="avatar"></div>
+          <div class="avatar" aria-hidden="true"></div>
           <div>
-            <div class="username">deportesCEU</div>
-            <div class="muted" style="font-size:12px">Pabellón · hace 1 h</div>
+            <div class="username">libreriaCampus</div>
+            <div class="muted" style="font-size:12px">Edificio A · hace 1 h</div>
           </div>
         </header>
 
-        <div class="post-media">
+        <div class="post-media" aria-label="Imagen del producto">
           <div class="ph">
-            <img src="../img/tienda balon de futbol.jpg" alt="Balón de fútbol" />
+            <img src="img/Boligrafo.jpg" alt="Bolígrafo azul" />
           </div>
         </div>
 
         <div class="product-header">
-          <span class="item-name">Balón de fútbol</span>
-          <span class="item-price">PVP: 12,00 €</span>
+          <span class="item-name">Bolígrafo azul</span>
+          <span class="item-price">PVP: 1,50 €</span>
         </div>
 
         <div class="post-actions">
@@ -89,7 +82,7 @@
             </button>
           </div>
           <div class="right-actions">
-            <button class="offer-btn" data-default="8.00" title="Enviar oferta">Ofertar 8,00 €</button>
+            <button class="offer-btn" data-default="1.00" title="Enviar oferta">Ofertar 1,00 €</button>
             <button class="action bookmark" aria-label="Guardar" title="Guardar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
             </button>
@@ -97,29 +90,29 @@
         </div>
 
         <div class="post-meta">
-          <div><b>Descripción</b> Talla 5, cosido híbrido, apto para césped artificial.</div>
+          <div><b>Descripción</b> Bolígrafo BIC azul nuevo, tinta de 1.0 mm.</div>
         </div>
       </article>
 
       <!-- Item 2 -->
-      <article class="post" data-item="Set pinceles y témperas">
+      <article class="post" data-item="Regla 30 cm">
         <header class="post-head">
-          <div class="avatar"></div>
+          <div class="avatar" aria-hidden="true"></div>
           <div>
-            <div class="username">arteClub</div>
-            <div class="muted" style="font-size:12px">Aula de Arte · hace 3 h</div>
+            <div class="username">mariaP</div>
+            <div class="muted" style="font-size:12px">Biblioteca · hace 3 h</div>
           </div>
         </header>
 
         <div class="post-media">
           <div class="ph">
-            <img src="../img/tienda banana artistica.webp" alt="Set pinceles y témperas" />
+            <img src="img/ReglaFoto.jpg" alt="Regla 30 cm" />
           </div>
         </div>
 
         <div class="product-header">
-          <span class="item-name">Banana artistica</span>
-          <span class="item-price">PVP: 900 000 000 €</span>
+          <span class="item-name">Regla 30 cm</span>
+          <span class="item-price">PVP: 2,00 €</span>
         </div>
 
         <div class="post-actions">
@@ -135,7 +128,7 @@
             </button>
           </div>
           <div class="right-actions">
-            <button class="offer-btn" data-default="6.50" title="Enviar oferta">Ofertar 6,50 €</button>
+            <button class="offer-btn" data-default="1.50" title="Enviar oferta">Ofertar 1,50 €</button>
             <button class="action bookmark" aria-label="Guardar" title="Guardar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
             </button>
@@ -143,29 +136,29 @@
         </div>
 
         <div class="post-meta">
-          <div><b>Descripción</b> Lo robé en un museo y cuesta carro, asi que lo vendo.</div>
+          <div><b>Descripción</b> Regla de plástico transparente, marcas en mm/cm.</div>
         </div>
       </article>
 
       <!-- Item 3 -->
-      <article class="post" data-item="Raqueta de bádminton">
+      <article class="post" data-item="Estuche doble">
         <header class="post-head">
-          <div class="avatar"></div>
+          <div class="avatar" aria-hidden="true"></div>
           <div>
-            <div class="username">Ousmane Dembélé</div>
-            <div class="muted" style="font-size:12px">París · hace 6 h</div>
+            <div class="username">papeleriaNorte</div>
+            <div class="muted" style="font-size:12px">Hall · hace 6 h</div>
           </div>
         </header>
 
         <div class="post-media">
           <div class="ph">
-            <img src="../img/tienda balon de oro dembele.jpg" alt="Raqueta de bádminton" />
+            <img src="img/EstucheBetis.jpg" alt="Estuche doble cremallera" />
           </div>
         </div>
 
         <div class="product-header">
-          <span class="item-name">Balón de Oro</span>
-          <span class="item-price">PVP: 3,33 €</span>
+          <span class="item-name">Estuche doble</span>
+          <span class="item-price">PVP: 6,00 €</span>
         </div>
 
         <div class="post-actions">
@@ -181,7 +174,7 @@
             </button>
           </div>
           <div class="right-actions">
-            <button class="offer-btn" data-default="12.00" title="Enviar oferta">Ofertar 3,00 €</button>
+            <button class="offer-btn" data-default="5.00" title="Enviar oferta">Ofertar 5,00 €</button>
             <button class="action bookmark" aria-label="Guardar" title="Guardar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
             </button>
@@ -189,7 +182,7 @@
         </div>
 
         <div class="post-meta">
-          <div><b>Descripción</b> Peso ligero, cuerda media, perfecta para iniciación.</div>
+          <div><b>Descripción</b> Estuche con dos compartimentos y tiradores metálicos.</div>
         </div>
       </article>
     </section>
@@ -198,25 +191,25 @@
     <aside class="panel search">
       <h3>Buscar objeto</h3>
       <div class="searchbar">
-        <input type="text" placeholder="Buscar objeto (p. ej. 'balón')" aria-label="Buscar objeto" />
+        <input type="text" placeholder="Buscar objeto (p. ej. 'regla')" aria-label="Buscar objeto" />
         <span class="magnify" aria-hidden="true">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
         </span>
       </div>
       <ul class="results">
-        <li tabindex="0">Balón</li>
-        <li tabindex="0">Raqueta</li>
-        <li tabindex="0">Pinturas</li>
-        <li tabindex="0">Cepillo artes</li>
-        <li tabindex="0">Zapatillas</li>
-        <li tabindex="0">Camiseta equipo</li>
-        <li tabindex="0">Sudadera</li>
-        <li tabindex="0">Bidón</li>
+        <li tabindex="0">Bolígrafo</li>
+        <li tabindex="0">Regla</li>
+        <li tabindex="0">Estuche</li>
+        <li tabindex="0">Lápiz</li>
+        <li tabindex="0">Compás</li>
+        <li tabindex="0">Carpeta</li>
+        <li tabindex="0">Mochila</li>
+        <li tabindex="0">Cuaderno</li>
       </ul>
     </aside>
   </main>
 
-  <!-- Modal de oferta (mismo comportamiento que tienda escolar) -->
+  <!-- Modal de oferta -->
   <dialog id="offerDialog" class="modal">
     <form method="dialog" class="modal-card" id="offerForm" novalidate>
       <h3 class="modal-title">Enviar oferta</h3>
@@ -234,34 +227,50 @@
   </dialog>
 
   <script>
-    // --- Misma lógica de ofertas que en tienda escolar ---
+    // --- Oferta modal ---
     const dialog = document.getElementById('offerDialog');
     const offerForm = document.getElementById('offerForm');
     const offerInput = document.getElementById('offerInput');
     const offerItem = document.getElementById('offerItem');
     const cancelOffer = document.getElementById('cancelOffer');
-    let lastOfferBtn = null;
 
+    let lastOfferBtn = null; // botón que abrió el modal
+
+    // Abrir modal al pulsar cualquier .offer-btn
     document.querySelectorAll('.offer-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         lastOfferBtn = btn;
         const article = btn.closest('.post');
         const itemName = article?.dataset.item || 'Artículo';
         const def = parseFloat(btn.dataset.default || '1.00');
+
         offerItem.textContent = itemName;
         offerInput.value = def.toFixed(2);
-        if (typeof dialog.showModal === 'function') { dialog.showModal(); }
-        else { dialog.setAttribute('open',''); }
-        offerInput.focus(); offerInput.select();
+
+        if (typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        } else {
+          // Fallback muy básico si <dialog> no existe (navegadores antiguos)
+          dialog.setAttribute('open', '');
+        }
+        offerInput.focus();
+        offerInput.select();
       });
     });
 
-    cancelOffer.addEventListener('click', () => dialog.close());
+    // Cerrar modal sin cambios
+    cancelOffer.addEventListener('click', () => {
+      dialog.close();
+    });
 
+    // Confirmar oferta -> actualizar botón
     offerForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const value = parseFloat(offerInput.value);
-      if (isNaN(value) || value < 0.10) { offerInput.focus(); return; }
+      if (isNaN(value) || value < 0.10) {
+        offerInput.focus();
+        return;
+      }
       if (lastOfferBtn) {
         lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
         lastOfferBtn.classList.add('offered');
@@ -271,11 +280,14 @@
       dialog.close();
     });
 
+    // Cerrar con click fuera del modal-card
     dialog.addEventListener('click', (e) => {
       const rect = offerForm.getBoundingClientRect();
-      const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
-                     e.clientY >= rect.top  && e.clientY <= rect.bottom;
-      if (!inside) dialog.close();
+      const inDialog = (
+        e.clientX >= rect.left && e.clientX <= rect.right &&
+        e.clientY >= rect.top && e.clientY <= rect.bottom
+      );
+      if (!inDialog) dialog.close();
     });
   </script>
 </body>
