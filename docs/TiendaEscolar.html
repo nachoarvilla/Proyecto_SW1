@@ -49,7 +49,7 @@
     <!-- Centro: Lista de objetos en venta -->
     <section class="feed">
       <!-- Item 1 -->
-      <article class="post" data-item="Bolígrafo azul">
+      <article class="post" data-item="Bolígrafo azul" data-product-id="1">
         <header class="post-head">
           <div class="avatar" aria-hidden="true"></div>
           <div>
@@ -72,8 +72,11 @@
         <div class="post-actions">
           <div class="left-actions">
             <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -95,7 +98,7 @@
       </article>
 
       <!-- Item 2 -->
-      <article class="post" data-item="Regla 30 cm">
+      <article class="post" data-item="Regla 30 cm" data-product-id="2">
         <header class="post-head">
           <div class="avatar" aria-hidden="true"></div>
           <div>
@@ -118,8 +121,11 @@
         <div class="post-actions">
           <div class="left-actions">
             <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -141,7 +147,7 @@
       </article>
 
       <!-- Item 3 -->
-      <article class="post" data-item="Estuche doble">
+      <article class="post" data-item="Estuche doble" data-product-id="3">
         <header class="post-head">
           <div class="avatar" aria-hidden="true"></div>
           <div>
@@ -164,8 +170,11 @@
         <div class="post-actions">
           <div class="left-actions">
             <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -288,6 +297,62 @@
         e.clientY >= rect.top && e.clientY <= rect.bottom
       );
       if (!inDialog) dialog.close();
+    });
+
+        // --- Likes: conectar con backend y marcar corazón en rojo ---
+    const API_URL = "https://conoceu-backend.onrender.com";
+
+    function getToken() {
+      // asumimos que el login guarda el token así
+      return localStorage.getItem("token");
+    }
+
+    async function likeProductoEscolar(productId) {
+      const res = await fetch(`${API_URL}/api/tienda-escolar/${productId}/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + getToken()
+        }
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Error al hacer like");
+      }
+
+      return res.json(); // { likes: N }
+    }
+
+    document.addEventListener("click", async (e) => {
+      const likeBtn = e.target.closest(".action.like");
+      if (!likeBtn) return; // click en otra cosa
+
+      const token = getToken();
+      if (!token) {
+        alert("Inicia sesión para dar like.");
+        return;
+      }
+
+      const article = likeBtn.closest(".post");
+      const productId = article?.dataset.productId;
+      if (!productId) {
+        console.warn("Falta data-product-id en el artículo");
+        return;
+      }
+
+      const likesSpan = article.querySelector(".likes-count");
+
+      try {
+        const data = await likeProductoEscolar(productId);
+        likeBtn.classList.add("liked");           // corazón rojo
+        if (likesSpan && typeof data.likes === "number") {
+          likesSpan.textContent = data.likes;     // actualizar contador
+        }
+      } catch (err) {
+        console.error(err);
+        alert(err.message || "No se pudo registrar el like");
+      }
     });
   </script>
 </body>

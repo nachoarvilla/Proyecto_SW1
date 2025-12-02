@@ -219,3 +219,15 @@ body{
 .btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
 .btn.primary:hover{background:#1e40af}
 .btn.ghost{background:#fff}
+
+/* Estado normal del corazón */
+.action.like .icon path{
+  fill: #6b7280;          /* gris */
+  transition: fill .15s ease;
+}
+
+/* Estado con like: corazón rojo */
+.action.like.liked .icon path{
+  fill: #e11d48;          /* rojo */
+}
+
