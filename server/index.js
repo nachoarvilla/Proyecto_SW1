@@ -375,6 +375,60 @@ app.get('/api/tienda-escolar', auth, async (req, res) => {
   }
 });
 
+// ------------- TIENDA ESCOLAR: like producto ---------------------------
+app.post('/api/tienda-escolar/:id/like', auth, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "UPDATE tienda_escolar SET likes_count = likes_count + 1 WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const [[row]] = await db.query(
+      "SELECT likes_count FROM tienda_escolar WHERE id = ?",
+      [id]
+    );
+
+    res.json({ likes: row.likes_count });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al hacer like" });
+  }
+});
+
+app.post('/api/tienda-escolar/:id/unlike', auth, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "UPDATE tienda_escolar SET likes_count = GREATEST(likes_count - 1, 0) WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const [[row]] = await db.query(
+      "SELECT likes_count FROM tienda_escolar WHERE id = ?",
+      [id]
+    );
+
+    res.json({ likes: row.likes_count });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al quitar like" });
+  }
+});
+
+
 // ------------- TIENDA ESCOLAR: crear oferta ----------------------------
 app.post('/api/tienda-escolar/:id/ofertas', auth, async (req, res) => {
   const productoId = req.params.id;
@@ -517,6 +571,60 @@ app.get('/api/tienda-extraescolar', auth, async (req, res) => {
     res.status(500).json({ error: "Error al obtener productos de tienda extraescolar" });
   }
 });
+
+// ------------- TIENDA EXTRAESCOLAR: like producto ------------------------
+app.post('/api/tienda-extraescolar/:id/like', auth, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "UPDATE tienda_extraescolar SET likes_count = likes_count + 1 WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const [[row]] = await db.query(
+      "SELECT likes_count FROM tienda_extraescolar WHERE id = ?",
+      [id]
+    );
+
+    res.json({ likes: row.likes_count });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al hacer like" });
+  }
+});
+
+app.post('/api/tienda-extraescolar/:id/unlike', auth, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "UPDATE tienda_extraescolar SET likes_count = GREATEST(likes_count - 1, 0) WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const [[row]] = await db.query(
+      "SELECT likes_count FROM tienda_extraescolar WHERE id = ?",
+      [id]
+    );
+
+    res.json({ likes: row.likes_count });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al quitar like" });
+  }
+});
+
 
 // ------------- TIENDA EXTRAESCOLAR: crear oferta ----------------------------
 app.post('/api/tienda-extraescolar/:id/ofertas', auth, async (req, res) => {
