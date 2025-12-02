@@ -1,178 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ConoCEU · Publicaciones</title>
-  <link rel="stylesheet" href="css/style_publicaciones.css" />
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <nav class="nav">
-      <a href= "index.html" class="logo">ConoCEU</a>
-      <div class="nav-center">
-        <span>Novedades</span>
-        <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
-          <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
-        </svg>
-      </div>
-      <div class="nav-actions">
-        <a href="Chats.html" class="icon-btn" aria-label="Mensajes" title="Mensajes">
-          <svg class="icon" viewBox="0 0 24 24">
-            <path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"></path>
-          </svg>
-        </a>
-        <a href="Notificaciones.html "class="icon-btn" aria-label="Notificaciones" title="Notificaciones">
-          <svg class="icon" viewBox="0 0 24 24">
-            <path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"></path>
-          </svg>
-        </a>
-        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
-          <svg class="icon" viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M4 21a8 8 0 0 1 16 0"></path>
-          </svg>
-        </a>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Contenido -->
-  <main class="wrap">
-    <!-- Lado izquierdo: Anuncio -->
-    <aside class="panel ad">
-      <h3>Anuncio</h3>
-        <div class="video-wrapper">
-        <video
-            class="ad-video"
-            src="anuncios/AnuncioNike.mp4"
-            playsinline
-            controls
-            muted
-            loop 
-            autoplay
-            preload="metadata"
-            poster="anuncios/poster_anuncio.jpg"> 
-        </video>
-        </div>
-    </aside>
-
-    <!-- Centro: Feed -->
-    <section class="feed">
-      <!-- Publicación de prueba -->
-      <article class="post" data-post-id="1">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">nombreDeUsuario</div>
-            <div class="muted" style="font-size:12px">Facultad de Informática · hace 2 h</div>
-          </div>
-        </header>
-        <div class="post-media" aria-label="Imagen de la publicación">
-          <div class="ph">
-            <img src="img/publicacion_nuevo logo ceu.png" alt="Logo de Publicaciones de ConoCEU" />
-          </div>
-        </div>
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-              </svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-              </svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="post-meta">
-          <div><b><span class="likes">128</span> Me gusta</b></div>
-          <div><b>nombreDeUsuario</b> ¡Hola CEU! Aquí esta el nuevo logo del <b>CEU</b>. #bienvenidos</div>
-          <div class="muted">Ver los 9 comentarios</div>
-        </div>
-      </article>
-
-      <!-- Otra publicación (duplicable) -->
-      <article class="post">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">otraPersona</div>
-            <div class="muted" style="font-size:12px">Argentina · hace 1 d</div>
-          </div>
-        </header>
-        <div class="post-media" aria-label="Imagen de la publicación">
-          <div class="ph">
-            <img src="img/Publicacion_messi ballon de oro.jpg" alt="Maqueta de un pabellón" />
-          </div>
-        </div>
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-              </svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-              </svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="post-meta">
-          <div><b><span class="likes">42</span> Me gusta</b></div>
-          <div><b>otraPersona</b> VISCA BARCA </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Lado derecho: Buscador -->
-    <aside class="panel search">
-      <h3>Buscar alumno</h3>
-      <div class="searchbar">
-        <input id="buscar" type="text" placeholder="Buscar alumno" value="M" aria-label="Buscar alumno" />
-        <span class="magnify" aria-hidden="true">
-          <svg class="icon" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="M21 21l-4-4"></path>
-          </svg>
-        </span>
-      </div>
-      <ul id="resultados" class="results" aria-live="polite"></ul>
-    </aside>
-  </main>
-
   <!-- Interacción -->
   <script>
-    // Interacciones de los botones de cada post
+    // Interacciones de los botones de cada post  (TU CÓDIGO)
     const posts = document.querySelectorAll('.post');
 
     posts.forEach(post => {
@@ -208,7 +36,7 @@
       });
     });
 
-    // Buscador de alumnos (demo)
+    // Buscador de alumnos (demo)  (TU CÓDIGO)
     const alumnos = [
       'Manuel X','Manolo Y','Miguel Z','María P','Marcos Q','Marta L',
       'Andrea V','Lucía R','Javier S','Carmen T'
@@ -231,6 +59,145 @@
 
     // Estado inicial con “M”
     render(input.value);
+
+    // ==================== INTEGRACIÓN CON BACKEND (CÓDIGO NUEVO) ====================
+
+    // URL base de tu API (ajusta el puerto si es otro)
+    const API_BASE = 'http://localhost:3000';
+
+    // Recuperar token JWT guardado al hacer login
+    function getToken() {
+      return localStorage.getItem('token'); // en la pantalla de login: localStorage.setItem('token', token);
+    }
+
+    // Cargar publicaciones reales desde /api/publicaciones
+    async function cargarPublicaciones() {
+      const token = getToken();
+      if (!token) {
+        console.warn('No hay token; deberías redirigir a login');
+        // window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/publicaciones?limit=20`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error('Error HTTP ' + res.status);
+        }
+
+        const publicaciones = await res.json();
+
+        const feed = document.querySelector('.feed');
+        // Eliminamos las publicaciones de prueba del HTML estático
+        feed.innerHTML = '';
+
+        publicaciones.forEach(p => {
+          const article = document.createElement('article');
+          article.className = 'post';
+          article.dataset.postId = p.id;
+
+          article.innerHTML = `
+            <header class="post-head">
+              <div class="avatar" aria-hidden="true">
+                ${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}">` : ''}
+              </div>
+              <div>
+                <div class="username">${p.username}</div>
+                <div class="muted" style="font-size:12px">
+                  ${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}
+                </div>
+              </div>
+            </header>
+            <div class="post-media" aria-label="Imagen de la publicación">
+              <div class="ph">
+                <img src="${p.foto}" alt="Publicación de ${p.username}" />
+              </div>
+            </div>
+            <div class="post-actions">
+              <div class="left-actions">
+                <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+                  </svg>
+                </button>
+                <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
+                  </svg>
+                </button>
+                <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="right-actions">
+                <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="post-meta">
+              <div><b><span class="likes">${p.likes_count ?? 0}</span> Me gusta</b></div>
+              <div><b>${p.username}</b> ${p.texto || ''}</div>
+              <div class="muted">Comentarios: ${p.comments_count ?? 0}</div>
+            </div>
+          `;
+
+          feed.appendChild(article);
+        });
+
+        // Volver a enganchar los listeners de like/comment/share sobre los nuevos posts
+        const nuevosPosts = document.querySelectorAll('.post');
+        nuevosPosts.forEach(post => {
+          post.addEventListener('click', (e) => {
+            const btn = e.target.closest('.action');
+            if (!btn) return;
+
+            const action = btn.dataset.action;
+
+            if (action === 'like') {
+              btn.classList.toggle('active');
+              const likesEl = post.querySelector('.likes');
+              if (likesEl) {
+                let n = parseInt(likesEl.textContent, 10);
+                likesEl.textContent = btn.classList.contains('active') ? (n + 1) : Math.max(0, n - 1);
+              }
+            }
+
+            if (action === 'bookmark') {
+              btn.classList.toggle('active');
+            }
+
+            if (action === 'comment') {
+              alert('Abrir modal de comentarios (pendiente de integrar).');
+            }
+
+            if (action === 'share') {
+              navigator.clipboard?.writeText(location.href).then(() => {
+                btn.classList.add('active');
+                setTimeout(() => btn.classList.remove('active'), 500);
+              });
+            }
+          });
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert('Error cargando publicaciones');
+      }
+    }
+
+    // Llamada inicial para cargar el feed real desde el backend
+    cargarPublicaciones();
+
   </script>
 </body>
 </html>
