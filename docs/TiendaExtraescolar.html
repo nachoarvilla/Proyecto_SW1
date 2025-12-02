@@ -56,7 +56,7 @@
     <!-- Centro: Lista de objetos en venta (extraescolar) -->
     <section class="feed">
       <!-- Item 1 -->
-      <article class="post" data-item="Balón de fútbol">
+      <article class="post" data-item="Balón de fútbol" data-product-id="4">
         <header class="post-head">
           <div class="avatar"></div>
           <div>
@@ -81,6 +81,7 @@
             <button class="action like" aria-label="Me gusta" title="Me gusta">
               <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -102,7 +103,7 @@
       </article>
 
       <!-- Item 2 -->
-      <article class="post" data-item="Set pinceles y témperas">
+      <article class="post" data-item="Banana artística" data-product-id="5">
         <header class="post-head">
           <div class="avatar"></div>
           <div>
@@ -127,6 +128,7 @@
             <button class="action like" aria-label="Me gusta" title="Me gusta">
               <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -148,7 +150,7 @@
       </article>
 
       <!-- Item 3 -->
-      <article class="post" data-item="Raqueta de bádminton">
+      <article class="post" data-item="Balón de Oro" data-product-id="6">
         <header class="post-head">
           <div class="avatar"></div>
           <div>
@@ -173,6 +175,7 @@
             <button class="action like" aria-label="Me gusta" title="Me gusta">
               <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
             </button>
+            <span class="likes-count">0</span>
             <button class="action comment" aria-label="Comentar" title="Comentar">
               <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
             </button>
@@ -189,7 +192,7 @@
         </div>
 
         <div class="post-meta">
-          <div><b>Descripción</b> Peso ligero, cuerda media, perfecta para iniciación.</div>
+          <div><b>Descripción</b> Balón de oro de 2025.</div>
         </div>
       </article>
     </section>
@@ -277,6 +280,59 @@
                      e.clientY >= rect.top  && e.clientY <= rect.bottom;
       if (!inside) dialog.close();
     });
+    const API_URL = "https://conoceu-backend.onrender.com";
+
+  function getToken() {
+    return localStorage.getItem("token");
+  }
+
+  async function likeProductoExtraescolar(productId) {
+    const res = await fetch(`${API_URL}/api/tienda-extraescolar/${productId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + getToken()
+      }
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || "Error al hacer like");
+    }
+
+    return res.json(); // { likes: N }
+  }
+
+  document.addEventListener("click", async (e) => {
+    const likeBtn = e.target.closest(".action.like");
+    if (!likeBtn) return;
+
+    const token = getToken();
+    if (!token) {
+      alert("Inicia sesión para dar like.");
+      return;
+    }
+
+    const article = likeBtn.closest(".post");
+    const productId = article?.dataset.productId;
+    if (!productId) {
+      console.warn("Falta data-product-id en el artículo extraescolar");
+      return;
+    }
+
+    const likesSpan = article.querySelector(".likes-count");
+
+    try {
+      const data = await likeProductoExtraescolar(productId);
+      likeBtn.classList.add("liked");
+      if (likesSpan && typeof data.likes === "number") {
+        likesSpan.textContent = data.likes;
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "No se pudo registrar el like");
+    }
+  });
   </script>
 </body>
 </html>
