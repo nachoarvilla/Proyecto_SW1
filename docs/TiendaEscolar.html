@@ -272,22 +272,64 @@
       dialog.close();
     });
 
-    // Confirmar oferta -> actualizar botón
-    offerForm.addEventListener('submit', (e) => {
+    // Confirmar oferta -> guardar en backend y actualizar botón
+    offerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const value = parseFloat(offerInput.value);
       if (isNaN(value) || value < 0.10) {
         offerInput.focus();
         return;
       }
-      if (lastOfferBtn) {
+      if (!lastOfferBtn) {
+        dialog.close();
+        return;
+      }
+
+      const article = lastOfferBtn.closest('.post');
+      const productId = article?.dataset.productId;
+      if (!productId) {
+        console.warn("Falta data-product-id en el artículo");
+        dialog.close();
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Inicia sesión para enviar una oferta.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://conoceu-backend.onrender.com/api/tienda-escolar/${productId}/ofertas`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ cantidad: value })
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          console.error(err);
+          alert(err.error || "No se pudo registrar la oferta.");
+          return;
+        }
+
+        // Si el backend responde OK, actualizamos el botón como antes
         lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
         lastOfferBtn.classList.add('offered');
         lastOfferBtn.dataset.default = value.toFixed(2);
         lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${value.toFixed(2)} euros`);
+
+        dialog.close();
+      } catch (err) {
+        console.error(err);
+        alert("Error de conexión al guardar la oferta.");
       }
-      dialog.close();
     });
+
 
     // Cerrar con click fuera del modal-card
     dialog.addEventListener('click', (e) => {

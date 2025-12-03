@@ -261,18 +261,66 @@
 
     cancelOffer.addEventListener('click', () => dialog.close());
 
-    offerForm.addEventListener('submit', (e) => {
+    offerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const value = parseFloat(offerInput.value);
-      if (isNaN(value) || value < 0.10) { offerInput.focus(); return; }
-      if (lastOfferBtn) {
+      if (isNaN(value) || value < 0.10) {
+        offerInput.focus();
+        return;
+      }
+      if (!lastOfferBtn) {
+        dialog.close();
+        return;
+      }
+
+      const article = lastOfferBtn.closest('.post');
+      const productId = article?.dataset.productId;
+      if (!productId) {
+        console.warn("Falta data-product-id en el artículo extraescolar");
+        dialog.close();
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Inicia sesión para enviar una oferta.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/tienda-extraescolar/${productId}/ofertas`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ cantidad: value })
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          console.error(err);
+          alert(err.error || "No se pudo registrar la oferta extraescolar.");
+          return;
+        }
+
+        // Si todo fue bien en backend, actualizamos el botón como antes
         lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
         lastOfferBtn.classList.add('offered');
         lastOfferBtn.dataset.default = value.toFixed(2);
-        lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${value.toFixed(2)} euros`);
+        lastOfferBtn.setAttribute(
+          'aria-label',
+          `Oferta enviada de ${value.toFixed(2)} euros`
+        );
+
+        dialog.close();
+      } catch (err) {
+        console.error(err);
+        alert("Error de conexión al guardar la oferta extraescolar.");
       }
-      dialog.close();
     });
+
 
     dialog.addEventListener('click', (e) => {
       const rect = offerForm.getBoundingClientRect();
