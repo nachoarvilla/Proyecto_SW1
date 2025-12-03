@@ -118,7 +118,7 @@
           <div class="intereses" id="interests-section">
             <h4>Intereses</h4>
             <div class="chips" id="profile-interests">
-              <!-- Se rellenará desde JS si existen intereses -->
+              <!-- Relleno dinámico -->
             </div>
           </div>
         </section>
@@ -165,9 +165,7 @@
     }
 
     function setAvatarFromName(fullName) {
-      const avatar = document.getElementById('profile-avatar');
       const initialsSpan = document.getElementById('profile-avatar-initials');
-
       if (!fullName) {
         initialsSpan.textContent = 'CEU';
         return;
@@ -230,7 +228,7 @@
         document.getElementById('info-birthdate').textContent =
           formatearFecha(user.fecha_nacimiento);
 
-        // Intereses (si existen en el objeto user.intereses como array o string)
+        // Intereses
         const interestsSection = document.getElementById('interests-section');
         const interestsContainer = document.getElementById('profile-interests');
         interestsContainer.innerHTML = '';
@@ -255,7 +253,7 @@
           interestsSection.style.display = 'none';
         }
 
-        // Foto de perfil opcional
+        // Foto de perfil
         if (user.foto_perfil) {
           const avatar = document.getElementById('profile-avatar');
           avatar.style.backgroundImage = 'url(' + user.foto_perfil + ')';
@@ -290,7 +288,15 @@
         });
       }
 
-      // De momento, los botones de Publicaciones y Tienda son placeholders
+      // Editar perfil -> Configuración
+      const editBtn = document.getElementById('btn-edit-profile');
+      if (editBtn) {
+        editBtn.addEventListener('click', function () {
+          window.location.href = 'Configuracion.html';
+        });
+      }
+
+      // Placeholders publicaciones / tienda
       document.getElementById('btn-publications').addEventListener('click', () => {
         alert('La sección de publicaciones estará disponible próximamente.');
       });

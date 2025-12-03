@@ -107,6 +107,7 @@ body {
   grid-template-columns: 260px minmax(0, 1fr) 260px;
   gap: 18px;
   padding: 0 20px 24px;
+  align-items: stretch; /* para que las columnas laterales puedan ocupar toda la altura */
 }
 
 /* COLUMNAS */
@@ -118,7 +119,7 @@ body {
 
 .col-side {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 /* CARDS GENERALES */
@@ -289,7 +290,8 @@ body {
 /* ANUNCIOS */
 .video-container {
   width: 100%;
-  max-height: 520px;
+  height: 100%;          /* ocupa toda la altura de la fila */
+  max-height: none;
   overflow: hidden;
   border-radius: 18px;
   box-shadow:
