@@ -170,6 +170,27 @@ app.get('/api/profile', auth, async (req, res) => {
   }
 });
 
+// ------------- USUARIOS: buscar por nombre/username -------------------
+app.get('/api/users/search', auth, async (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q) return res.json([]);
+
+  try {
+    const like = '%' + q + '%';
+    const [rows] = await db.query(
+      `SELECT id, username, nombre, apellido, grado, curso, pais, ciudad, foto_perfil
+       FROM users
+       WHERE username LIKE ? OR nombre LIKE ? OR apellido LIKE ?
+       ORDER BY nombre LIMIT 10`,
+      [like, like, like]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error buscando usuarios' });
+  }
+});
+
 // ------------- PUBLICACIONES: crear ------------------------
 app.post('/api/publicaciones', auth, async (req, res) => {
   const { foto, texto, ubicacion } = req.body;
