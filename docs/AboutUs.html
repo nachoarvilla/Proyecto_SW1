@@ -85,7 +85,35 @@
   </footer>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  (function () {
+    function applyThemePreference(prefFromStorage) {
+      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+      }
+
+      if (pref === 'system') {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', e => {
+          const current = localStorage.getItem('cfg_theme') || 'system';
+          if (current === 'system') {
+            setTheme(e.matches ? 'dark' : 'light');
+          }
+        });
+      } else {
+        setTheme(pref);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      applyThemePreference();
+    });
+  })();
+</script>
+
 </body>
 </html>

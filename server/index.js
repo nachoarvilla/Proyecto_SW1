@@ -775,6 +775,133 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
   }
 });
 
+// Actualizar perfil del usuario logueado
+app.put('/api/profile', authenticateToken, async (req, res) => {
+  const userId = req.user.id; // o req.user.userId según tu middleware
+  const {
+    nombre,
+    apellido,
+    grado,
+    curso,
+    edad,
+    fecha_nacimiento,
+    ciudad,
+    pais,
+    foto_perfil,
+  } = req.body;
+
+  try {
+    const result = await pool.query(
+      `UPDATE usuarios
+       SET nombre = $1,
+           apellido = $2,
+           grado = $3,
+           curso = $4,
+           edad = $5,
+           fecha_nacimiento = $6,
+           ciudad = $7,
+           pais = $8,
+           foto_perfil = $9
+       WHERE id = $10
+       RETURNING id`,
+      [
+        nombre || null,
+        apellido || null,
+        grado || null,
+        curso || null,
+        edad || null,
+        fecha_nacimiento || null,
+        ciudad || null,
+        pais || null,
+        foto_perfil || null,
+        userId
+      ]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.json({ message: 'Perfil actualizado' });
+  } catch (err) {
+    console.error('Error actualizando perfil', err);
+    res.status(500).json({ error: 'Error al actualizar el perfil' });
+  }
+});
+
+// Cambiar contraseña
+app.post('/api/change-password', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Faltan datos' });
+  }
+
+  try {
+    const userRes = await pool.query(
+      'SELECT password_hash FROM usuarios WHERE id = $1',
+      [userId]
+    );
+
+    if (userRes.rowCount === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes.rows[0].password_hash;
+    const ok = await bcrypt.compare(currentPassword, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await pool.query(
+      'UPDATE usuarios SET password_hash = $1 WHERE id = $2',
+      [newHash, userId]
+    );
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    console.error('Error cambiando contraseña', err);
+    res.status(500).json({ error: 'Error al cambiar la contraseña' });
+  }
+});
+
+// Eliminar cuenta
+app.delete('/api/account', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: 'Contraseña requerida' });
+  }
+
+  try {
+    const userRes = await pool.query(
+      'SELECT password_hash FROM usuarios WHERE id = $1',
+      [userId]
+    );
+
+    if (userRes.rowCount === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes.rows[0].password_hash;
+    const ok = await bcrypt.compare(password, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
+
+    // Aquí puedes borrar en cascada datos relacionados si hace falta
+    await pool.query('DELETE FROM usuarios WHERE id = $1', [userId]);
+
+    res.json({ message: 'Cuenta eliminada' });
+  } catch (err) {
+    console.error('Error eliminando cuenta', err);
+    res.status(500).json({ error: 'Error al eliminar la cuenta' });
+  }
+});
+
 
 // Lanzar servidor
 const PORT = process.env.PORT || 3000;
