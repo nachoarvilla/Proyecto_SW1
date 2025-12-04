@@ -37,107 +37,95 @@
     <!-- Título -->
     <div class="page-title">Perfil</div>
 
-    <!-- Layout -->
+    <!-- Layout principal -->
     <main class="layout">
-      <!-- Columna izquierda -->
-      <aside class="col-left">
-        <section class="card info-card">
-          <h3>Información</h3>
-
-          <dl class="info-grid">
-            <div>
-              <dt>Usuario</dt>
-              <dd id="profile-username">@usuarioCEU</dd>
-            </div>
-            <div>
-              <dt>Nombre</dt>
-              <dd id="profile-name">Nombre Apellidos</dd>
-            </div>
-            <div>
-              <dt>Grado</dt>
-              <dd id="profile-degree">Ing. Sistemas de Información</dd>
-            </div>
-            <div>
-              <dt>Curso</dt>
-              <dd id="profile-year">3º</dd>
-            </div>
-            <div>
-              <dt>Email</dt>
-              <dd id="profile-email">usuario@ceu.es</dd>
-            </div>
-            <div>
-              <dt>País</dt>
-              <dd id="profile-country">España</dd>
-            </div>
-            <div>
-              <dt>Ciudad</dt>
-              <dd id="profile-city">Madrid</dd>
-            </div>
-          </dl>
-
-          <div class="intereses">
-            <h4>Intereses</h4>
-            <div class="chips" id="profile-interests">
-              <span class="chip">Tecnología</span>
-              <span class="chip">Deporte</span>
-              <span class="chip">Música</span>
-            </div>
-          </div>
-        </section>
+      <!-- Columna izquierda: anuncio -->
+      <aside class="col-side">
+        <div class="ad video-container">
+          <video
+            src="anuncios/AnuncioAdidas.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            controlslist="nodownload noplaybackrate"
+            disablepictureinpicture
+            oncontextmenu="return false;"
+          ></video>
+        </div>
       </aside>
 
-      <!-- Columna central -->
+      <!-- Columna central: perfil -->
       <section class="col-center">
+        <!-- Cabecera de perfil -->
         <div class="card profile-header">
-          <div class="avatar" aria-hidden="true" id="profile-avatar">
-            Foto<br>placeholder
+          <div class="avatar" id="profile-avatar">
+            <span id="profile-avatar-initials">CEU</span>
           </div>
 
           <div class="profile-meta">
-            <h2 id="profile-fullname">Nombre Apellidos</h2>
-            <p class="subtitle" id="profile-subtitle">Estudiante CEU · Madrid</p>
+            <h2 id="profile-fullname">Tu nombre</h2>
+            <p class="subtitle" id="profile-subtitle">Tu grado · Ciudad · País</p>
 
             <div class="profile-actions">
-              <button class="btn btn-primary">Enviar mensaje</button>
-              <button class="btn">Editar perfil</button>
-              <button class="btn btn-ghost">Compartir</button>
+              <button class="btn btn-primary" id="btn-edit-profile">Editar perfil</button>
+              <button class="btn" id="btn-publications">Publicaciones</button>
+              <button class="btn" id="btn-store">Tienda</button>
               <button class="btn btn-ghost" id="logout-btn">Cerrar sesión</button>
             </div>
-
-            <nav class="tabs">
-              <button class="tab active">Publicaciones</button>
-              <button class="tab">Tienda</button>
-              <button class="tab">Chats</button>
-              <button class="tab">Info</button>
-            </nav>
           </div>
         </div>
 
-        <!-- Publicaciones (por ahora estático) -->
-        <article class="card post">
-          <h4>Apuntes de Sistemas</h4>
-          <div class="post-meta">hoy · #IS · 3º</div>
-          <p>Comparto resumen de la unidad 2. ¡Éxitos!</p>
-          <div class="post-actions">
-            <span>🔥 12</span>
-            <span>💬 3</span>
-            <a href="#" class="link">🔗 Compartir</a>
-          </div>
-        </article>
+        <!-- Información del usuario -->
+        <section class="card profile-info">
+          <h3>Información personal</h3>
+          <dl class="info-grid">
+            <div>
+              <dt>Usuario</dt>
+              <dd id="info-username">@usuario</dd>
+            </div>
+            <div>
+              <dt>Nombre completo</dt>
+              <dd id="info-name">—</dd>
+            </div>
+            <div>
+              <dt>Grado</dt>
+              <dd id="info-degree">—</dd>
+            </div>
+            <div>
+              <dt>Curso</dt>
+              <dd id="info-year">—</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd id="info-email">—</dd>
+            </div>
+            <div>
+              <dt>País</dt>
+              <dd id="info-country">—</dd>
+            </div>
+            <div>
+              <dt>Ciudad</dt>
+              <dd id="info-city">—</dd>
+            </div>
+            <div>
+              <dt>Fecha de nacimiento</dt>
+              <dd id="info-birthdate">—</dd>
+            </div>
+          </dl>
 
-        <article class="card post">
-          <h4>Club de running CEU</h4>
-          <div class="post-meta">ayer · #deporte</div>
-          <p>Salimos los jueves 19:00 desde Moncloa. ¡Únete!</p>
-          <div class="post-actions">
-            <span>🔥 7</span>
-            <span>👀 1</span>
+          <div class="intereses" id="interests-section">
+            <h4>Intereses</h4>
+            <div class="chips" id="profile-interests">
+              <!-- Relleno dinámico -->
+            </div>
           </div>
-        </article>
+        </section>
       </section>
 
-      <!-- Columna derecha: anuncio con video local -->
-      <aside class="col-right">
+      <!-- Columna derecha: anuncio -->
+      <aside class="col-side">
         <div class="ad video-container">
           <video
             src="anuncios/AnuncioAdidas.mp4"
@@ -155,7 +143,7 @@
     </main>
 
     <!-- Engranaje -->
-    <button class="gear" aria-label="Ajustes" title="Ajustes">
+    <button class="gear" aria-label="Ajustes" title="Ajustes" id="settings-btn">
       <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
         <path d="M19.14 12.94a7.43 7.43 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.23l-2.39.96a7.36 7.36 0 0 0-1.63-.95l-.36-2.55a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.55c-.57.23-1.12.54-1.63.95l-2.39-.96a.5.5 0 0 0-.6.23L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.43 7.43 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.23l2.39-.96c.51.41 1.06.72 1.63.95l.36 2.55c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.55c.57-.23 1.12-.54 1.63-.95l2.39.96c.21.08.47-.01.6-.23l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z" fill="currentColor"/>
       </svg>
@@ -167,6 +155,27 @@
 
     function redirectToLogin() {
       window.location.href = 'login.html';
+    }
+
+    function formatearFecha(fechaISO) {
+      if (!fechaISO) return '—';
+      const d = new Date(fechaISO);
+      if (isNaN(d.getTime())) return fechaISO;
+      return d.toLocaleDateString('es-ES');
+    }
+
+    function setAvatarFromName(fullName) {
+      const initialsSpan = document.getElementById('profile-avatar-initials');
+      if (!fullName) {
+        initialsSpan.textContent = 'CEU';
+        return;
+      }
+      const parts = fullName.trim().split(/\s+/);
+      let initials = parts[0].charAt(0);
+      if (parts.length > 1) {
+        initials += parts[parts.length - 1].charAt(0);
+      }
+      initialsSpan.textContent = initials.toUpperCase();
     }
 
     async function cargarPerfil() {
@@ -186,7 +195,6 @@
         });
 
         if (!res.ok) {
-          // Token inválido, caducado o usuario no encontrado
           localStorage.removeItem('token');
           redirectToLogin();
           return;
@@ -194,34 +202,67 @@
 
         const user = await res.json();
 
-        // Rellenar datos en la UI
-        const fullName = (user.nombre || '') + ' ' + (user.apellido || '');
+        const fullName = ((user.nombre || '') + ' ' + (user.apellido || '')).trim() || user.username || 'Tu nombre';
+
+        // Cabecera
+        document.getElementById('profile-fullname').textContent = fullName;
+
         const subtitleParts = [];
         if (user.grado) subtitleParts.push(user.grado);
         if (user.ciudad) subtitleParts.push(user.ciudad);
-        if (user.pais && !subtitleParts.includes(user.pais)) subtitleParts.push(user.pais);
-
-        document.getElementById('profile-username').textContent = user.username ? '@' + user.username : '@usuario';
-        document.getElementById('profile-name').textContent = fullName.trim() || 'Nombre Apellidos';
-        document.getElementById('profile-fullname').textContent = fullName.trim() || 'Nombre Apellidos';
-
-        document.getElementById('profile-degree').textContent = user.grado || 'Grado no especificado';
-        document.getElementById('profile-year').textContent = user.curso || '—';
-        document.getElementById('profile-email').textContent = user.email || '';
-        document.getElementById('profile-country').textContent = user.pais || '—';
-        document.getElementById('profile-city').textContent = user.ciudad || '—';
-
+        if (user.pais) subtitleParts.push(user.pais);
         document.getElementById('profile-subtitle').textContent =
-          subtitleParts.length > 0 ? subtitleParts.join(' · ') : 'Estudiante CEU';
+          subtitleParts.length ? subtitleParts.join(' · ') : 'Estudiante CEU';
 
-        // Si hubiera foto de perfil URL podrías usarla para fondo o imagen
+        setAvatarFromName(fullName);
+
+        // Información
+        document.getElementById('info-username').textContent =
+          user.username ? '@' + user.username : '—';
+        document.getElementById('info-name').textContent = fullName || '—';
+        document.getElementById('info-degree').textContent = user.grado || '—';
+        document.getElementById('info-year').textContent = user.curso || '—';
+        document.getElementById('info-email').textContent = user.email || '—';
+        document.getElementById('info-country').textContent = user.pais || '—';
+        document.getElementById('info-city').textContent = user.ciudad || '—';
+        document.getElementById('info-birthdate').textContent =
+          formatearFecha(user.fecha_nacimiento);
+
+        // Intereses
+        const interestsSection = document.getElementById('interests-section');
+        const interestsContainer = document.getElementById('profile-interests');
+        interestsContainer.innerHTML = '';
+
+        let intereses = user.intereses;
+
+        if (Array.isArray(intereses) && intereses.length) {
+          intereses.forEach(i => {
+            const span = document.createElement('span');
+            span.className = 'chip';
+            span.textContent = i;
+            interestsContainer.appendChild(span);
+          });
+        } else if (typeof intereses === 'string' && intereses.trim() !== '') {
+          intereses.split(',').forEach(i => {
+            const span = document.createElement('span');
+            span.className = 'chip';
+            span.textContent = i.trim();
+            interestsContainer.appendChild(span);
+          });
+        } else {
+          interestsSection.style.display = 'none';
+        }
+
+        // Foto de perfil
         if (user.foto_perfil) {
           const avatar = document.getElementById('profile-avatar');
           avatar.style.backgroundImage = 'url(' + user.foto_perfil + ')';
           avatar.style.backgroundSize = 'cover';
           avatar.style.backgroundPosition = 'center';
-          avatar.textContent = '';
+          avatar.classList.add('avatar-image');
+          document.getElementById('profile-avatar-initials').style.display = 'none';
         }
+
       } catch (err) {
         console.error('Error cargando perfil', err);
         localStorage.removeItem('token');
@@ -239,6 +280,29 @@
           redirectToLogin();
         });
       }
+
+      const settingsBtn = document.getElementById('settings-btn');
+      if (settingsBtn) {
+        settingsBtn.addEventListener('click', function () {
+          window.location.href = 'Configuracion.html';
+        });
+      }
+
+      // Editar perfil -> Configuración
+      const editBtn = document.getElementById('btn-edit-profile');
+      if (editBtn) {
+        editBtn.addEventListener('click', function () {
+          window.location.href = 'Configuracion.html';
+        });
+      }
+
+      // Placeholders publicaciones / tienda
+      document.getElementById('btn-publications').addEventListener('click', () => {
+        alert('La sección de publicaciones estará disponible próximamente.');
+      });
+      document.getElementById('btn-store').addEventListener('click', () => {
+        alert('La sección de tienda estará disponible próximamente.');
+      });
     });
   </script>
 </body>
