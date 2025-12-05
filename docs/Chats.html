@@ -44,6 +44,8 @@
       <div id="list-ind" class="ch-list" role="tabpanel" aria-labelledby="tab-ind"></div>
       <div id="list-grp" class="ch-list" role="tabpanel" aria-labelledby="tab-grp" hidden></div>
 
+      <input id="search-user" type="text" placeholder="Buscar usuario..." />
+      <div id="search-results"></div>
       <button id="btn-new-chat" class="ch-new" type="button">Nuevo chat</button>
     </aside>
 
@@ -75,6 +77,7 @@
 
   <!-- Socket.IO client CDN -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="Chats.js"></script>
 
   <script>
   // ------------- CONFIG -------------

@@ -714,16 +714,11 @@ app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
   const chatId = req.params.id;
   const { contenido } = req.body;
 
-  if (!contenido) {
-    return res.status(400).json({ error: "El contenido del mensaje es obligatorio" });
-  }
+  if (!contenido) return res.status(400).json({ error: "Contenido obligatorio" });
 
   try {
-    // Comprobar que el usuario pertenece al chat
     const esMiembro = await userIsMemberOfChat(chatId, req.user.id);
-    if (!esMiembro) {
-      return res.status(403).json({ error: "No perteneces a este chat" });
-    }
+    if (!esMiembro) return res.status(403).json({ error: "No perteneces al chat" });
 
     const [result] = await db.query(
       `INSERT INTO mensajes (chat_id, user_id, contenido)
@@ -731,14 +726,21 @@ app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
       [chatId, req.user.id, contenido]
     );
 
-    return res.status(201).json({
-      message: "Mensaje enviado",
-      id: result.insertId
-    });
+    const mensaje = {
+      id: result.insertId,
+      chatId,
+      contenido,
+      user: { id: req.user.id, username: req.user.username },
+      fecha_envio: new Date()
+    };
 
+    // EMITIR AUTOMÁTICAMENTE
+    io.to("chat_" + chatId).emit("new_message", mensaje);
+
+    res.status(201).json(mensaje);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Error enviando mensaje" });
+    res.status(500).json({ error: "Error enviando mensaje" });
   }
 });
 
@@ -777,6 +779,27 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
     res.status(500).json({ error: "Error al obtener mensajes" });
   }
 });
+// ------------- BUSCAR USUARIOS --------------------
+app.get('/api/users/search', auth, async (req, res) => {
+  const q = req.query.q;
+
+  if (!q) return res.json([]);
+
+  try {
+    const [rows] = await db.query(
+      `SELECT id, username, foto_perfil
+       FROM users
+       WHERE username LIKE ? AND id != ?`,
+      ['%' + q + '%', req.user.id]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error buscando usuarios" });
+  }
+});
+
 
 
 // Lanzar servidor
@@ -784,41 +807,22 @@ const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
-    origin: "*", // Puedes limitarlo a tu frontend
-    methods: ["GET", "POST"]
-  }
+  cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
 io.on("connection", (socket) => {
-  console.log("Nuevo usuario conectado:", socket.id);
+  console.log("Socket conectado:", socket.id);
 
-  // Unirse a un chat
   socket.on("join_chat", (chatId) => {
     socket.join("chat_" + chatId);
-    console.log(`Socket ${socket.id} unido al chat ${chatId}`);
-  });
-
-  // Enviar mensaje realtime
-  socket.on("send_message", (data) => {
-    const { chatId, mensaje, user } = data;
-
-    // reenviar a los clientes del mismo chat
-    io.to("chat_" + chatId).emit("new_message", {
-      chatId,
-      mensaje,
-      user,
-      fecha_envio: new Date()
-    });
   });
 
   socket.on("disconnect", () => {
-    console.log("Usuario desconectado:", socket.id);
+    console.log("Socket desconectado:", socket.id);
   });
 });
 
-// Iniciar servidor
 server.listen(PORT, () => {
-  console.log("Servidor arrancado en el puerto " + PORT);
+  console.log("Servidor con sockets en puerto " + PORT);
 });
 
