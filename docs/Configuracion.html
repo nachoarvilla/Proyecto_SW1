@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/style_configuracion.css" />
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <nav class="nav">
       <a class="logo" href="index.html">ConoCEU</a>
@@ -26,10 +25,8 @@
     </nav>
   </header>
 
-  <!-- Layout -->
   <main class="wrap">
     <section class="panel settings">
-      <!-- Tabs -->
       <div class="tabs" role="tablist">
         <button class="tab active" data-tab="perfil" role="tab" aria-selected="true">Perfil</button>
         <button class="tab" data-tab="seguridad" role="tab">Seguridad y privacidad</button>
@@ -38,12 +35,9 @@
         <button class="tab" data-tab="cuenta" role="tab">Cuenta</button>
       </div>
 
-      <!-- Contenido de tabs -->
       <div class="tabpanels">
-        <!-- PERFIL -->
         <section class="tabpanel show" id="perfil" role="tabpanel">
           <div class="grid-2 perfil-grid">
-            <!-- FOTO PERFIL + URL -->
             <div>
               <label class="label">Foto de perfil</label>
               <div class="avatar-row">
@@ -54,7 +48,6 @@
               <small class="muted">Introduce la URL de tu foto (por ejemplo, de tu almacenamiento o redes).</small>
             </div>
 
-            <!-- NOMBRE / APELLIDO -->
             <div>
               <label class="label">Nombre</label>
               <input id="nombre" class="input" type="text" placeholder="Nombre" />
@@ -63,7 +56,6 @@
               <input id="apellido" class="input" type="text" placeholder="Apellidos" />
             </div>
 
-            <!-- GRADO / CURSO / EDAD -->
             <div>
               <label class="label">Grado</label>
               <input id="grado" class="input" type="text" placeholder="Ing. Sistemas de Información" />
@@ -75,7 +67,6 @@
               <input id="edad" class="input" type="number" min="16" max="99" placeholder="Edad" />
             </div>
 
-            <!-- FECHA / CIUDAD / PAÍS -->
             <div>
               <label class="label">Fecha de nacimiento</label>
               <input id="fecha_nacimiento" class="input" type="date" />
@@ -94,7 +85,6 @@
           </div>
         </section>
 
-        <!-- SEGURIDAD Y PRIVACIDAD -->
         <section class="tabpanel" id="seguridad" role="tabpanel">
           <div class="grid-2">
             <div>
@@ -124,7 +114,6 @@
           </div>
         </section>
 
-        <!-- NOTIFICACIONES (placeholder, sin lógica) -->
         <section class="tabpanel" id="notis" role="tabpanel">
           <p class="muted">
             Las notificaciones aún no están implementadas. Cuando estén disponibles,
@@ -132,7 +121,6 @@
           </p>
         </section>
 
-        <!-- APARIENCIA -->
         <section class="tabpanel" id="apariencia" role="tabpanel">
           <div class="list">
             <label class="radio">
@@ -151,7 +139,6 @@
           </div>
         </section>
 
-        <!-- CUENTA -->
         <section class="tabpanel" id="cuenta" role="tabpanel">
           <div class="card">
             <h4>Eliminar cuenta</h4>
@@ -172,6 +159,7 @@
   </main>
 
   <script>
+    // **CORRECCIÓN:** Usar la URL base de tu backend en Render
     const API_BASE = 'https://conoceu-backend.onrender.com';
 
     const $ = (s, p=document) => p.querySelector(s);
@@ -266,7 +254,8 @@
     function initPerfil(token) {
       $('#foto_perfil').addEventListener('input', () => {
         const url = $('#foto_perfil').value.trim();
-        if (url) $('#avatarPreview').src = url;
+        // Si la URL es vacía, puedes poner un placeholder, si no, actualizas la imagen
+        $('#avatarPreview').src = url || 'img/avatar_placeholder.png'; 
       });
 
       $('#savePerfil').addEventListener('click', async () => {
@@ -286,8 +275,11 @@
           $('#perfilMsg').textContent = 'Nombre y apellido son obligatorios.';
           return;
         }
+        
+        $('#perfilMsg').textContent = 'Guardando...';
 
         try {
+          // **CORRECCIÓN:** El endpoint es /api/profile y el método es PUT.
           const res = await fetch(API_BASE + '/api/profile', {
             method: 'PUT',
             headers: {
@@ -300,11 +292,14 @@
           const data = await res.json().catch(() => ({}));
 
           if (!res.ok) {
+            // **CORRECCIÓN:** Manejo de errores más específico
             $('#perfilMsg').textContent = data.error || 'Error al guardar el perfil.';
             return;
           }
 
           $('#perfilMsg').textContent = 'Perfil actualizado correctamente.';
+          // Recargar el perfil para asegurar que los datos en la UI son los correctos
+          // loadProfile(token); 
           setTimeout(() => $('#perfilMsg').textContent = '', 2000);
         } catch (err) {
           console.error(err);
@@ -354,6 +349,8 @@
           return;
         }
 
+        $('#secMsg').textContent = 'Cambiando contraseña...';
+
         try {
           const res = await fetch(API_BASE + '/api/change-password', {
             method: 'POST',
@@ -368,8 +365,15 @@
           });
 
           const data = await res.json().catch(() => ({}));
+
           if (!res.ok) {
-            $('#passMsg').textContent = data.error || 'No se ha podido cambiar la contraseña.';
+            // **CORRECCIÓN:** Si el error es la contraseña actual incorrecta o weak pass, mostrar en passMsg
+            if (res.status === 401) {
+                $('#passMsg').textContent = data.error || 'Contraseña actual incorrecta.';
+                $('#secMsg').textContent = ''; // Limpiar mensaje de progreso
+            } else {
+                $('#secMsg').textContent = data.error || 'No se ha podido cambiar la contraseña.';
+            }
             return;
           }
 
@@ -378,7 +382,7 @@
           $('#newPassword1').value = '';
           $('#newPassword2').value = '';
           $('#meterBar').style.width = '0%';
-          setTimeout(() => $('#secMsg').textContent = '', 2000);
+          setTimeout(() => $('#secMsg').textContent = '', 3000);
         } catch (err) {
           console.error(err);
           $('#secMsg').textContent = 'Error de conexión con el servidor.';
@@ -417,7 +421,10 @@
         const ok = confirm('¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');
         if (!ok) return;
 
+        $('#delMsg').textContent = 'Eliminando cuenta...';
+
         try {
+          // **CORRECCIÓN:** Endpoint DELETE correcto
           const res = await fetch(API_BASE + '/api/account', {
             method: 'DELETE',
             headers: {
@@ -447,7 +454,8 @@
 
     /* ===================== INIT ===================== */
     document.addEventListener('DOMContentLoaded', () => {
-      applyThemePreference();
+      // **CORRECCIÓN:** Llamar a applyThemePreference al inicio para cargar el tema inmediatamente
+      applyThemePreference(); 
       initTabs();
 
       const token = getTokenOrRedirect();

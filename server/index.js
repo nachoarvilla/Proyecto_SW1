@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
+const db = require('./db'); // pool de mysql2/promise
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -144,7 +144,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// ------------- PERFIL ------------------------
+// ------------- PERFIL: obtener ------------------------
 app.get('/api/profile', auth, async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -166,6 +166,146 @@ app.get('/api/profile', auth, async (req, res) => {
     res.status(500).json({ error: "Error al obtener perfil" });
   }
 });
+
+// ------------- PERFIL: actualizar ------------------------
+app.put('/api/profile', auth, async (req, res) => {
+  const userId = req.user.id;
+  const {
+    nombre,
+    apellido,
+    grado,
+    curso,
+    edad,
+    fecha_nacimiento,
+    ciudad,
+    pais,
+    foto_perfil,
+  } = req.body;
+
+  // Corregir la validación de campos obligatorios para el UPDATE
+  if (!nombre || !apellido) {
+      return res.status(400).json({ error: 'Nombre y apellido son obligatorios.' });
+  }
+
+  try {
+    const sql = `
+      UPDATE users
+      SET nombre = ?,
+          apellido = ?,
+          grado = ?,
+          curso = ?,
+          edad = ?,
+          fecha_nacimiento = ?,
+          ciudad = ?,
+          pais = ?,
+          foto_perfil = ?
+      WHERE id = ?
+    `;
+
+    const [result] = await db.query(sql,
+      [
+        nombre,
+        apellido,
+        grado || null,
+        curso || null,
+        edad || null,
+        fecha_nacimiento || null,
+        ciudad || null,
+        pais || null,
+        foto_perfil || null,
+        userId
+      ]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado o sin cambios' });
+    }
+
+    res.json({ message: 'Perfil actualizado' });
+  } catch (err) {
+    console.error('Error actualizando perfil', err);
+    res.status(500).json({ error: 'Error al actualizar el perfil' });
+  }
+});
+
+// ------------- SEGURIDAD: cambiar contraseña ------------------------
+app.post('/api/change-password', auth, async (req, res) => {
+  const userId = req.user.id;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Faltan datos' });
+  }
+
+  try {
+    const [userRes] = await db.query(
+      'SELECT password_hash FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (userRes.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes[0].password_hash;
+    const ok = await bcrypt.compare(currentPassword, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await db.query(
+      'UPDATE users SET password_hash = ? WHERE id = ?',
+      [newHash, userId]
+    );
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    console.error('Error cambiando contraseña', err);
+    res.status(500).json({ error: 'Error al cambiar la contraseña' });
+  }
+});
+
+// ------------- CUENTA: eliminar cuenta ------------------------
+app.delete('/api/account', auth, async (req, res) => {
+  const userId = req.user.id;
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: 'Contraseña requerida' });
+  }
+
+  try {
+    const [userRes] = await db.query(
+      'SELECT password_hash FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (userRes.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes[0].password_hash;
+    const ok = await bcrypt.compare(password, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
+
+    // El borrado en cascada se delega a la configuración de la BD,
+    // pero aquí eliminamos el registro principal.
+    const [deleteResult] = await db.query('DELETE FROM users WHERE id = ?', [userId]);
+
+    if (deleteResult.affectedRows === 0) {
+        return res.status(500).json({ error: 'Error al intentar eliminar el usuario' });
+    }
+
+    res.json({ message: 'Cuenta eliminada' });
+  } catch (err) {
+    console.error('Error eliminando cuenta', err);
+    res.status(500).json({ error: 'Error al eliminar la cuenta' });
+  }
+});
+
 
 // ------------- PUBLICACIONES: crear ------------------------
 app.post('/api/publicaciones', auth, async (req, res) => {
@@ -772,133 +912,6 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error al obtener mensajes" });
-  }
-});
-
-// Actualizar perfil del usuario logueado
-app.put('/api/profile', authenticateToken, async (req, res) => {
-  const userId = req.user.id; // o req.user.userId según tu middleware
-  const {
-    nombre,
-    apellido,
-    grado,
-    curso,
-    edad,
-    fecha_nacimiento,
-    ciudad,
-    pais,
-    foto_perfil,
-  } = req.body;
-
-  try {
-    const result = await pool.query(
-      `UPDATE usuarios
-       SET nombre = $1,
-           apellido = $2,
-           grado = $3,
-           curso = $4,
-           edad = $5,
-           fecha_nacimiento = $6,
-           ciudad = $7,
-           pais = $8,
-           foto_perfil = $9
-       WHERE id = $10
-       RETURNING id`,
-      [
-        nombre || null,
-        apellido || null,
-        grado || null,
-        curso || null,
-        edad || null,
-        fecha_nacimiento || null,
-        ciudad || null,
-        pais || null,
-        foto_perfil || null,
-        userId
-      ]
-    );
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    res.json({ message: 'Perfil actualizado' });
-  } catch (err) {
-    console.error('Error actualizando perfil', err);
-    res.status(500).json({ error: 'Error al actualizar el perfil' });
-  }
-});
-
-// Cambiar contraseña
-app.post('/api/change-password', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { currentPassword, newPassword } = req.body;
-
-  if (!currentPassword || !newPassword) {
-    return res.status(400).json({ error: 'Faltan datos' });
-  }
-
-  try {
-    const userRes = await pool.query(
-      'SELECT password_hash FROM usuarios WHERE id = $1',
-      [userId]
-    );
-
-    if (userRes.rowCount === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    const passwordHash = userRes.rows[0].password_hash;
-    const ok = await bcrypt.compare(currentPassword, passwordHash);
-    if (!ok) {
-      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
-    }
-
-    const newHash = await bcrypt.hash(newPassword, 10);
-    await pool.query(
-      'UPDATE usuarios SET password_hash = $1 WHERE id = $2',
-      [newHash, userId]
-    );
-
-    res.json({ message: 'Contraseña actualizada correctamente' });
-  } catch (err) {
-    console.error('Error cambiando contraseña', err);
-    res.status(500).json({ error: 'Error al cambiar la contraseña' });
-  }
-});
-
-// Eliminar cuenta
-app.delete('/api/account', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { password } = req.body;
-
-  if (!password) {
-    return res.status(400).json({ error: 'Contraseña requerida' });
-  }
-
-  try {
-    const userRes = await pool.query(
-      'SELECT password_hash FROM usuarios WHERE id = $1',
-      [userId]
-    );
-
-    if (userRes.rowCount === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    const passwordHash = userRes.rows[0].password_hash;
-    const ok = await bcrypt.compare(password, passwordHash);
-    if (!ok) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
-    }
-
-    // Aquí puedes borrar en cascada datos relacionados si hace falta
-    await pool.query('DELETE FROM usuarios WHERE id = $1', [userId]);
-
-    res.json({ message: 'Cuenta eliminada' });
-  } catch (err) {
-    console.error('Error eliminando cuenta', err);
-    res.status(500).json({ error: 'Error al eliminar la cuenta' });
   }
 });
 
