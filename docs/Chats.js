@@ -1,4 +1,4 @@
-const API = "http://localhost:3000";
+const API = "https://conoceu-backend.onrender.com";
 const token = localStorage.getItem("token");
 const user = JSON.parse(localStorage.getItem("user"));
 
