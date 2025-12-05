@@ -19,6 +19,11 @@ async function loadChats() {
   });
   const chats = await res.json();
 
+  if (!Array.isArray(chats)) {
+  console.warn("La API devolvió:", chats);
+  return; // evita el crash
+  }
+
   listInd.innerHTML = "";
   listGrp.innerHTML = "";
 

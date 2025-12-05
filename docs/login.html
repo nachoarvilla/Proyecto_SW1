@@ -47,7 +47,7 @@
   </div>
 
   <script>
-    const API_BASE = 'https://conoceu-backend.onrender.com';
+    const API_BASE = 'http://localhost:3000';
 
     function showMessage(text, type) {
       const box = document.getElementById('auth-message');
@@ -97,6 +97,7 @@
           }
 
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.usuario)); // <-- NECESARIO
           window.location.href = 'Perfil.html';
         } catch (err) {
           console.error(err);
