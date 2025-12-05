@@ -86,7 +86,6 @@
   const SOCKET_URL = API_BASE;
 
   // ------------- HELPERS -------------
-  const token = localStorage.getItem('token'); // se asume que el login guarda JWT aquí
   function authHeaders() {
     return token ? { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
   }

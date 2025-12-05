@@ -6,9 +6,9 @@ const socket = io(API);
 
 const listInd = document.getElementById("list-ind");
 const listGrp = document.getElementById("list-grp");
-const thread = document.getElementById("thread");
-const input = document.getElementById("input-msg");
-const btn = document.getElementById("btn-send");
+const thread = document.getElementById("mensajes");
+const input = document.getElementById("mensajeInput");
+const btn = document.getElementById("enviar-Btn");
 
 let currentChat = null;
 
