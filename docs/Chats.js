@@ -8,7 +8,7 @@ const listInd = document.getElementById("list-ind");
 const listGrp = document.getElementById("list-grp");
 const thread = document.getElementById("mensajes");
 const input = document.getElementById("mensajeInput");
-const btn = document.getElementById("enviar-Btn");
+const btn = document.getElementById("enviarBtn");
 
 let currentChat = null;
 
