@@ -59,15 +59,15 @@
         </div>
       </header>
 
-      <div class="ch-thread" aria-live="polite" id="thread">
+      <div class="ch-thread" aria-live="polite" id="mensajes">
         <!-- Mensajes se añadiran aquí -->
         <div class="placeholder">Selecciona un chat en la columna izquierda para ver los mensajes.</div>
       </div>
 
-      <form class="ch-input" id="form-send" action="#" onsubmit="return false;">
-        <input id="input-msg" type="text" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" disabled>
-        <button id="btn-send" type="button" disabled>Enviar</button>
-      </form>
+      <form class="ch-input" id="form-send" action="#" onsubmit="return false;">   
+        <input type="text" id="mensajeInput" placeholder="Escribe un mensaje...">
+        <button type="button" id="enviarBtn">Enviar</button>
+      </form> 
     </section>
   </main>
 
