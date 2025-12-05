@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Registro</title>
+  <link rel="stylesheet" href="css/registro.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Gochi+Hand&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-app-frame">
+    <header class="auth-topbar">
+      <a href="index.html" class="brand">
+        <span class="brand-primary">Cono</span><span class="brand-accent">CEU</span>
+      </a>
+    </header>
+
+    <main class="auth-layout">
+      <section class="auth-card">
+        <h1>Crear cuenta</h1>
+        <p class="auth-subtitle">Únete a ConoCEU para compartir apuntes, chats y mucho más.</p>
+
+        <div id="auth-message" class="auth-message" style="display:none;"></div>
+
+        <form id="register-form" class="auth-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username">Usuario</label>
+              <input type="text" id="username" name="username" required placeholder="nick_ceu" />
+            </div>
+            <div class="form-group">
+              <label for="email">Correo CEU</label>
+              <input type="email" id="email" name="email" required placeholder="tucorreo@ceu.es" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input type="password" id="password" name="password" required placeholder="••••••••" />
+            </div>
+            <div class="form-group">
+              <label for="password2">Repite la contraseña</label>
+              <input type="password" id="password2" name="password2" required placeholder="••••••••" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre" required placeholder="Nombre" />
+            </div>
+            <div class="form-group">
+              <label for="apellido">Apellido</label>
+              <input type="text" id="apellido" name="apellido" required placeholder="Apellidos" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fecha_nacimiento">Fecha de nacimiento</label>
+              <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required />
+            </div>
+            <div class="form-group">
+              <label for="edad">Edad (opcional)</label>
+              <input type="number" id="edad" name="edad" min="16" max="99" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="grado">Grado (opcional)</label>
+              <input type="text" id="grado" name="grado" placeholder="Ing. Sistemas de Información" />
+            </div>
+            <div class="form-group">
+              <label for="curso">Curso (opcional)</label>
+              <input type="text" id="curso" name="curso" placeholder="1º, 2º, 3º..." />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pais">País (opcional)</label>
+              <input type="text" id="pais" name="pais" placeholder="España" />
+            </div>
+            <div class="form-group">
+              <label for="ciudad">Ciudad (opcional)</label>
+              <input type="text" id="ciudad" name="ciudad" placeholder="Madrid" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="foto_perfil">Foto de perfil (URL, opcional)</label>
+            <input type="url" id="foto_perfil" name="foto_perfil" placeholder="https://..." />
+          </div>
+
+          <button type="submit" class="btn-primary">Registrarme</button>
+        </form>
+
+        <p class="auth-footer-text">
+          ¿Ya tienes cuenta?
+          <a href="login.html">Inicia sesión</a>
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = 'https://conoceu-backend.onrender.com';
+
+    function showMessage(text, type) {
+      const box = document.getElementById('auth-message');
+      box.textContent = text;
+      box.className = 'auth-message ' + (type === 'error' ? 'error' : 'success');
+      box.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('register-form');
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const password2 = document.getElementById('password2').value;
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellido = document.getElementById('apellido').value.trim();
+        const fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
+        const edad = document.getElementById('edad').value;
+        const grado = document.getElementById('grado').value.trim();
+        const curso = document.getElementById('curso').value.trim();
+        const pais = document.getElementById('pais').value.trim();
+        const ciudad = document.getElementById('ciudad').value.trim();
+        const foto_perfil = document.getElementById('foto_perfil').value.trim();
+
+        if (!username || !email || !password || !password2 || !nombre || !apellido || !fecha_nacimiento) {
+          showMessage('Rellena todos los campos obligatorios.', 'error');
+          return;
+        }
+
+        if (password !== password2) {
+          showMessage('Las contraseñas no coinciden.', 'error');
+          return;
+        }
+
+        try {
+          const res = await fetch(API_BASE + '/api/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username,
+              email,
+              password,
+              nombre,
+              apellido,
+              fecha_nacimiento,
+              edad: edad || null,
+              grado: grado || null,
+              curso: curso || null,
+              pais: pais || null,
+              ciudad: ciudad || null,
+              foto_perfil: foto_perfil || null
+            })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            showMessage(data.error || 'Error al registrarse.', 'error');
+            return;
+          }
+
+          // Registro OK: redirigimos a login con mensaje
+          window.location.href = 'login.html?registered=1';
+        } catch (err) {
+          console.error(err);
+          showMessage('No se ha podido conectar con el servidor.', 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
