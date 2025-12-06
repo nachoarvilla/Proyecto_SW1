@@ -997,6 +997,9 @@ app.get('/api/chats', auth, async (req, res) => {
 app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
   const chatId = req.params.id;
   const { contenido } = req.body;
+  
+  // 💡 OBTENER LA INSTANCIA DE SOCKET.IO
+  const io = req.app.get('socketio'); 
 
   if (!contenido) {
     return res.status(400).json({ error: "El contenido del mensaje es obligatorio" });
@@ -1015,26 +1018,35 @@ app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
        VALUES (?, ?, ?)`,
       [chatId, req.user.id, contenido]
     );
-    
+
     // 2. Obtener datos completos del mensaje para enviar por socket
     const [mensajeCompleto] = await db.query(
-        `SELECT 
-           m.id,
-           m.contenido,
-           m.fecha_envio,
-           u.id AS user_id,
-           u.username,
-           u.foto_perfil
-         FROM mensajes m
-         JOIN users u ON m.user_id = u.id
-         WHERE m.id = ?`,
-        [result.insertId]
+      `SELECT 
+         m.id,
+         m.contenido,
+         m.fecha_envio,
+         u.id AS user_id,
+         u.username,
+         u.foto_perfil
+       FROM mensajes m
+       JOIN users u ON m.user_id = u.id
+       WHERE m.id = ?`,
+      [result.insertId]
     );
+
+    // 💡 CAMBIO CRÍTICO: Añadir el chat_id explícitamente al objeto antes de emitir.
+    const messageData = {
+        ...mensajeCompleto[0], // Contiene id, contenido, fecha_envio, user_id, username, foto_perfil
+        chat_id: Number(chatId) // El cliente lo necesita para saber si debe mostrarlo
+    };
     
-    // 3. Emitir mensaje a la sala de chat (a todos los miembros excepto al emisor)
+    // 3. Emitir mensaje a la sala de chat
     const roomName = `chat-${chatId}`;
-    // Usamos io.to(roomName).emit() para que lo reciban todos los usuarios conectados a esa sala
-    io.to(roomName).emit('chat:message', mensajeCompleto[0]);
+    if (io) {
+        // Enviar a todos los sockets conectados a la sala (incluido el emisor, que ya lo verá
+        // pintado gracias a la llamada API, pero así se asegura)
+        io.to(roomName).emit('chat:message', messageData);
+    }
 
     return res.status(201).json({
       message: "Mensaje enviado",
@@ -1090,8 +1102,35 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
 // 💡 CONFIGURACIÓN FINAL DEL SERVIDOR (MODIFICADA)
 // -----------------------------------------------------
 
-// Lanzar servidor con server.listen (no app.listen)
+// LÓGICA DE CONEXIÓN DE SOCKET.IO
+io.on('connection', (socket) => {
+    console.log(`Usuario conectado por socket: ${socket.user.username} (ID: ${socket.user.id})`);
+    
+    // Evento para UNIRSE A UNA SALA DE CHAT
+    socket.on('chat:join', (chatId) => {
+        // Abandonar salas anteriores
+        Object.keys(socket.rooms).forEach(room => {
+            if (room !== socket.id) {
+                socket.leave(room);
+            }
+        });
+        const roomName = `chat-${chatId}`;
+        socket.join(roomName);
+        console.log(`Usuario ${socket.user.username} se unió a la sala ${roomName}`);
+    });
+
+    // Evento de desconexión
+    socket.on('disconnect', () => {
+        console.log(`Usuario desconectado por socket: ${socket.user.username}`);
+    });
+});
+
+// 💡 HACER LA INSTANCIA DE 'io' ACCESIBLE
+// Esto permite acceder a `io` desde las rutas REST usando req.app.get('socketio')
+app.set('socketio', io); 
+
+// Lanzar servidor HTTP/Socket.io
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+server.listen(PORT, () => { 
   console.log("Servidor arrancado en el puerto " + PORT);
 });
