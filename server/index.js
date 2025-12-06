@@ -1,20 +1,25 @@
+// index.js (CÓDIGO COMPLETO Y ACTUALIZADO CON SOCKET.IO)
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
+const db = require('./db'); // pool de mysql2/promise
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const app = express();
+// 💡 CAMBIO: Importar HTTP y Socket.io
 const http = require('http');
 const { Server } = require('socket.io');
 
+const app = express();
+// 💡 CAMBIO: Crear servidor HTTP a partir de la app Express
+const server = http.createServer(app); 
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Middleware de autenticación
+// Middleware de autenticación (Se mantiene)
 function auth(req, res, next) {
   const header = req.headers.authorization;
 
@@ -31,7 +36,7 @@ function auth(req, res, next) {
   }
 }
 
-// Helper: comprobar si un usuario pertenece a un chat
+// Helper: comprobar si un usuario pertenece a un chat (Se mantiene)
 async function userIsMemberOfChat(chatId, userId) {
   const [rows] = await db.query(
     "SELECT 1 FROM chat_miembros WHERE chat_id = ? AND user_id = ?",
@@ -39,6 +44,64 @@ async function userIsMemberOfChat(chatId, userId) {
   );
   return rows.length > 0;
 }
+
+// -----------------------------------------------------
+// 💡 IMPLEMENTACIÓN DE SOCKET.IO
+// -----------------------------------------------------
+
+// Inicializar Socket.io con la configuración CORS para tu frontend
+const io = new Server(server, {
+    cors: {
+        origin: ["https://conoceu.vercel.app", "http://localhost:8080"], // Añade tu dominio de Vercel y localhost para desarrollo
+        methods: ["GET", "POST"]
+    }
+});
+
+// Middleware para autenticar la conexión de Socket.io (usando el token JWT)
+io.use((socket, next) => {
+    // El token se envía desde el cliente en la opción 'auth' del handshake
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+        return next(new Error("Falta token de autenticación en el socket"));
+    }
+
+    try {
+        const data = jwt.verify(token, process.env.JWT_SECRET);
+        socket.user = data; // Adjuntar datos del usuario al socket
+        next();
+    } catch (err) {
+        return next(new Error("Token inválido en el socket"));
+    }
+});
+
+// Lógica de Sockets
+io.on('connection', (socket) => {
+    console.log(`Usuario conectado por socket: ${socket.user.username} (ID: ${socket.user.id})`);
+    
+    // Evento para que el usuario se una a la "sala" del chat
+    socket.on('chat:join', (chatId) => {
+        // Abandonar salas anteriores para evitar recibir mensajes de chats no activos
+        Object.keys(socket.rooms).forEach(room => {
+            if (room !== socket.id) { // No abandonar la sala propia de socket
+                socket.leave(room);
+            }
+        });
+
+        const roomName = `chat-${chatId}`;
+        socket.join(roomName);
+        console.log(`Usuario ${socket.user.username} se unió a la sala ${roomName}`);
+    });
+
+    // Evento de desconexión
+    socket.on('disconnect', () => {
+        console.log(`Usuario desconectado por socket: ${socket.user.username}`);
+    });
+});
+
+// -----------------------------------------------------
+// RUTAS REST API
+// -----------------------------------------------------
 
 // Ruta de prueba
 app.get('/', async (req, res) => {
@@ -122,15 +185,13 @@ app.post('/api/login', async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
 
-    if (rows.length === 0)
-      return res.status(400).json({ error: "Usuario no encontrado" });
+    if (rows.length === 0) return res.status(400).json({ error: "Usuario no encontrado" });
 
     const user = rows[0];
 
     const isValid = await bcrypt.compare(password, user.password_hash);
 
-    if (!isValid)
-      return res.status(401).json({ error: "Contraseña incorrecta" });
+    if (!isValid) return res.status(401).json({ error: "Contraseña incorrecta" });
 
     const token = jwt.sign(
       {
@@ -141,19 +202,7 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: "2h" }
     );
 
-
-    // 🔥 ESTE ES EL FORMATO CORRECTO para que el frontend funcione
-    return res.json({
-      token,
-      usuario:{
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        foto_perfil: user.foto_perfil
-      }
-    });
+    return res.json({ token });
 
   } catch (err) {
     console.error(err);
@@ -161,8 +210,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
-// ------------- PERFIL ------------------------
+// ------------- PERFIL: obtener ------------------------
 app.get('/api/profile', auth, async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -184,6 +232,146 @@ app.get('/api/profile', auth, async (req, res) => {
     res.status(500).json({ error: "Error al obtener perfil" });
   }
 });
+
+// ------------- PERFIL: actualizar ------------------------
+app.put('/api/profile', auth, async (req, res) => {
+  const userId = req.user.id;
+  const {
+    nombre,
+    apellido,
+    grado,
+    curso,
+    edad,
+    fecha_nacimiento,
+    ciudad,
+    pais,
+    foto_perfil,
+  } = req.body;
+
+  // Corregir la validación de campos obligatorios para el UPDATE
+  if (!nombre || !apellido) {
+      return res.status(400).json({ error: 'Nombre y apellido son obligatorios.' });
+  }
+
+  try {
+    const sql = `
+      UPDATE users
+      SET nombre = ?,
+          apellido = ?,
+          grado = ?,
+          curso = ?,
+          edad = ?,
+          fecha_nacimiento = ?,
+          ciudad = ?,
+          pais = ?,
+          foto_perfil = ?
+      WHERE id = ?
+    `;
+
+    const [result] = await db.query(sql,
+      [
+        nombre,
+        apellido,
+        grado || null,
+        curso || null,
+        edad || null,
+        fecha_nacimiento || null,
+        ciudad || null,
+        pais || null,
+        foto_perfil || null,
+        userId
+      ]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado o sin cambios' });
+    }
+
+    res.json({ message: 'Perfil actualizado' });
+  } catch (err) {
+    console.error('Error actualizando perfil', err);
+    res.status(500).json({ error: 'Error al actualizar el perfil' });
+  }
+});
+
+// ------------- SEGURIDAD: cambiar contraseña ------------------------
+app.post('/api/change-password', auth, async (req, res) => {
+  const userId = req.user.id;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Faltan datos' });
+  }
+
+  try {
+    const [userRes] = await db.query(
+      'SELECT password_hash FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (userRes.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes[0].password_hash;
+    const ok = await bcrypt.compare(currentPassword, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await db.query(
+      'UPDATE users SET password_hash = ? WHERE id = ?',
+      [newHash, userId]
+    );
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    console.error('Error cambiando contraseña', err);
+    res.status(500).json({ error: 'Error al cambiar la contraseña' });
+  }
+});
+
+// ------------- CUENTA: eliminar cuenta ------------------------
+app.delete('/api/account', auth, async (req, res) => {
+  const userId = req.user.id;
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: 'Contraseña requerida' });
+  }
+
+  try {
+    const [userRes] = await db.query(
+      'SELECT password_hash FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (userRes.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const passwordHash = userRes[0].password_hash;
+    const ok = await bcrypt.compare(password, passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: 'Contraseña incorrecta' });
+    }
+
+    // El borrado en cascada se delega a la configuración de la BD,
+    // pero aquí eliminamos el registro principal.
+    const [deleteResult] = await db.query('DELETE FROM users WHERE id = ?', [userId]);
+
+    if (deleteResult.affectedRows === 0) {
+        return res.status(500).json({ error: 'Error al intentar eliminar el usuario' });
+    }
+
+    res.json({ message: 'Cuenta eliminada' });
+  } catch (err) {
+    console.error('Error eliminando cuenta', err);
+    res.status(500).json({ error: 'Error al eliminar la cuenta' });
+  }
+});
+
 
 // ------------- PUBLICACIONES: crear ------------------------
 app.post('/api/publicaciones', auth, async (req, res) => {
@@ -613,6 +801,36 @@ app.get('/api/tienda-extraescolar/:id/ofertas', auth, async (req, res) => {
   }
 });
 
+// -----------------------------------------------------
+// 💡 NUEVA RUTA: BÚSQUEDA DE USUARIOS
+// -----------------------------------------------------
+
+app.get('/api/users/search', auth, async (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        return res.status(400).json({ error: "El parámetro 'username' es obligatorio" });
+    }
+
+    try {
+        // Buscar usuarios por username, excluyendo al propio usuario
+        const [rows] = await db.query(
+            `SELECT id, username, nombre, apellido, foto_perfil
+             FROM users
+             WHERE username LIKE ? AND id != ?
+             LIMIT 10`,
+            [`%${username}%`, req.user.id]
+        );
+
+        res.json(rows);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error al buscar usuarios" });
+    }
+});
+
+
 // ------------- CHATS: crear chat privado -------------------------------
 app.post('/api/chats/privado', auth, async (req, res) => {
   const { destinatario_id } = req.body;
@@ -621,7 +839,8 @@ app.post('/api/chats/privado', auth, async (req, res) => {
     return res.status(400).json({ error: "Falta destinatario_id" });
   }
 
-  if (destinatario_id === req.user.id) {
+  // Asegurar que no intenta chatear consigo mismo
+  if (destinatario_id == req.user.id) {
     return res.status(400).json({ error: "No puedes crear un chat contigo mismo" });
   }
 
@@ -635,6 +854,24 @@ app.post('/api/chats/privado', auth, async (req, res) => {
     if (userRows.length === 0) {
       return res.status(404).json({ error: "Usuario destinatario no encontrado" });
     }
+    
+    // Opcional: Comprobar si ya existe un chat privado entre ellos (para evitar duplicados)
+    const [existingChat] = await db.query(
+        `SELECT c.id FROM chats c
+         JOIN chat_miembros cm1 ON c.id = cm1.chat_id
+         JOIN chat_miembros cm2 ON c.id = cm2.chat_id
+         WHERE c.es_grupo = 0
+           AND cm1.user_id = ? AND cm2.user_id = ?`,
+        [req.user.id, destinatario_id]
+    );
+
+    if (existingChat.length > 0) {
+        return res.status(200).json({
+            message: "Chat privado ya existe",
+            chat_id: existingChat[0].id
+        });
+    }
+
 
     // Crear chat
     const [chatResult] = await db.query(
@@ -700,9 +937,15 @@ app.post('/api/chats/grupo', auth, async (req, res) => {
   }
 });
 
-// ------------- CHATS: listar chats del usuario -------------------------
+// -----------------------------------------------------
+// 💡 RUTA MODIFICADA: LISTAR CHATS
+// -----------------------------------------------------
+// Se mantiene el endpoint, pero se añade lógica para buscar el nombre del otro usuario en chats privados.
+
 app.get('/api/chats', auth, async (req, res) => {
   try {
+    const userId = req.user.id;
+    
     const [rows] = await db.query(
       `SELECT 
          c.id,
@@ -713,10 +956,32 @@ app.get('/api/chats', auth, async (req, res) => {
        JOIN chat_miembros cm ON c.id = cm.chat_id
        WHERE cm.user_id = ?
        ORDER BY c.created_at DESC`,
-      [req.user.id]
+      [userId]
     );
 
-    res.json(rows);
+    // Para los chats privados (es_grupo = 0), necesitamos la info del otro usuario
+    const chatsConInfo = await Promise.all(rows.map(async (chat) => {
+        if (!chat.es_grupo) {
+            // Es privado, buscar el ID y el nombre del otro usuario
+            const [miembros] = await db.query(
+                `SELECT u.id, u.username, u.foto_perfil
+                 FROM chat_miembros cm
+                 JOIN users u ON cm.user_id = u.id
+                 WHERE cm.chat_id = ? AND cm.user_id != ?`,
+                [chat.id, userId]
+            );
+
+            if (miembros.length > 0) {
+                // Sobreescribir el nombre del chat con el username del otro
+                chat.nombre = miembros[0].username;
+                chat.foto_perfil = miembros[0].foto_perfil;
+                chat.destinatario_id = miembros[0].id; // Añadir ID para referencia
+            }
+        }
+        return chat;
+    }));
+
+    res.json(chatsConInfo);
 
   } catch (err) {
     console.error(err);
@@ -724,42 +989,67 @@ app.get('/api/chats', auth, async (req, res) => {
   }
 });
 
-// ------------- MENSAJES: enviar mensaje en un chat ---------------------
+// -----------------------------------------------------
+// 💡 RUTA MODIFICADA: ENVIAR MENSAJES
+// -----------------------------------------------------
+// Se añade la emisión del mensaje por socket después de guardarlo.
+
 app.post('/api/chats/:id/mensajes', auth, async (req, res) => {
   const chatId = req.params.id;
   const { contenido } = req.body;
 
-  if (!contenido) return res.status(400).json({ error: "Contenido obligatorio" });
+  if (!contenido) {
+    return res.status(400).json({ error: "El contenido del mensaje es obligatorio" });
+  }
 
   try {
+    // Comprobar que el usuario pertenece al chat
     const esMiembro = await userIsMemberOfChat(chatId, req.user.id);
-    if (!esMiembro) return res.status(403).json({ error: "No perteneces al chat" });
+    if (!esMiembro) {
+      return res.status(403).json({ error: "No perteneces a este chat" });
+    }
 
+    // 1. Insertar en la BD
     const [result] = await db.query(
       `INSERT INTO mensajes (chat_id, user_id, contenido)
        VALUES (?, ?, ?)`,
       [chatId, req.user.id, contenido]
     );
+    
+    // 2. Obtener datos completos del mensaje para enviar por socket
+    const [mensajeCompleto] = await db.query(
+        `SELECT 
+           m.id,
+           m.contenido,
+           m.fecha_envio,
+           u.id AS user_id,
+           u.username,
+           u.foto_perfil
+         FROM mensajes m
+         JOIN users u ON m.user_id = u.id
+         WHERE m.id = ?`,
+        [result.insertId]
+    );
+    
+    // 3. Emitir mensaje a la sala de chat (a todos los miembros excepto al emisor)
+    const roomName = `chat-${chatId}`;
+    // Usamos io.to(roomName).emit() para que lo reciban todos los usuarios conectados a esa sala
+    io.to(roomName).emit('chat:message', mensajeCompleto[0]);
 
-    const mensaje = {
-      id: result.insertId,
-      chatId,
-      contenido,
-      user: { id: req.user.id, username: req.user.username },
-      fecha_envio: new Date()
-    };
+    return res.status(201).json({
+      message: "Mensaje enviado",
+      id: result.insertId
+    });
 
-    // EMITIR AUTOMÁTICAMENTE
-    io.to("chat_" + chatId).emit("new_message", mensaje);
-
-    res.status(201).json(mensaje);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error enviando mensaje" });
+    return res.status(500).json({ error: "Error enviando mensaje" });
   }
 });
 
+
 // ------------- MENSAJES: listar mensajes de un chat --------------------
+// Se mantiene esta ruta, ya que solo se usa para cargar el historial de mensajes al inicio.
 app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
   const chatId = req.params.id;
   const limit = parseInt(req.query.limit, 10) || 50;
@@ -794,50 +1084,14 @@ app.get('/api/chats/:id/mensajes', auth, async (req, res) => {
     res.status(500).json({ error: "Error al obtener mensajes" });
   }
 });
-// ------------- BUSCAR USUARIOS --------------------
-app.get('/api/users/search', auth, async (req, res) => {
-  const q = req.query.q;
-
-  if (!q) return res.json([]);
-
-  try {
-    const [rows] = await db.query(
-      `SELECT id, username, foto_perfil
-       FROM users
-       WHERE username LIKE ? AND id != ?`,
-      ['%' + q + '%', req.user.id]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error buscando usuarios" });
-  }
-});
 
 
+// -----------------------------------------------------
+// 💡 CONFIGURACIÓN FINAL DEL SERVIDOR (MODIFICADA)
+// -----------------------------------------------------
 
-// Lanzar servidor
+// Lanzar servidor con server.listen (no app.listen)
 const PORT = process.env.PORT || 3000;
-const server = http.createServer(app);
-
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
-});
-
-io.on("connection", (socket) => {
-  console.log("Socket conectado:", socket.id);
-
-  socket.on("join_chat", (chatId) => {
-    socket.join("chat_" + chatId);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Socket desconectado:", socket.id);
-  });
-});
-
 server.listen(PORT, () => {
-  console.log("Servidor con sockets en puerto " + PORT);
+  console.log("Servidor arrancado en el puerto " + PORT);
 });
-

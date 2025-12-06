@@ -1,4 +1,21 @@
 /* ===== Aislado para About Us ===== */
+:root[data-theme="light"]{
+  --page-bg:#f3f4ff;
+  --page-text:#111827;
+}
+
+:root[data-theme="dark"]{
+  --page-bg:#020617;
+  --page-text:#e5e7eb;
+}
+
+/* Asegura que el body de cada página usa estas variables */
+body{
+  background-color: var(--page-bg);
+  color: var(--page-text);
+}
+
+
 .aboutus-page, .aboutus-page * { box-sizing: border-box; }
 :root{
   --bg: #f5f7fb;
