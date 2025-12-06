@@ -144,7 +144,7 @@
       // 💡 EVENTO CLAVE: Recibir mensaje instantáneo
       socket.on('chat:message', (message) => {
           // Solo si estamos en el chat correcto
-          if (message.chat_id == currentChatId) {
+          if (message.chat_id === currentChatId) {
               displayMessage(message);
           }
       });
@@ -289,7 +289,7 @@
 
         // 💡 Unirse a la sala de Socket.io
         if (socket && socket.connected) {
-            socket.emit('chat:join', currentChatId);
+            socket.emit('chat:join', Number(currentChatId));
         }
 
         try {
