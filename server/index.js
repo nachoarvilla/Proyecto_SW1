@@ -145,7 +145,7 @@ app.post('/api/login', async (req, res) => {
     // 🔥 ESTE ES EL FORMATO CORRECTO para que el frontend funcione
     return res.json({
       token,
-      usuario: {
+      usuario:{
         id: user.id,
         username: user.username,
         email: user.email,
