@@ -147,7 +147,7 @@
       // 💡 EVENTO CLAVE: Recibir mensaje instantáneo
       socket.on('chat:message', (message) => {
           // Solo si estamos en el chat correcto
-          if (message.chat_id == currentChatId) {
+          if (message.chat_id === currentChatId) {
               displayMessage(message);
           }
       });
@@ -225,25 +225,31 @@
 
     // 1. Cargar la lista de chats
     async function loadChatList() {
-      const listInd = document.getElementById('list-ind');
-      const listGrp = document.getElementById('list-grp');
-      document.getElementById('loading-ind').textContent = 'Cargando chats...';
-      document.getElementById('loading-grp').textContent = 'Cargando chats...';
-      listInd.innerHTML = '';
-      listGrp.innerHTML = '';
+    const listInd = document.getElementById('list-ind');
+    const listGrp = document.getElementById('list-grp');
+    
+    // 💡 CAMBIO 1: Establecer los mensajes iniciales y luego limpiarlos
+    // Esto asegura que si la llamada falla, sigue mostrando un mensaje.
+    listInd.innerHTML = '<p style="text-align: center; color: var(--muted);" id="loading-ind">Cargando chats...</p>';
+    listGrp.innerHTML = '<p style="text-align: center; color: var(--muted);" id="loading-grp">Cargando chats...</p>';
 
-      try {
+
+    try {
         const response = await fetch(`${BASE_URL}/api/chats`, {
-          headers: { 'Authorization': `Bearer ${getToken()}` }
+            headers: { 'Authorization': `Bearer ${getToken()}` }
         });
 
         if (response.status === 401) {
-          alert('Sesión expirada. Por favor, vuelve a iniciar sesión.');
-          window.location.href = 'Login.html';
-          return;
+            alert('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+            window.location.href = 'Login.html';
+            return;
         }
 
         const chats = await response.json();
+
+        // 💡 CAMBIO 2: Limpiar el contenido ANTES de empezar a añadir los resultados.
+        listInd.innerHTML = '';
+        listGrp.innerHTML = '';
         
         if (chats.length === 0) {
             listInd.innerHTML = '<p style="text-align: center; color: var(--muted);">No hay chats individuales.</p>';
@@ -257,15 +263,16 @@
                 }
             });
         }
-        document.getElementById('loading-ind').style.display = 'none';
-        document.getElementById('loading-grp').style.display = 'none';
+        
+        // 💡 CAMBIO 3: ELIMINAR el código que causaba el error de null.
+        // Las líneas document.getElementById('loading-ind').style.display = 'none'; YA NO EXISTEN aquí.
 
-      } catch (error) {
+    } catch (error) {
         console.error('Error al cargar chats:', error);
         listInd.innerHTML = '<p style="color:red; text-align: center;">Error al cargar.</p>';
         listGrp.innerHTML = '<p style="color:red; text-align: center;">Error al cargar.</p>';
-      }
     }
+}
 
     // 2. Seleccionar un chat y cargar sus mensajes
     async function selectChat(chat) {
@@ -285,7 +292,7 @@
 
         // 💡 Unirse a la sala de Socket.io
         if (socket && socket.connected) {
-            socket.emit('chat:join', currentChatId);
+            socket.emit('chat:join', Number(currentChatId));
         }
 
         try {
