@@ -97,6 +97,7 @@
           }
 
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.usuario));
           window.location.href = 'Perfil.html';
         } catch (err) {
           console.error(err);

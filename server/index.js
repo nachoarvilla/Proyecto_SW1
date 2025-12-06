@@ -122,13 +122,15 @@ app.post('/api/login', async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
 
-    if (rows.length === 0) return res.status(400).json({ error: "Usuario no encontrado" });
+    if (rows.length === 0)
+      return res.status(400).json({ error: "Usuario no encontrado" });
 
     const user = rows[0];
 
     const isValid = await bcrypt.compare(password, user.password_hash);
 
-    if (!isValid) return res.status(401).json({ error: "Contraseña incorrecta" });
+    if (!isValid)
+      return res.status(401).json({ error: "Contraseña incorrecta" });
 
     const token = jwt.sign(
       {
@@ -139,13 +141,26 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: "2h" }
     );
 
-    return res.json({ token });
+
+    // 🔥 ESTE ES EL FORMATO CORRECTO para que el frontend funcione
+    return res.json({
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        foto_perfil: user.foto_perfil
+      }
+    });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error en el login" });
   }
 });
+
 
 // ------------- PERFIL ------------------------
 app.get('/api/profile', auth, async (req, res) => {
