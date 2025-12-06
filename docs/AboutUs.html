@@ -87,32 +87,32 @@
   <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  (function () {
-    function applyThemePreference(prefFromStorage) {
-      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+  function applyThemePreference(prefFromStorage) {
+    const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
 
-      function setTheme(theme) {
+    function setTheme(theme) {
+        // Establece el atributo data-theme en la etiqueta <html>
         document.documentElement.dataset.theme = theme;
-      }
+    }
 
-      if (pref === 'system') {
+    if (pref === 'system') {
         const mq = window.matchMedia('(prefers-color-scheme: dark)');
         setTheme(mq.matches ? 'dark' : 'light');
         mq.addEventListener('change', e => {
-          const current = localStorage.getItem('cfg_theme') || 'system';
-          if (current === 'system') {
-            setTheme(e.matches ? 'dark' : 'light');
-          }
+            const current = localStorage.getItem('cfg_theme') || 'system';
+            if (current === 'system') {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
         });
-      } else {
+    } else {
         setTheme(pref);
-      }
     }
+}
 
-    document.addEventListener('DOMContentLoaded', function () {
-      applyThemePreference();
-    });
-  })();
+document.addEventListener('DOMContentLoaded', () => {
+  // Llama a la función de aplicación del tema.
+  applyThemePreference(); 
+});
 </script>
 
 </body>

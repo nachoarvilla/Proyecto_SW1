@@ -1,3 +1,27 @@
+:root{
+  /* Modo Claro por Defecto */
+  --bg: #f3f4ff; /* El color de fondo que usa perfil.css originalmente */
+  --panel: #ffffff; /* El color de las tarjetas (card) */
+  --ink: #111827; /* Color principal del texto */
+  --muted: #6b7280; /* Color de texto secundario (subtítulos) */
+  --line: rgba(148, 163, 184, 0.18); /* Color de bordes/líneas */
+  --accent: #4f46e5; /* Color de acento/botón primario */
+  --hover: #f9fafb; /* Color de fondo al pasar el ratón */
+  --shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+}
+
+/* Tema oscuro: Se activa con <html data-theme="dark"> */
+:root[data-theme="dark"]{
+  --bg: #111827;
+  --panel: #1f2937;
+  --ink: #ffffff;
+  --muted: #9ca3af;
+  --line: rgba(255, 255, 255, 0.15);
+  --accent: #6366f1;
+  --hover: #2d3748;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

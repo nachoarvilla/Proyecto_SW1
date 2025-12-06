@@ -4,6 +4,14 @@
   --line:#e5e7eb; --brand:#2b6cb0; --hover:#f1f5f9;
   --accent:#0ea5e9; --shadow:0 10px 25px rgba(2,8,23,.08); --radius:16px;
 }
+
+/* Tema oscuro: Se activa con <html data-theme="dark"> */
+:root[data-theme="dark"]{
+  --bg:#0b1020; --panel:#0f172a; --ink:#e5e7eb; --muted:#94a3b8;
+  --line:#1f2a44; --hover:#0b1224; --brand:#60a5fa; --accent:#38bdf8;
+  --shadow:0 10px 25px rgba(0,0,0,.6);
+}
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
