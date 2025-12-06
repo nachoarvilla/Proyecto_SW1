@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ConoCEU — Chats</title>
   <link rel="stylesheet" href="css/style_chats.css">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body class="ch-page">
-  <!-- Header -->
   <header class="ch-header">
     <a href="index.html" class="ch-brand" aria-label="Ir a inicio">
       <img src="img/logoceu.png" alt="Logo CEU" class="ch-logo">
@@ -17,7 +17,6 @@
     <h1 class="ch-title">Chats</h1>
 
     <nav class="ch-actions" aria-label="Acciones">
-      <!-- Icono chats (no navega) -->
       <span class="ch-iconbtn" aria-label="Chats">
         <img src="img/Chats.png" alt="" class="ch-icon">
       </span>
@@ -30,9 +29,7 @@
     </nav>
   </header>
 
-  <!-- Layout -->
   <main class="ch-layout">
-    <!-- Sidebar -->
     <aside class="ch-sidebar">
     <div class="ch-tabs" role="tablist" aria-label="Tipo de chat">
         <button class="ch-tab is-active" role="tab" aria-selected="true"
@@ -41,60 +38,37 @@
                 id="tab-grp" data-target="#list-grp">Grupales</button>
     </div>
 
-    <!-- SOLO individuales -->
     <div id="list-ind" class="ch-list" role="tabpanel" aria-labelledby="tab-ind">
-        <button class="ch-item is-active">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Pepito</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>María</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Carlos</span>
-        </button>
+        <p style="text-align: center; color: var(--muted);" id="loading-ind">Cargando chats...</p>
     </div>
 
-    <!-- SOLO grupales -->
     <div id="list-grp" class="ch-list" role="tabpanel" aria-labelledby="tab-grp" hidden>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Proyecto IS · Grupo 3</span>
-        </button>
-        <button class="ch-item">
-        <img src="img/Perfil.png" alt="" class="ch-item-avatar"><span>Club Running CEU</span>
-        </button>
+        <p style="text-align: center; color: var(--muted);" id="loading-grp">Cargando chats...</p>
     </div>
 
-    <button class="ch-new" type="button">Nuevo chat</button>
+    <button class="ch-new" type="button" onclick="window.location.href='resultado_usuarios.html'">
+      Nuevo chat
+    </button>
     </aside>
 
-    <!-- Panel de chat (solo ejemplo visual) -->
     <section class="ch-panel" aria-label="Conversación">
       <header class="ch-panel-hd">
-        <img src="img/Perfil.png" alt="" class="ch-user-avatar">
+        <img src="img/Perfil.png" alt="" class="ch-user-avatar" id="chat-header-avatar">
         <div class="ch-user">
-          <strong>Pepito</strong>
-          <span class="ch-user-status">en línea</span>
+          <strong id="chat-header-name">Selecciona un chat</strong>
+          <span class="ch-user-status" id="chat-header-status">Desconectado</span>
         </div>
       </header>
 
-      <div class="ch-thread" aria-live="polite">
-        <div class="msg msg-in">
-          <p>¡Hola! ¿Tienes el resumen de la unidad 2?</p>
-          <time>12:03</time>
-        </div>
-        <div class="msg msg-out">
-          <p>Sí, te lo paso ahora mismo. ¿Lo quieres en PDF?</p>
-          <time>12:04</time>
-        </div>
-        <div class="msg msg-in">
-          <p>Perfecto, ¡gracias!</p>
-          <time>12:05</time>
-        </div>
+      <div class="ch-thread" aria-live="polite" id="chat-thread">
+        <p style="text-align: center; color: var(--muted); padding-top: 50px;">
+          Haz click en un chat para ver la conversación.
+        </p>
       </div>
 
-      <form class="ch-input" action="#" onsubmit="return false;">
-        <input type="text" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" disabled>
-        <button type="button" disabled>Enviar</button>
+      <form class="ch-input" id="message-form" onsubmit="sendMessage(event)">
+        <input type="text" id="message-input" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" disabled>
+        <button type="submit" id="send-button" disabled>Enviar</button>
       </form>
     </section>
   </main>
@@ -104,31 +78,319 @@
   </footer>
 
   <script>
-    // Año
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // URL base de tu backend
+    const BASE_URL = 'https://conoceu-backend.onrender.com';
+    let currentChatId = null;
+    let userId = null; // Para saber si un mensaje es entrante o saliente
+    let socket = null;
 
-    // Tabs: alternar Individuales / Grupales
-    const tabs = document.querySelectorAll('.ch-tab');
-    const lists = {
-        '#list-ind': document.querySelector('#list-ind'),
-        '#list-grp': document.querySelector('#list-grp')
-    };
-
-    function showList(targetSel){
-        Object.values(lists).forEach(el => el.hidden = true);
-        lists[targetSel].hidden = false;
+    // --- Utilidades ---
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+    
+    // Obtener la ID del usuario desde el token (no es 100% seguro, pero es rápido)
+    function decodeToken() {
+        const token = getToken();
+        if (!token) return null;
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload).id;
+        } catch (e) {
+            console.error("Error al decodificar token", e);
+            return null;
+        }
     }
 
-    tabs.forEach(btn => {
-        btn.addEventListener('click', () => {
-        tabs.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected','false'); });
-        btn.classList.add('is-active'); btn.setAttribute('aria-selected','true');
-        showList(btn.dataset.target);
+    // --- Sockets ---
+
+    function setupSocket() {
+      const token = getToken();
+      userId = decodeToken();
+      if (!token || !userId) {
+        alert('Necesitas iniciar sesión para usar el chat.');
+        window.location.href = 'Login.html'; // Redirige si no hay token
+        return;
+      }
+
+      socket = io(BASE_URL, {
+        auth: {
+          token: token
+        },
+        transports: ['websocket', 'polling']
+      });
+
+      socket.on('connect', () => {
+        console.log('Conectado al servidor de sockets.');
+        // Si ya hay un chat abierto, nos unimos a su sala
+        if(currentChatId) {
+            socket.emit('chat:join', currentChatId);
+        }
+      });
+      
+      socket.on('disconnect', () => {
+        console.log('Desconectado del servidor de sockets.');
+      });
+
+      socket.on('connect_error', (err) => {
+        console.error('Error de conexión de socket:', err.message);
+        alert('Error conectando al servidor de chat. Inténtalo de nuevo.');
+      });
+      
+      // 💡 EVENTO CLAVE: Recibir mensaje instantáneo
+      socket.on('chat:message', (message) => {
+          // Solo si estamos en el chat correcto
+          if (message.chat_id == currentChatId) {
+              displayMessage(message);
+          }
+      });
+    }
+
+    // --- Lógica de la Interfaz ---
+
+    // Crea el HTML de un chat en la lista
+    function createChatListItem(chat) {
+        const button = document.createElement('button');
+        const isActive = chat.id == currentChatId ? ' is-active' : '';
+        button.className = 'ch-item' + isActive;
+        button.setAttribute('data-chat-id', chat.id);
+        button.setAttribute('data-chat-name', chat.nombre);
+        
+        // Determinar la foto de perfil (para privados usa la del destinatario)
+        const avatarSrc = chat.foto_perfil || 'img/Perfil.png';
+
+        button.innerHTML = `
+            <img src="${avatarSrc}" alt="" class="ch-item-avatar">
+            <span>${chat.nombre}</span>
+        `;
+        button.addEventListener('click', () => selectChat(chat));
+        return button;
+    }
+    
+    // Crea el HTML de un mensaje
+    function createMessageElement(message) {
+        const isOut = message.user_id == userId;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `msg msg-${isOut ? 'out' : 'in'}`;
+        
+        const time = new Date(message.fecha_envio).toLocaleTimeString('es-ES', { 
+            hour: '2-digit', minute: '2-digit' 
         });
+
+        // Para chats de grupo, mostrar el nombre si es entrante
+        const senderName = (message.es_grupo && !isOut) ? `<small style="font-weight: bold;">${message.username}:</small><br>` : '';
+
+        msgDiv.innerHTML = `
+            <p>${senderName}${message.contenido}</p>
+            <time>${time}</time>
+        `;
+        return msgDiv;
+    }
+    
+    function displayMessage(message) {
+        const chatThread = document.getElementById('chat-thread');
+        const msgElement = createMessageElement(message);
+        chatThread.appendChild(msgElement);
+        // Scroll al final
+        chatThread.scrollTop = chatThread.scrollHeight;
+    }
+    
+    function resetChatPanel(chatName, avatarSrc = 'img/Perfil.png') {
+        document.getElementById('chat-header-name').textContent = chatName;
+        document.getElementById('chat-header-avatar').src = avatarSrc;
+        document.getElementById('chat-header-status').textContent = 'Conectado';
+        document.getElementById('chat-thread').innerHTML = '<p style="text-align: center; color: var(--muted); padding-top: 50px;">Cargando mensajes...</p>';
+        document.getElementById('message-input').disabled = false;
+        document.getElementById('send-button').disabled = false;
+    }
+    
+    function disableChatPanel() {
+        document.getElementById('chat-header-name').textContent = 'Selecciona un chat';
+        document.getElementById('chat-header-avatar').src = 'img/Perfil.png';
+        document.getElementById('chat-header-status').textContent = 'Desconectado';
+        document.getElementById('chat-thread').innerHTML = '<p style="text-align: center; color: var(--muted); padding-top: 50px;">Haz click en un chat para ver la conversación.</p>';
+        document.getElementById('message-input').disabled = true;
+        document.getElementById('send-button').disabled = true;
+    }
+
+
+    // --- Peticiones al Backend ---
+
+    // 1. Cargar la lista de chats
+    async function loadChatList() {
+      const listInd = document.getElementById('list-ind');
+      const listGrp = document.getElementById('list-grp');
+      document.getElementById('loading-ind').textContent = 'Cargando chats...';
+      document.getElementById('loading-grp').textContent = 'Cargando chats...';
+      listInd.innerHTML = '';
+      listGrp.innerHTML = '';
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/chats`, {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+
+        if (response.status === 401) {
+          alert('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+          window.location.href = 'Login.html';
+          return;
+        }
+
+        const chats = await response.json();
+        
+        if (chats.length === 0) {
+            listInd.innerHTML = '<p style="text-align: center; color: var(--muted);">No hay chats individuales.</p>';
+            listGrp.innerHTML = '<p style="text-align: center; color: var(--muted);">No hay chats grupales.</p>';
+        } else {
+            chats.forEach(chat => {
+                if (chat.es_grupo) {
+                    listGrp.appendChild(createChatListItem(chat));
+                } else {
+                    listInd.appendChild(createChatListItem(chat));
+                }
+            });
+        }
+        document.getElementById('loading-ind').style.display = 'none';
+        document.getElementById('loading-grp').style.display = 'none';
+
+      } catch (error) {
+        console.error('Error al cargar chats:', error);
+        listInd.innerHTML = '<p style="color:red; text-align: center;">Error al cargar.</p>';
+        listGrp.innerHTML = '<p style="color:red; text-align: center;">Error al cargar.</p>';
+      }
+    }
+
+    // 2. Seleccionar un chat y cargar sus mensajes
+    async function selectChat(chat) {
+        // Desactivar el chat anterior
+        document.querySelectorAll('.ch-item.is-active').forEach(btn => 
+            btn.classList.remove('is-active')
+        );
+
+        // Activar el chat seleccionado
+        const currentChatButton = document.querySelector(`.ch-item[data-chat-id="${chat.id}"]`);
+        if(currentChatButton) {
+            currentChatButton.classList.add('is-active');
+        }
+
+        currentChatId = chat.id;
+        resetChatPanel(chat.nombre, chat.foto_perfil);
+
+        // 💡 Unirse a la sala de Socket.io
+        if (socket && socket.connected) {
+            socket.emit('chat:join', currentChatId);
+        }
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/chats/${currentChatId}/mensajes?limit=50`, {
+                headers: { 'Authorization': `Bearer ${getToken()}` }
+            });
+            
+            if (response.status === 401) {
+                alert('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+                window.location.href = 'Login.html';
+                return;
+            }
+
+            const messages = await response.json();
+            const chatThread = document.getElementById('chat-thread');
+            chatThread.innerHTML = ''; // Limpiar
+
+            if (messages.length === 0) {
+                chatThread.innerHTML = '<p style="text-align: center; color: var(--muted); padding-top: 50px;">No hay mensajes aún.</p>';
+            } else {
+                messages.forEach(msg => displayMessage(msg));
+            }
+
+        } catch (error) {
+            console.error('Error al cargar mensajes:', error);
+            document.getElementById('chat-thread').innerHTML = '<p style="color:red; text-align: center;">Error al cargar mensajes.</p>';
+        }
+    }
+    
+    // 3. Enviar mensaje
+    async function sendMessage(event) {
+        event.preventDefault();
+        
+        const input = document.getElementById('message-input');
+        const contenido = input.value.trim();
+        
+        if (!contenido || !currentChatId) return;
+
+        input.value = ''; // Limpiar el input
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/chats/${currentChatId}/mensajes`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}` 
+                },
+                body: JSON.stringify({ contenido })
+            });
+
+            if (response.ok) {
+                // Para el remitente, podemos añadirlo al chat inmediatamente,
+                // ya que sabemos que se guardó correctamente.
+                const now = new Date().toISOString();
+                displayMessage({ 
+                    contenido, 
+                    user_id: userId, 
+                    fecha_envio: now 
+                });
+                // El socket del servidor ya se encargó de enviarlo a los demás miembros.
+            } else {
+                const error = await response.json();
+                alert(`Error al enviar mensaje: ${error.error}`);
+                input.value = contenido; // Restaurar el mensaje si falla
+            }
+
+        } catch (error) {
+            console.error('Error al enviar mensaje:', error);
+            alert('Error de conexión al enviar mensaje.');
+            input.value = contenido;
+        }
+    }
+
+
+    // --- Inicialización ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Año en el footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Cargar datos y configurar sockets
+        disableChatPanel();
+        setupSocket();
+        loadChatList();
+
+        // Lógica de Tabs (se mantiene)
+        const tabs = document.querySelectorAll('.ch-tab');
+        const lists = {
+            '#list-ind': document.querySelector('#list-ind'),
+            '#list-grp': document.querySelector('#list-grp')
+        };
+        function showList(targetSel){
+            Object.values(lists).forEach(el => el.hidden = true);
+            const targetEl = lists[targetSel];
+            if (targetEl) {
+                targetEl.hidden = false;
+            }
+        }
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected','false'); });
+                btn.classList.add('is-active'); btn.setAttribute('aria-selected','true');
+                showList(btn.dataset.target);
+            });
+        });
+        showList('#list-ind');
     });
 
-    // estado inicial
-    showList('#list-ind');
   </script>
 </body>
 </html>
