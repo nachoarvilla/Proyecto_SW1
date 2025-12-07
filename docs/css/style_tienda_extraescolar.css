@@ -75,9 +75,9 @@ body{
   max-width:1200px;
   margin:24px auto;
   display:grid;
-  grid-template-columns:350px minmax(0,1fr) 300px;
+  /* CAMBIO CLAVE: 2 columnas: 1fr para el feed, 300px para el buscador */
+  grid-template-columns: minmax(0,1fr) 300px; 
   gap:20px;
-  /* CORRECCIÓN: Uniformar padding a 16px para el grid */
   padding:0 16px; 
 }
 @media (max-width:1024px){ .wrap{grid-template-columns:1fr;} }
@@ -91,15 +91,6 @@ body{
 }
 
 /* Anuncio */
-.ad{ 
-  /* CLAVE: Heredar estilos visuales del .panel */
-  background: var(--panel); 
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-
-  position:sticky; top:90px; z-index:8; height:fit-content; display:flex; flex-direction:column; padding:10px; gap:12px; 
-}
 .ad h3{ margin:0 0 12px 0 }
 .video-wrapper{ margin:0; width:100%; aspect-ratio:16/9; position:relative; overflow:hidden; border-radius:12px; background:#000; box-shadow:var(--shadow); }
 .ad-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border:0 }
