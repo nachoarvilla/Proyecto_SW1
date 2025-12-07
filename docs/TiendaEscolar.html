@@ -32,6 +32,13 @@
 
     <section class="feed" id="product-feed">
       <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
+      
+      <a href="crear_nuevo_producto_Escolar.html" class="new-post-btn" title="Crear nuevo producto">
+        <svg viewBox="0 0 24 24" class="icon">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+      </a>
+
     </section>
 
     <aside class="panel search">
@@ -110,7 +117,6 @@
             hour: '2-digit', minute: '2-digit' 
         });
 
-        // HTML para un solo post (adaptado de tu estático)
         const post = document.createElement('article');
         post.className = 'post';
         post.dataset.itemId = item.id;
@@ -188,6 +194,12 @@
             } else {
                 products.forEach(p => feed.appendChild(createProductCard(p)));
             }
+            
+            // Reinsertar el botón de creación si se eliminó al vaciar el feed
+            const createBtn = document.querySelector('.new-post-btn');
+            if (createBtn && !feed.contains(createBtn)) {
+                feed.appendChild(createBtn);
+            }
 
         } catch (err) {
             console.error('Error al cargar productos:', err);
@@ -249,11 +261,21 @@
             currentProductId = btn.dataset.productId;
 
             const article = btn.closest('.post');
-            const itemName = article?.dataset.itemName || 'Artículo';
-            const def = parseFloat(btn.dataset.default || '1.00');
+            const itemName = article?.querySelector('.item-name')?.textContent || 'Artículo';
+
+            // Usar una fórmula simple para sugerir una oferta inicial (75% del precio original)
+            const priceText = article?.querySelector('.item-price')?.textContent;
+            let originalPrice = 0;
+            if (priceText) {
+                // Limpiar "PVP:" y "€" y reemplazar coma por punto
+                const cleanedPrice = priceText.replace('PVP:', '').replace('€', '').trim().replace(',', '.');
+                originalPrice = parseFloat(cleanedPrice);
+            }
+            const def = (originalPrice * 0.75).toFixed(2);
+
 
             offerItem.textContent = itemName;
-            offerInput.value = def.toFixed(2);
+            offerInput.value = def > 0 ? def : '0.10'; // Asegurar un valor mínimo
             document.getElementById('offerMsg').textContent = ''; // Limpiar mensaje previo
 
             if (typeof dialog.showModal === 'function') {
@@ -278,7 +300,6 @@
             if (success && lastOfferBtn) {
                 lastOfferBtn.textContent = `Ofertado ${amount.toFixed(2)} €`;
                 lastOfferBtn.classList.add('offered');
-                lastOfferBtn.dataset.default = amount.toFixed(2);
                 lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${amount.toFixed(2)} euros`);
                 // Pequeña pausa para que el usuario vea el mensaje de éxito antes de cerrar
                 setTimeout(() => dialog.close(), 1500); 
@@ -293,7 +314,7 @@
 
     // --- INIT ---
     document.addEventListener('DOMContentLoaded', () => {
-        applyThemePreference(); // Aplicar tema (aunque se llama al inicio del script, lo aseguramos)
+        applyThemePreference(); // Aplicar tema
 
         const token = getTokenOrRedirect();
         if (!token) return;
@@ -305,7 +326,6 @@
         document.getElementById('product-feed').addEventListener('click', (e) => {
             const btn = e.target.closest('.action.comment');
             if (!btn) return;
-            // Aquí iría la lógica para cargar y mostrar el modal de ofertas de ese producto.
             alert('Cargar modal de ofertas recibidas (Pendiente de implementar).');
         });
 

@@ -230,3 +230,54 @@ body{
 .btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
 .btn.primary:hover{background:#1e40af}
 .btn.ghost{background:#fff}
+
+/* --- ESTILOS DEL FORMULARIO DE CREACIÓN --- */
+.form-container label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container input[type="url"],
+.form-container textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--hover);
+  color: var(--ink);
+  outline: none;
+}
+
+.form-container textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-container .form-row {
+  display: grid;
+  grid-template-columns: 1fr 150px; /* Foto y Precio */
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.form-container .msg {
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-container .msg.error {
+  background: var(--danger);
+  color: white;
+}
+
+.form-container .msg.success {
+  background: var(--success);
+  color: white;
+}

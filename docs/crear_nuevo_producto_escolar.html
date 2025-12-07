@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU · Vender Material Escolar</title>
+  <link rel="stylesheet" href="css/style_tienda_escolar.css" />
+  </head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a href="index.html" class="logo">ConoCEU</a>
+      <div class="nav-center"><span>Vender material escolar</span></div>
+      <div class="nav-actions">
+        <a class="icon-btn" href="TiendaEscolar.html" aria-label="Volver a la tienda" title="Volver">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5m7-7l-7 7 7 7"></path></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap" style="grid-template-columns: 1fr; max-width: 700px;">
+    <section class="panel">
+      <form id="productForm" class="form-container">
+        <h2 style="margin-bottom: 20px;">Publicar producto escolar</h2>
+        
+        <div id="formMsg" class="msg" style="margin-bottom: 15px;"></div>
+
+        <label for="descripcion">Descripción del producto</label>
+        <textarea id="descripcion" name="descripcion" required rows="3" placeholder="Ej: Bolígrafo BIC azul nuevo, tinta de 1.0 mm." maxlength="500"></textarea>
+        
+        <div class="form-row">
+          <div>
+            <label for="foto">URL de la foto (Obligatorio)</label>
+            <input id="foto" name="foto" type="url" placeholder="https://..." required>
+            <small class="muted">Sube tu foto a un servicio de almacenamiento y pega la URL.</small>
+          </div>
+          
+          <div>
+            <label for="precio">Precio de venta (€)</label>
+            <input id="precio" name="precio" type="number" min="0.10" step="0.10" inputmode="decimal" placeholder="Ej: 1.50" required>
+          </div>
+        </div>
+        
+        <label for="ubicacion">Ubicación (Opcional)</label>
+        <input id="ubicacion" name="ubicacion" type="text" placeholder="Ej: Edificio A, 3ª planta">
+
+        <button type="submit" class="offer-btn" style="margin-top: 20px; background: var(--brand); color: white; border: none;">
+          Publicar Venta
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = 'https://conoceu-backend.onrender.com';
+    const ENDPOINT = '/api/tienda-escolar'; 
+
+    function getTokenOrRedirect() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return token;
+    }
+    
+    // Lógica de tema (asegura consistencia)
+    function applyThemePreference(prefFromStorage) {
+      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+      function setTheme(theme) { document.documentElement.dataset.theme = theme; }
+      if (pref === 'system') {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', e => {
+          const current = localStorage.getItem('cfg_theme') || 'system';
+          if (current === 'system') { setTheme(e.matches ? 'dark' : 'light'); }
+        });
+      } else { setTheme(pref); }
+    }
+    applyThemePreference(); 
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = getTokenOrRedirect();
+      if (!token) return;
+
+      const form = document.getElementById('productForm');
+      const formMsg = document.getElementById('formMsg');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const payload = {
+          descripcion: document.getElementById('descripcion').value.trim(),
+          foto: document.getElementById('foto').value.trim(),
+          precio: parseFloat(document.getElementById('precio').value),
+          ubicacion: document.getElementById('ubicacion').value.trim() || null,
+        };
+
+        if (!payload.foto || isNaN(payload.precio)) {
+          formMsg.textContent = 'Por favor, completa la URL de la foto y el precio.';
+          return;
+        }
+
+        formMsg.textContent = 'Publicando...';
+        
+        try {
+          const res = await fetch(API_BASE + ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(payload)
+          });
+          
+          const data = await res.json();
+
+          if (!res.ok) {
+            formMsg.className = 'msg error';
+            formMsg.textContent = data.error || 'Error al publicar el producto.';
+            return;
+          }
+
+          formMsg.className = 'msg success';
+          formMsg.textContent = '¡Producto publicado correctamente! Redirigiendo...';
+          setTimeout(() => {
+            window.location.href = 'TiendaEscolar.html';
+          }, 1500);
+
+        } catch (err) {
+          console.error(err);
+          formMsg.className = 'msg error';
+          formMsg.textContent = 'Error de conexión con el servidor.';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

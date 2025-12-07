@@ -38,6 +38,13 @@
 
     <section class="feed" id="product-feed">
       <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
+      
+      <a href="crear_nuevo_producto_Extraescolar.html" class="new-post-btn" title="Crear nuevo producto">
+        <svg viewBox="0 0 24 24" class="icon">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+      </a>
+
     </section>
 
     <aside class="panel search">
@@ -80,11 +87,10 @@
 
   <script>
     const API_BASE = 'https://conoceu-backend.onrender.com';
-    // 💡 CAMBIO CLAVE: Endpoint de la tienda extraescolar
-    const ENDPOINT = '/api/tienda-extraescolar';
+    const ENDPOINT = '/api/tienda-extraescolar'; // 💡 CAMBIO CLAVE: Endpoint de la tienda extraescolar
     let currentProductId = null; 
 
-    // --- Funciones de Tema/Token (Iguales que Tienda Escolar) ---
+    // --- Funciones de Tema/Token ---
     function applyThemePreference(prefFromStorage) {
       const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
       function setTheme(theme) { document.documentElement.dataset.theme = theme; }
@@ -107,7 +113,7 @@
       return token;
     }
 
-    // --- Renderizado (Iguales que Tienda Escolar) ---
+    // --- Renderizado ---
     function createProductCard(item) {
         const date = new Date(item.fecha_creacion).toLocaleDateString('es-ES', { 
             day: 'numeric', month: 'short' 
@@ -193,6 +199,12 @@
             } else {
                 products.forEach(p => feed.appendChild(createProductCard(p)));
             }
+            
+            // Reinsertar el botón de creación si se eliminó al vaciar el feed
+            const createBtn = document.querySelector('.new-post-btn');
+            if (createBtn && !feed.contains(createBtn)) {
+                feed.appendChild(createBtn);
+            }
 
         } catch (err) {
             console.error('Error al cargar productos:', err);
@@ -200,7 +212,7 @@
         }
     }
 
-    // --- Lógica de Oferta (Backend) (Iguales que Tienda Escolar) ---
+    // --- Lógica de Oferta (Backend) ---
     async function submitOffer(productId, amount, token) {
         const offerMsg = document.getElementById('offerMsg');
         offerMsg.className = 'msg';
@@ -236,7 +248,7 @@
     }
 
 
-    // --- Interacciones y Modales (Iguales que Tienda Escolar) ---
+    // --- Interacciones y Modales ---
     const dialog = document.getElementById('offerDialog');
     const offerForm = document.getElementById('offerForm');
     const offerInput = document.getElementById('offerInput');
@@ -253,11 +265,19 @@
             currentProductId = btn.dataset.productId;
 
             const article = btn.closest('.post');
-            const itemName = article?.dataset.itemName || 'Artículo';
-            const def = parseFloat(btn.dataset.default || '1.00');
+            const itemName = article?.querySelector('.item-name')?.textContent || 'Artículo';
+            
+            const priceText = article?.querySelector('.item-price')?.textContent;
+            let originalPrice = 0;
+            if (priceText) {
+                const cleanedPrice = priceText.replace('PVP:', '').replace('€', '').trim().replace(',', '.');
+                originalPrice = parseFloat(cleanedPrice);
+            }
+            const def = (originalPrice * 0.75).toFixed(2);
+
 
             offerItem.textContent = itemName;
-            offerInput.value = def.toFixed(2);
+            offerInput.value = def > 0 ? def : '0.10'; 
             document.getElementById('offerMsg').textContent = ''; 
 
             if (typeof dialog.showModal === 'function') {
@@ -281,7 +301,6 @@
             if (success && lastOfferBtn) {
                 lastOfferBtn.textContent = `Ofertado ${amount.toFixed(2)} €`;
                 lastOfferBtn.classList.add('offered');
-                lastOfferBtn.dataset.default = amount.toFixed(2);
                 lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${amount.toFixed(2)} euros`);
                 setTimeout(() => dialog.close(), 1500); 
             } else if (success) {
