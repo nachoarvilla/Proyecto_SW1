@@ -77,11 +77,12 @@ body{
   display:grid;
   grid-template-columns:350px minmax(0,1fr) 300px;
   gap:20px;
-  padding:0 16px 0 8px;
+  /* CORRECCIÓN: Uniformar padding a 16px para el grid */
+  padding:0 16px; 
 }
 @media (max-width:1024px){ .wrap{grid-template-columns:1fr;} }
 
-/* ===== Paneles ===== */
+/* ===== Paneles (El diseño visual básico se aplica aquí) ===== */
 .panel{
   background:var(--panel);
   border:1px solid var(--line);
@@ -90,7 +91,15 @@ body{
 }
 
 /* Anuncio */
-.ad{ position:sticky; top:90px; z-index:8; height:fit-content; display:flex; flex-direction:column; padding:10px; gap:12px; }
+.ad{ 
+  /* CLAVE: Heredar estilos visuales del .panel */
+  background: var(--panel); 
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+
+  position:sticky; top:90px; z-index:8; height:fit-content; display:flex; flex-direction:column; padding:10px; gap:12px; 
+}
 .ad h3{ margin:0 0 12px 0 }
 .video-wrapper{ margin:0; width:100%; aspect-ratio:16/9; position:relative; overflow:hidden; border-radius:12px; background:#000; box-shadow:var(--shadow); }
 .ad-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border:0 }
@@ -153,7 +162,15 @@ body{
 .post-meta b{ color:var(--ink) }
 
 /* ===== Buscador ===== */
-.search{ position:sticky; top:90px; z-index:8; height:fit-content; padding:14px }
+.search{ 
+  /* CLAVE: Heredar estilos visuales del .panel */
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+
+  position:sticky; top:90px; z-index:8; height:fit-content; padding:14px 
+}
 .search h3{ margin:0 0 10px 0 }
 .searchbar{ position:relative }
 .searchbar input{

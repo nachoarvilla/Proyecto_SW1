@@ -71,13 +71,14 @@ body{
   max-width:1200px;
   margin:24px auto;
   display:grid;
-  grid-template-columns:350px minmax(0,1fr) 300px;
+  grid-template-columns:350px minmax(0,1fr) 300px; /* Anuncio | Contenido | Buscador */
   gap:20px;
-  padding:0 16px;
-  padding-left:8px;
+  /* Uniformar padding */
+  padding:0 16px; 
 }
 @media (max-width:1024px){
-  .wrap{grid-template-columns:1fr;}
+  /* Esta regla asegura que en móvil se muestre una sola columna, lo cual es correcto. */
+  .wrap{grid-template-columns:1fr;} 
 }
 
 /* ===================
@@ -92,6 +93,12 @@ body{
 
 /* Anuncio */
 .ad{
+  /* CLAVE: Heredar estilos visuales del .panel */
+  background: var(--panel); 
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  
   position:sticky;top:90px;z-index:8;
   height:fit-content;
   display:flex;flex-direction:column;
@@ -167,7 +174,17 @@ body{
 /* ===================
    Buscador de objetos
 ==================== */
-.search{position:sticky;top:90px;z-index:8;height:fit-content;padding:14px}
+.search{
+  /* CLAVE: Heredar estilos visuales del .panel */
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  
+  position:sticky;top:90px;z-index:8;
+  height:fit-content;
+  padding:14px;
+}
 .search h3{margin:0 0 10px 0}
 .searchbar{position:relative}
 .searchbar input{
