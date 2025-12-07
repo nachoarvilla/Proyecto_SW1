@@ -1,23 +1,27 @@
+/* style.css (CÓDIGO COMPLETO Y CORREGIDO) */
+
 :root{
   /* Modo Claro por Defecto */
-  --bg: #f3f4ff; /* El color de fondo que usa perfil.css originalmente */
-  --panel: #ffffff; /* El color de las tarjetas (card) */
+  --bg: #f3f4ff; /* Fondo de la página */
+  --panel: #ffffff; /* Fondo del header/footer */
   --ink: #111827; /* Color principal del texto */
-  --muted: #6b7280; /* Color de texto secundario (subtítulos) */
+  --muted: #6b7280; /* Color de texto secundario */
   --line: rgba(148, 163, 184, 0.18); /* Color de bordes/líneas */
-  --accent: #4f46e5; /* Color de acento/botón primario */
+  --accent: #4f46e5; /* Color de acento/tarjetas */
+  --brand: #2a66d4; /* Color del logo */
   --hover: #f9fafb; /* Color de fondo al pasar el ratón */
   --shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
 }
 
 /* Tema oscuro: Se activa con <html data-theme="dark"> */
 :root[data-theme="dark"]{
-  --bg: #111827;
-  --panel: #1f2937;
+  --bg: #111827; /* Fondo azul oscuro */
+  --panel: #1f2937; /* Barras superior/inferior más claras que el fondo */
   --ink: #ffffff;
   --muted: #9ca3af;
   --line: rgba(255, 255, 255, 0.15);
-  --accent: #6366f1;
+  --accent: #374151; /* Color base de las tarjetas (más suave) */
+  --brand: #60a5fa; /* Color del logo claro */
   --hover: #2d3748;
   --shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
 }
@@ -30,10 +34,12 @@
 }
 
 body {
-  background-color: #e9f2fb;
+  /* CAMBIO: Usar variable para el fondo */
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  color: var(--ink); /* Usar variable para el texto */
 }
 
 /* --- HEADER --- */
@@ -41,13 +47,16 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  /* CAMBIO: Usar variable para el fondo */
+  background-color: var(--panel);
   padding: 10px 20px;
-  border-bottom: 2px solid #ccc;
+  /* CAMBIO: Usar variable para el borde */
+  border-bottom: 2px solid var(--line);
 }
 
 header h1 {
-  color: #2a66d4;
+  /* CAMBIO: Usar variable para el color */
+  color: var(--brand);
   font-size: 2.2rem;
   font-weight: bold;
 }
@@ -73,6 +82,7 @@ header h1 {
   background: none;
   cursor: pointer;
   transition: transform 0.2s ease;
+  /* El color del SVG por defecto será var(--ink) */
 }
 
 .icon-btn:hover {
@@ -89,8 +99,9 @@ main {
 }
 
 .card {
-  background-color: #3a83db;
-  color: white;
+  /* CAMBIO: Contraste deseado (azul oscuro vs azul más claro para el fondo) */
+  background-color: var(--brand);
+  color: var(--panel); /* Texto blanco/claro */
   text-align: center;
   border-radius: 10px;
   padding: 20px;
@@ -119,7 +130,8 @@ main {
 
 /* --- FOOTER --- */
 footer {
-  background-color: white;
+  /* CAMBIO: Usar variable para el fondo */
+  background-color: var(--panel);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -129,13 +141,15 @@ footer {
 
 /* Botones del footer */
 .footer-btn {
-  color: black;
+  /* CAMBIO: Usar variable para el color de texto */
+  color: var(--ink);
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .footer-btn:hover {
-  color: #2a66d4;
+  /* CAMBIO: Usar variable de acento */
+  color: var(--brand);
   transform: scale(1.05);
 }
