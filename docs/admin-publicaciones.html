@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Admin — Publicaciones</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="admin-usuarios.html">Usuarios</a>
+    <a href="admin-publicaciones.html">Publicaciones</a>
+    <a href="admin-productos.html">Productos</a>
+</div>
+
+<div class="content">
+    <h1>Moderación de publicaciones</h1>
+
+    <div class="card">
+        <table id="pubTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Foto</th>
+                    <th>Texto</th>
+                    <th>Autor</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+protectAdminPage();
+
+const API = "https://conoceu-backend.onrender.com";
+const token = localStorage.getItem("token");
+
+async function loadPublicaciones() {
+    const res = await fetch(API + "/api/admin/publicaciones", {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        alert("Error cargando publicaciones");
+        return [];
+    }
+
+    return res.json();
+}
+
+function render(pubList) {
+    const tbody = document.querySelector("#pubTable tbody");
+    tbody.innerHTML = "";
+
+    pubList.forEach(p => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${p.id}</td>
+            <td><img class="thumb" src="${p.foto}" alt=""></td>
+            <td>${(p.texto || "").slice(0, 120)}</td>
+            <td>${p.username || "-"}</td>
+            <td>${new Date(p.fecha_creacion).toLocaleString()}</td>
+            <td>
+                <a href="#" data-id="${p.id}" data-action="delete" class="btn btn-danger">Eliminar</a>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+document.querySelector("#pubTable tbody").addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-action]");
+    if (!a) return;
+
+    const id = a.dataset.id;
+
+    if (a.dataset.action === "delete") {
+        if (!confirm("¿Eliminar publicación " + id + "?")) return;
+
+        const res = await fetch(API + "/api/admin/publicaciones/" + id, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (!res.ok) {
+            alert("Error al eliminar");
+            return;
+        }
+
+        alert("Publicación eliminada");
+        loadPublicaciones().then(render);
+    }
+});
+
+// Cargar al inicio
+loadPublicaciones().then(render);
+</script>
+
+</body>
+</html>

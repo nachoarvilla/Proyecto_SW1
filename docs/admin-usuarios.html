@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Admin — Usuarios</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="admin-usuarios.html">Usuarios</a>
+    <a href="admin-publicaciones.html">Publicaciones</a>
+    <a href="admin-productos.html">Productos</a>
+</div>
+
+<div class="content">
+    <h1>Gestión de usuarios</h1>
+
+    <div class="card">
+        <div class="search-row">
+            <input id="qSearch" type="search" placeholder="Buscar por username o email...">
+            <a id="btnSearch" class="btn btn-primary" href="#">Buscar</a>
+        </div>
+
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Creado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <p class="small-muted">Los administradores pueden cambiar roles o eliminar usuarios.</p>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+protectAdminPage();
+
+const API_BASE = "https://conoceu-backend.onrender.com";
+const token = localStorage.getItem("token");
+
+async function fetchUsuarios(q = "") {
+    const url = new URL(API_BASE + "/api/admin/users");
+    if (q) url.searchParams.set("search", q);
+
+    const res = await fetch(url, {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        alert("Error cargando usuarios");
+        return [];
+    }
+
+    return res.json();
+}
+
+function renderUsuarios(list) {
+    const tbody = document.querySelector("#usersTable tbody");
+    tbody.innerHTML = "";
+
+    list.forEach(u => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${u.id}</td>
+            <td>${u.username}</td>
+            <td>${u.email}</td>
+            <td>${u.role}</td>
+            <td>${new Date(u.created_at || "").toLocaleString()}</td>
+            <td>
+                <a href="#" class="btn btn-primary" data-id="${u.id}" data-action="make-admin">Hacer Admin</a>
+                <a href="#" class="btn btn-danger" data-id="${u.id}" data-action="delete">Eliminar</a>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+async function cambiarRol(id, role) {
+    const res = await fetch(API_BASE + "/api/admin/users/" + id + "/role", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ role })
+    });
+
+    if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        alert("Error cambiando rol: " + (err?.error || res.statusText));
+        return false;
+    }
+
+    return true;
+}
+
+async function eliminarUsuario(id) {
+    if (!confirm("¿Eliminar usuario ID " + id + "?")) return false;
+
+    const res = await fetch(API_BASE + "/api/admin/users/" + id, {
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        alert("Error eliminando usuario");
+        return false;
+    }
+
+    return true;
+}
+
+// Eventos
+document.getElementById("btnSearch").addEventListener("click", async () => {
+    const q = document.getElementById("qSearch").value.trim();
+    const users = await fetchUsuarios(q);
+    renderUsuarios(users);
+});
+
+document.querySelector("#usersTable tbody").addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-action]");
+    if (!a) return;
+
+    const id = a.dataset.id;
+    const action = a.dataset.action;
+
+    if (action === "make-admin") {
+        if (await cambiarRol(id, "admin")) {
+            alert("Usuario actualizado a Admin");
+            document.getElementById("btnSearch").click();
+        }
+    }
+
+    if (action === "delete") {
+        if (await eliminarUsuario(id)) {
+            alert("Usuario eliminado");
+            document.getElementById("btnSearch").click();
+        }
+    }
+});
+
+// Carga inicial
+(async () => {
+    const users = await fetchUsuarios();
+    renderUsuarios(users);
+})();
+</script>
+
+</body>
+</html>

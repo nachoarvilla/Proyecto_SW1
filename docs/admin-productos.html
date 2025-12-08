@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Admin — Productos</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="admin-usuarios.html">Usuarios</a>
+    <a href="admin-publicaciones.html">Publicaciones</a>
+    <a href="admin-productos.html">Productos</a>
+</div>
+
+<div class="content">
+    <h1>Productos de la tienda</h1>
+
+    <div class="card">
+        <table id="prodTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Tipo</th>
+                    <th>ID Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+protectAdminPage();
+
+const API = "https://conoceu-backend.onrender.com";
+const token = localStorage.getItem("token");
+
+async function loadProductos() {
+    const res = await fetch(API + "/api/admin/productos", {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        alert("Error cargando productos");
+        return [];
+    }
+
+    return res.json();
+}
+
+function render(list) {
+    const tbody = document.querySelector("#prodTable tbody");
+    tbody.innerHTML = "";
+
+    list.forEach(p => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${p.id}</td>
+            <td>${p.descripcion}</td>
+            <td>${p.precio}</td>
+            <td>${p.tipo}</td>
+            <td>${p.user_id}</td>
+            <td>
+                <a href="#" class="btn btn-danger" data-id="${p.id}" data-tipo="${p.tipo}" data-action="delete">Eliminar</a>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+document.querySelector("#prodTable tbody").addEventListener("click", async (e) => {
+    const a = e.target.closest("a[data-action]");
+    if (!a) return;
+
+    const id = a.dataset.id;
+    const tipo = a.dataset.tipo;
+
+    if (!confirm("Eliminar producto " + id + "?")) return;
+
+    const path =
+        tipo === "escolar"
+        ? "/api/admin/tienda-escolar/"
+        : "/api/admin/tienda-extraescolar/";
+
+    const res = await fetch(API + path + id, {
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        alert("Error eliminando producto");
+        return;
+    }
+
+    alert("Producto eliminado");
+    loadProductos().then(render);
+});
+
+// Cargar al inicio
+loadProductos().then(render);
+</script>
+
+</body>
+</html>

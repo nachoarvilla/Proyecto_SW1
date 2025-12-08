@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="css/admin.css">
+
+    <style>
+        /* Tarjetas del dashboard */
+        .cards {
+            display: flex;
+            gap: 20px;
+        }
+
+        .card-mini {
+            background: white;
+            padding: 20px;
+            width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-mini h3 {
+            font-size: 16px;
+            color: #636e72;
+            margin: 0;
+        }
+
+        .card-mini p {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #2d3436;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="admin-usuarios.html">Usuarios</a>
+    <a href="admin-publicaciones.html">Publicaciones</a>
+    <a href="admin-productos.html">Productos</a>
+</div>
+
+<div class="content">
+    <h1>Dashboard general</h1>
+
+    <div class="cards">
+        <div class="card-mini">
+            <h3>Usuarios</h3>
+            <p id="statUsuarios">-</p>
+        </div>
+        <div class="card-mini">
+            <h3>Publicaciones</h3>
+            <p id="statPublicaciones">-</p>
+        </div>
+        <div class="card-mini">
+            <h3>Chats</h3>
+            <p id="statChats">-</p>
+        </div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+protectAdminPage();
+
+async function cargarStats() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:3000/api/admin/stats", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    const stats = await res.json();
+
+    document.getElementById("statUsuarios").textContent = stats.usuarios;
+    document.getElementById("statPublicaciones").textContent = stats.publicaciones;
+    document.getElementById("statChats").textContent = stats.chats;
+}
+
+cargarStats();
+</script>
+
+</body>
+</html>
