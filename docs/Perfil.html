@@ -11,7 +11,6 @@
 </head>
 <body>
   <div class="app-frame">
-    <!-- Barra superior -->
     <header class="topbar">
       <div class="window-dots">
         <span></span><span></span><span></span>
@@ -34,12 +33,9 @@
       </div>
     </header>
 
-    <!-- Título -->
     <div class="page-title">Perfil</div>
 
-    <!-- Layout principal -->
     <main class="layout">
-      <!-- Columna izquierda: anuncio -->
       <aside class="col-side">
         <div class="ad video-container">
           <video
@@ -56,9 +52,7 @@
         </div>
       </aside>
 
-      <!-- Columna central: perfil -->
       <section class="col-center">
-        <!-- Cabecera de perfil -->
         <div class="card profile-header">
           <div class="avatar" id="profile-avatar">
             <span id="profile-avatar-initials">CEU</span>
@@ -71,13 +65,17 @@
             <div class="profile-actions">
               <button class="btn btn-primary" id="btn-edit-profile">Editar perfil</button>
               <button class="btn" id="btn-publications">Publicaciones</button>
-              <button class="btn" id="btn-store">Tienda</button>
+              
+              <a href="ofertas_tienda.html" class="btn" id="btn-received-offers">
+                Ofertas (<span id="offers-count">0</span>)
+              </a>
+              <a href="SeleccionTienda.html" class="btn" id="btn-my-store">Mi Tienda</a>
+
               <button class="btn btn-ghost" id="logout-btn">Cerrar sesión</button>
             </div>
           </div>
         </div>
 
-        <!-- Información del usuario -->
         <section class="card profile-info">
           <h3>Información personal</h3>
           <dl class="info-grid">
@@ -118,13 +116,11 @@
           <div class="intereses" id="interests-section">
             <h4>Intereses</h4>
             <div class="chips" id="profile-interests">
-              <!-- Relleno dinámico -->
-            </div>
+              </div>
           </div>
         </section>
       </section>
 
-      <!-- Columna derecha: anuncio -->
       <aside class="col-side">
         <div class="ad video-container">
           <video
@@ -142,7 +138,6 @@
       </aside>
     </main>
 
-    <!-- Engranaje -->
     <button class="gear" aria-label="Ajustes" title="Ajustes" id="settings-btn">
       <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
         <path d="M19.14 12.94a7.43 7.43 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.23l-2.39.96a7.36 7.36 0 0 0-1.63-.95l-.36-2.55a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.55c-.57.23-1.12.54-1.63.95l-2.39-.96a.5.5 0 0 0-.6.23L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.43 7.43 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.23l2.39-.96c.51.41 1.06.72 1.63.95l.36 2.55c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.55c.57-.23 1.12-.54 1.63-.95l2.39.96c.21.08.47-.01.6-.23l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z" fill="currentColor"/>
@@ -205,6 +200,28 @@
       }
       initialsSpan.textContent = initials.toUpperCase();
     }
+    
+    // 💡 NUEVA FUNCIÓN PARA OBTENER EL NÚMERO DE OFERTAS (Opcional, si tienes la ruta optimizada)
+    async function loadOffersCount(token) {
+        const countElement = document.getElementById('offers-count');
+        try {
+            // Usamos la ruta combinada que acabas de crear para contar las ofertas.
+            const res = await fetch(API_BASE + '/api/tienda/ofertas-recibidas', {
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            
+            if (res.ok) {
+                const offers = await res.json();
+                countElement.textContent = offers.length;
+            } else {
+                countElement.textContent = '?';
+            }
+        } catch (err) {
+            countElement.textContent = '?';
+        }
+    }
+
 
     async function cargarPerfil() {
       const token = localStorage.getItem('token');
@@ -213,6 +230,9 @@
         redirectToLogin();
         return;
       }
+      
+      // Cargar el conteo de ofertas en paralelo
+      loadOffersCount(token); 
 
       try {
         const res = await fetch(API_BASE + '/api/profile', {
@@ -324,13 +344,11 @@
         });
       }
 
-      // Placeholders publicaciones / tienda
+      // 💡 REDIRECCIONES DE TIENDA: Mantener placeholders
       document.getElementById('btn-publications').addEventListener('click', () => {
         alert('La sección de publicaciones estará disponible próximamente.');
       });
-      document.getElementById('btn-store').addEventListener('click', () => {
-        alert('La sección de tienda estará disponible próximamente.');
-      });
+      // El botón de ofertas y mi tienda ya redirigen directamente (href)
     });
   </script>
 </body>

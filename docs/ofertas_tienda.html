@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU — Ofertas Recibidas</title>
+  <link rel="stylesheet" href="css/style_ofertas.css">
+  <link rel="stylesheet" href="css/perfil.css"> </head>
+<body>
+  <div class="app-frame">
+    <header class="topbar">
+      <div class="window-dots">
+        <span></span><span></span><span></span>
+      </div>
+
+      <a href="index.html" class="brand">
+        <span class="brand-primary">Cono</span><span class="brand-accent">CEU</span>
+      </a>
+
+      <div class="top-actions">
+        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
+          <img src="img/Perfil.png" alt="" class="icon">
+        </a>
+      </div>
+    </header>
+
+    <div class="page-title">Ofertas Recibidas</div>
+    
+    <main class="layout" style="grid-template-columns: minmax(0, 800px);">
+        <section class="card offers-container">
+            <h3>Ofertas sobre tus productos en venta</h3>
+
+            <div id="offers-table-wrapper" class="table-wrapper">
+                <table id="offers-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Tienda</th>
+                            <th>Comprador</th>
+                            <th>Oferta</th>
+                            <th>PVP Original</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="offers-list">
+                        </tbody>
+                </table>
+                <p id="loading-status" style="text-align: center; color: var(--muted); padding: 20px;">Cargando ofertas...</p>
+            </div>
+            
+        </section>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = 'https://conoceu-backend.onrender.com';
+    const TABLE_BODY = document.getElementById('offers-list');
+    const LOADING_STATUS = document.getElementById('loading-status');
+
+    // --- Funciones de Tema/Token ---
+    function applyThemePreference(prefFromStorage) {
+      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+      function setTheme(theme) { document.documentElement.dataset.theme = theme; }
+      if (pref === 'system') {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', e => {
+          const current = localStorage.getItem('cfg_theme') || 'system';
+          if (current === 'system') { setTheme(e.matches ? 'dark' : 'light'); }
+        });
+      } else { setTheme(pref); }
+    }
+    
+    function getTokenOrRedirect() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'login.html';
+        return null;
+      }
+      return token;
+    }
+
+    // --- Renderizado de Ofertas ---
+    function createOfferRow(offer) {
+        const row = document.createElement('tr');
+        const offerDate = new Date(offer.fecha_creacion).toLocaleDateString('es-ES');
+        const offerTime = new Date(offer.fecha_creacion).toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
+        
+        row.innerHTML = `
+            <td>${offer.producto_descripcion.substring(0, 30)}...</td>
+            <td><span class="tienda-tag tag-${offer.tipo_tienda}">${offer.tipo_tienda.toUpperCase()}</span></td>
+            <td>
+                <div class="comprador-info">
+                    <div class="avatar-small"></div>
+                    <span>@${offer.comprador_username}</span>
+                </div>
+            </td>
+            <td class="offer-amount">${parseFloat(offer.cantidad).toFixed(2)} €</td>
+            <td class="original-price">${parseFloat(offer.producto_precio).toFixed(2)} €</td>
+            <td>${offerDate} ${offerTime}</td>
+            <td>
+                <button class="btn-action accept" data-offer-id="${offer.oferta_id}" title="Aceptar oferta">
+                    <svg viewBox="0 0 24 24" class="icon-small"><path d="M5 13l4 4L19 7"/></svg>
+                </button>
+                <button class="btn-action reject" data-offer-id="${offer.oferta_id}" title="Rechazar oferta">
+                    <svg viewBox="0 0 24 24" class="icon-small"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </td>
+        `;
+        return row;
+    }
+
+    async function loadReceivedOffers(token) {
+        TABLE_BODY.innerHTML = '';
+        LOADING_STATUS.textContent = 'Cargando ofertas...';
+        
+        try {
+            const res = await fetch(API_BASE + '/api/tienda/ofertas-recibidas', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const offers = await res.json();
+            LOADING_STATUS.style.display = 'none';
+
+            if (offers.length === 0) {
+                TABLE_BODY.innerHTML = '<tr><td colspan="7" style="text-align: center;">No has recibido ninguna oferta por tus productos.</td></tr>';
+            } else {
+                offers.forEach(offer => TABLE_BODY.appendChild(createOfferRow(offer)));
+            }
+
+        } catch (err) {
+            console.error('Error al cargar ofertas:', err);
+            LOADING_STATUS.style.display = 'block';
+            LOADING_STATUS.textContent = 'Error al cargar las ofertas.';
+        }
+    }
+
+    // --- INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        applyThemePreference(); 
+
+        const token = getTokenOrRedirect();
+        if (!token) return;
+
+        loadReceivedOffers(token);
+        
+        // Lógica para botones de Aceptar/Rechazar (Placeholder)
+        TABLE_BODY.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-action');
+            if (!btn) return;
+            
+            const offerId = btn.dataset.offerId;
+            const action = btn.classList.contains('accept') ? 'aceptada' : 'rechazada';
+
+            alert(`La oferta #${offerId} ha sido marcada como ${action}. (Lógica de backend pendiente)`);
+
+            // Eliminar fila (solo visualmente por ahora)
+            btn.closest('tr').remove();
+        });
+    });
+  </script>
+</body>
+</html>
