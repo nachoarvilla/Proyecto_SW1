@@ -42,16 +42,26 @@
     <aside class="panel ad">
       <h3>Anuncio</h3>
       <div class="video-wrapper">
-        <video class="ad-video" src="anuncios/AnuncioNike.mp4" playsinline controls muted loop autoplay preload="metadata" poster="anuncios/poster_anuncio.jpg"></video>
+        <video
+          class="ad-video"
+          src="anuncios/AnuncioNike.mp4"
+          playsinline
+          controls
+          muted
+          loop
+          autoplay
+          preload="metadata"
+          poster="anuncios/poster_anuncio.jpg">
+        </video>
       </div>
     </aside>
 
-    <!-- Centro: Feed + Crear publicación -->
+    <!-- Centro: Feed -->
     <section class="feed">
-      <!-- Botón flotante para nueva publicación -->
+      <!-- Botón nueva publicación -->
       <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
 
-      <!-- Modal crear publicación (oculto por defecto) -->
+      <!-- Modal nueva publicación -->
       <div id="modalNuevaPub" class="modal hidden">
         <div class="modal-content">
           <div class="modal-header">
@@ -76,15 +86,16 @@
         </div>
       </div>
 
-      <!-- Aquí se cargarán las publicaciones dinámicamente -->
+      <!-- Loader / mensajes -->
       <div id="loader" class="loader hidden">Cargando...</div>
+      <div id="feedContenido"></div>
     </section>
 
     <!-- Lado derecho: Buscador -->
     <aside class="panel search">
       <h3>Buscar alumno</h3>
       <div class="searchbar">
-        <input id="buscar" type="text" placeholder="Buscar alumno" />
+        <input id="buscar" type="text" placeholder="Buscar alumno" aria-label="Buscar alumno" />
         <span class="magnify" aria-hidden="true">
           <svg class="icon" viewBox="0 0 24 24">
             <rcle cx="11" cy="11" r="7"></circle>
@@ -96,47 +107,71 @@
     </aside>
   </main>
 
+  <!-- Estilos mínimos para modal/botón -->
   <style>
-    /* Modal y botón nueva publicación */
     .new-post-btn {
       position: fixed; right: 20px; bottom: 20px;
       width: 56px; height: 56px; border-radius: 50%;
-      background: var(--accent); color: white; border: none;
-      font-size: 24px; font-weight: bold; box-shadow: var(--shadow);
-      cursor: pointer; z-index: 100; transition: transform 0.2s;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 26px; font-weight: 700;
+      box-shadow: var(--shadow); cursor: pointer; z-index: 50;
+      display:flex;align-items:center;justify-content:center;
     }
-    .new-post-btn:hover { transform: scale(1.1); }
-    .modal { 
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5); 
-      display: flex; align-items: center; justify-content: center; z-index: 200;
+    .new-post-btn:hover { transform: scale(1.05); }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+      display:flex;align-items:center;justify-content:center;
+      z-index:100;
     }
-    .modal.hidden { display: none; }
+    .modal.hidden { display:none; }
     .modal-content {
-      background: var(--panel); max-width: 500px; width: 90%; max-height: 80vh;
-      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      background: var(--panel); border-radius: var(--radius);
+      box-shadow: var(--shadow); width: 100%; max-width: 480px;
+      max-height: 80vh; overflow:auto;
     }
     .modal-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px; border-bottom: 1px solid var(--line);
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 20px;border-bottom:1px solid var(--line);
     }
-    .close-modal { 
-      background: none; border: none; font-size: 24px; cursor: pointer; 
-      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    .close-modal {
+      border:none;background:transparent;font-size:24px;cursor:pointer;
+      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
     }
-    .form-group { padding: 0 20px 20px; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-    .form-group input, .form-group textarea {
-      width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px;
-      font-size: 16px; transition: border-color 0.2s;
-    }
-    .form-group input:focus, .form-group textarea:focus { 
-      outline: none; border-color: var(--accent); 
+    .form-group { padding:16px 20px; }
+    .form-group label { display:block;margin-bottom:6px;font-weight:600; }
+    .form-group input,.form-group textarea {
+      width:100%;padding:10px 12px;border-radius:8px;
+      border:1px solid var(--line);font-size:14px;
     }
     .btn-primary {
-      width: 100%; padding: 14px; background: var(--accent); color: white;
-      border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+      margin:0 20px 20px;width:calc(100% - 40px);
+      padding:12px;border-radius:10px;border:none;
+      background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
     }
-    .loader { text-align: center; padding: 40px; color: var(--muted); }
+    .loader { padding:40px;text-align:center;color:var(--muted); }
+    .comentarios-modal {
+      background:var(--panel);border-radius:var(--radius);
+      box-shadow:var(--shadow);width:100%;max-width:480px;
+      max-height:80vh;overflow:auto;
+    }
+    .comentarios-header {
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 20px;border-bottom:1px solid var(--line);
+    }
+    .form-comentario {
+      display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);
+    }
+    .form-comentario input {
+      flex:1;padding:8px 10px;border-radius:999px;
+      border:1px solid var(--line);
+    }
+    .form-comentario button {
+      border:none;border-radius:999px;padding:8px 14px;
+      background:var(--accent);color:#fff;cursor:pointer;
+    }
+    .comentario { padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px; }
+    .comentario small { display:block;color:var(--muted);font-size:12px; }
   </style>
 
   <script>
@@ -151,9 +186,9 @@
       window.location.href = 'login.html';
     }
 
-    // ==================== BUSCADOR ====================
+    // ====== Buscador de alumnos (usa /api/users/search?username=) ======
     const input = document.getElementById('buscar');
-    const list = document.getElementById('resultados');
+    const list  = document.getElementById('resultados');
 
     async function buscarAlumnos(query = '') {
       const q = query.trim();
@@ -163,10 +198,14 @@
         return;
       }
       try {
-        const res = await fetch(`${API_BASE}/api/users/search?q=${encodeURIComponent(q)}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) { list.innerHTML = ''; return; }
+        const res = await fetch(
+          `${API_BASE}/api/users/search?username=${encodeURIComponent(q)}`,
+          { headers: { 'Authorization': 'Bearer ' + token } }
+        );
+        if (!res.ok) {
+          list.innerHTML = '';
+          return;
+        }
         const users = await res.json();
         list.innerHTML = users.map(u => `
           <li tabindex="0" data-user-id="${u.id}">
@@ -174,7 +213,7 @@
           </li>
         `).join('');
       } catch (err) {
-        console.error('Error búsqueda', err);
+        console.error('Error buscando alumnos', err);
         list.innerHTML = '';
       }
     }
@@ -183,77 +222,69 @@
     list.addEventListener('click', e => {
       const li = e.target.closest('li');
       if (!li) return;
-      alert('Ir a perfil: ' + li.textContent.trim());
+      alert('Abrir perfil de: ' + li.textContent.trim());
+      // window.location.href = 'Perfil.html?user=' + li.dataset.userId;
     });
 
-    // ==================== PUBLICACIONES ====================
-    const feed = document.querySelector('.feed');
+    // ====== Publicaciones ======
+    const feedWrapper = document.getElementById('feedContenido');
     const loader = document.getElementById('loader');
-
-    async function cargarPublicaciones() {
-      const token = getToken();
-      if (!token) return;
-
-      loader.classList.remove('hidden');
-      try {
-        const res = await fetch(`${API_BASE}/api/publicaciones?limit=20`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const publicaciones = await res.json();
-        loader.classList.add('hidden');
-        feed.innerHTML = '';
-
-        for (const p of publicaciones) {
-          const article = crearPost(p);
-          feed.appendChild(article);
-        }
-        engancharEventosPosts();
-      } catch (err) {
-        loader.classList.add('hidden');
-        console.error('Error publicaciones:', err);
-        feed.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Error cargando publicaciones</div>';
-      }
-    }
 
     function crearPost(p) {
       const article = document.createElement('article');
       article.className = 'post';
       article.dataset.postId = p.id;
+
       article.innerHTML = `
         <header class="post-head">
-          <div class="avatar">${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}">` : ''}</div>
+          <div class="avatar">
+            ${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}" style="width:100%;height:100%;object-fit:cover;border-radius:999px;">` : ''}
+          </div>
           <div>
             <div class="username">${p.username}</div>
-            <div class="muted" style="font-size:12px">${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}</div>
+            <div class="muted" style="font-size:12px">
+              ${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}
+            </div>
           </div>
         </header>
         <div class="post-media">
-          <div class="ph"><img src="${p.foto}" alt="Publicación" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOGY4Ii8+PHRleHQgeD0iNTAlIiB5PSI5MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiPkltYWdlIG5vIGVuY29udHJhPC90ZXh0Pjwvc3ZnPg=='"/></div>
+          <div class="ph">
+            <img src="${p.foto}" alt="Publicación de ${p.username}"
+                 onerror="this.style.display='none'">
+          </div>
         </div>
         <div class="post-actions">
           <div class="left-actions">
             <button class="action like" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
             </button>
             <button class="action comment" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
+              </svg>
             </button>
             <button class="action share" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
+              </svg>
             </button>
           </div>
           <div class="right-actions">
             <button class="action bookmark" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
+              </svg>
             </button>
           </div>
         </div>
         <div class="post-meta">
-          <div><b><span class="likes">${p.likes_count || 0}</span> Me gusta</b></div>
+          <div><b><span class="likes">${p.likes_count ?? 0}</span> Me gusta</b></div>
           <div><b>${p.username}</b> ${p.texto || ''}</div>
-          <div class="muted comentarios-link" data-post-id="${p.id}">Comentarios: ${p.comments_count || 0}</div>
+          <div class="muted comentarios-link" data-post-id="${p.id}">
+            Comentarios: ${p.comments_count ?? 0}
+          </div>
         </div>
       `;
       return article;
@@ -275,23 +306,52 @@
               likesEl.textContent = btn.classList.contains('active') ? n + 1 : Math.max(0, n - 1);
             }
           }
-          if (action === 'comment') {
-            abrirComentarios(postId);
-          }
+          if (action === 'bookmark') btn.classList.toggle('active');
           if (action === 'share') {
-            navigator.clipboard?.writeText(window.location.href).then(() => {
+            navigator.clipboard?.writeText(location.href).then(() => {
               btn.classList.add('active');
               setTimeout(() => btn.classList.remove('active'), 500);
             });
           }
-          if (action === 'bookmark') {
-            btn.classList.toggle('active');
-          }
+          if (action === 'comment') abrirComentarios(postId);
         });
       });
     }
 
-    // ==================== NUEVA PUBLICACIÓN ====================
+    async function cargarPublicaciones() {
+      const token = getToken();
+      if (!token) return;
+
+      loader.classList.remove('hidden');
+      feedWrapper.innerHTML = '';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/publicaciones?limit=20`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const publicaciones = await res.json();
+        loader.classList.add('hidden');
+
+        if (!publicaciones.length) {
+          feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Todavía no hay publicaciones. Crea la primera con el botón “+”.</div>';
+          return;
+        }
+
+        publicaciones.forEach(p => {
+          const art = crearPost(p);
+          feedWrapper.appendChild(art);
+        });
+        engancharEventosPosts();
+      } catch (err) {
+        loader.classList.add('hidden');
+        console.error('Error cargando publicaciones', err);
+        feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Error cargando publicaciones</div>';
+      }
+    }
+
+    // ====== Nueva publicación ======
     const btnNuevaPub = document.getElementById('nuevaPublicacion');
     const modalNuevaPub = document.getElementById('modalNuevaPub');
     const formNuevaPub = document.getElementById('formNuevaPub');
@@ -305,7 +365,7 @@
       const token = getToken();
       if (!token) return redirectToLogin();
 
-      const formData = {
+      const payload = {
         foto: document.getElementById('fotoPub').value,
         texto: document.getElementById('textoPub').value,
         ubicacion: document.getElementById('ubicacionPub').value
@@ -315,24 +375,25 @@
         const res = await fetch(API_BASE + '/api/publicaciones', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error(await res.text());
-        
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         modalNuevaPub.classList.add('hidden');
         formNuevaPub.reset();
-        cargarPublicaciones(); // Recargar feed
+        cargarPublicaciones();
       } catch (err) {
-        alert('Error creando publicación: ' + err.message);
+        alert('Error creando publicación');
       }
     });
 
-    // ==================== COMENTARIOS ====================
+    // ====== Comentarios ======
     function abrirComentarios(postId) {
-      const comentariosHTML = `
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `
         <div class="comentarios-modal">
           <div class="comentarios-header">
             <h3>Comentarios</h3>
@@ -345,63 +406,67 @@
           </form>
         </div>
       `;
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = comentariosHTML;
-      modal.style.cssText = 'display:flex !important';
       document.body.appendChild(modal);
 
-      cargarComentarios(postId, modal);
       modal.querySelector('.close-comentarios').onclick = () => modal.remove();
       modal.querySelector('.form-comentario').onsubmit = e => enviarComentario(e, postId, modal);
+      cargarComentarios(postId, modal);
     }
 
     async function cargarComentarios(postId, modal) {
       const token = getToken();
-      const lista = modal.querySelector('#lista-comentarios');
+      const cont = modal.querySelector('#lista-comentarios');
+      cont.innerHTML = 'Cargando...';
       try {
         const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Authorization': 'Bearer ' + token }
         });
-        if (!res.ok) return;
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const comentarios = await res.json();
-        lista.innerHTML = comentarios.map(c => `
+        if (!comentarios.length) {
+          cont.innerHTML = '<div class="muted" style="padding:12px 16px;">Sé el primero en comentar.</div>';
+          return;
+        }
+        cont.innerHTML = comentarios.map(c => `
           <div class="comentario">
             <strong>${c.username}</strong> ${c.texto}
             <small>${new Date(c.fecha_creacion).toLocaleString()}</small>
           </div>
         `).join('');
       } catch (err) {
-        lista.innerHTML = '<div>Error cargando comentarios</div>';
+        cont.innerHTML = '<div style="padding:12px 16px;">Error cargando comentarios</div>';
       }
     }
 
     async function enviarComentario(e, postId, modal) {
       e.preventDefault();
-      const texto = document.getElementById('nuevo-comentario').value;
       const token = getToken();
+      const inputComentario = modal.querySelector('#nuevo-comentario');
+      const texto = inputComentario.value.trim();
+      if (!texto) return;
+
       try {
         const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ texto })
         });
-        if (!res.ok) throw new Error(await res.text());
-        document.getElementById('nuevo-comentario').value = '';
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        inputComentario.value = '';
         cargarComentarios(postId, modal);
-        cargarPublicaciones(); // Actualizar contador
+        cargarPublicaciones(); // actualizar contador
       } catch (err) {
-        alert('Error enviando comentario: ' + err.message);
+        alert('Error enviando comentario');
       }
     }
 
-    // ==================== INICIALIZACIÓN ====================
+    // ====== Inicialización ======
     document.addEventListener('DOMContentLoaded', () => {
       if (!getToken()) {
-        feed.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Inicia sesión para ver publicaciones</div>';
+        feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Inicia sesión para ver publicaciones.</div>';
         return;
       }
       cargarPublicaciones();
