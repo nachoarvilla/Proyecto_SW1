@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/style_tienda_escolar.css" />
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <nav class="nav">
       <a href="index.html" class="logo">ConoCEU</a>
@@ -29,165 +28,21 @@
     </nav>
   </header>
 
-  <!-- Contenido -->
   <main class="wrap">
-    <!-- Lado izquierdo: Anuncio -->
-    <aside class="panel ad">
-      <h3>Anuncio</h3>
-      <div class="video-wrapper">
-        <video
-          class="ad-video"
-          src="anuncios/AnuncioNike.mp4"
-          playsinline
-          controls
-          preload="metadata"
-          poster="anuncios/poster_anuncio.jpg">
-        </video>
-      </div>
+    
+    <aside class="col-side-left">
+      <a href="crear_nuevo_producto_escolar.html" class="new-post-btn" title="Crear nuevo producto">
+        <svg viewBox="0 0 24 24" class="icon">
+          <path d="M12 5v14M5 12h14"></path>
+        </svg>
+        <span>Vender Material</span>
+      </a>
     </aside>
 
-    <!-- Centro: Lista de objetos en venta -->
-    <section class="feed">
-      <!-- Item 1 -->
-      <article class="post" data-item="Bolígrafo azul">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">libreriaCampus</div>
-            <div class="muted" style="font-size:12px">Edificio A · hace 1 h</div>
-          </div>
-        </header>
-
-        <div class="post-media" aria-label="Imagen del producto">
-          <div class="ph">
-            <img src="img/Boligrafo.jpg" alt="Bolígrafo azul" />
-          </div>
-        </div>
-
-        <div class="product-header">
-          <span class="item-name">Bolígrafo azul</span>
-          <span class="item-price">PVP: 1,50 €</span>
-        </div>
-
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="offer-btn" data-default="1.00" title="Enviar oferta">Ofertar 1,00 €</button>
-            <button class="action bookmark" aria-label="Guardar" title="Guardar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="post-meta">
-          <div><b>Descripción</b> Bolígrafo BIC azul nuevo, tinta de 1.0 mm.</div>
-        </div>
-      </article>
-
-      <!-- Item 2 -->
-      <article class="post" data-item="Regla 30 cm">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">mariaP</div>
-            <div class="muted" style="font-size:12px">Biblioteca · hace 3 h</div>
-          </div>
-        </header>
-
-        <div class="post-media">
-          <div class="ph">
-            <img src="img/ReglaFoto.jpg" alt="Regla 30 cm" />
-          </div>
-        </div>
-
-        <div class="product-header">
-          <span class="item-name">Regla 30 cm</span>
-          <span class="item-price">PVP: 2,00 €</span>
-        </div>
-
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="offer-btn" data-default="1.50" title="Enviar oferta">Ofertar 1,50 €</button>
-            <button class="action bookmark" aria-label="Guardar" title="Guardar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="post-meta">
-          <div><b>Descripción</b> Regla de plástico transparente, marcas en mm/cm.</div>
-        </div>
-      </article>
-
-      <!-- Item 3 -->
-      <article class="post" data-item="Estuche doble">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">papeleriaNorte</div>
-            <div class="muted" style="font-size:12px">Hall · hace 6 h</div>
-          </div>
-        </header>
-
-        <div class="post-media">
-          <div class="ph">
-            <img src="img/EstucheBetis.jpg" alt="Estuche doble cremallera" />
-          </div>
-        </div>
-
-        <div class="product-header">
-          <span class="item-name">Estuche doble</span>
-          <span class="item-price">PVP: 6,00 €</span>
-        </div>
-
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="offer-btn" data-default="5.00" title="Enviar oferta">Ofertar 5,00 €</button>
-            <button class="action bookmark" aria-label="Guardar" title="Guardar">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="post-meta">
-          <div><b>Descripción</b> Estuche con dos compartimentos y tiradores metálicos.</div>
-        </div>
-      </article>
+    <section class="feed" id="product-feed">
+      <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
     </section>
 
-    <!-- Lado derecho: Buscador de objetos -->
     <aside class="panel search">
       <h3>Buscar objeto</h3>
       <div class="searchbar">
@@ -209,7 +64,6 @@
     </aside>
   </main>
 
-  <!-- Modal de oferta -->
   <dialog id="offerDialog" class="modal">
     <form method="dialog" class="modal-card" id="offerForm" novalidate>
       <h3 class="modal-title">Enviar oferta</h3>
@@ -223,98 +77,259 @@
         <button type="button" class="btn ghost" id="cancelOffer">Cancelar</button>
         <button type="submit" class="btn primary">Confirmar</button>
       </div>
+      <div id="offerMsg" class="msg"></div>
     </form>
   </dialog>
 
   <script>
+    const API_BASE = 'https://conoceu-backend.onrender.com';
+    const ENDPOINT = '/api/tienda-escolar';
+    let currentProductId = null;
+
+    // --- Funciones de Tema/Token ---
     function applyThemePreference(prefFromStorage) {
       const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
-
-      function setTheme(theme) {
-          // Establece el atributo data-theme en la etiqueta <html>
-          document.documentElement.dataset.theme = theme;
-      }
-
+      function setTheme(theme) { document.documentElement.dataset.theme = theme; }
       if (pref === 'system') {
-          const mq = window.matchMedia('(prefers-color-scheme: dark)');
-          setTheme(mq.matches ? 'dark' : 'light');
-          mq.addEventListener('change', e => {
-              const current = localStorage.getItem('cfg_theme') || 'system';
-              if (current === 'system') {
-                  setTheme(e.matches ? 'dark' : 'light');
-              }
-          });
-      } else {
-          setTheme(pref);
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', e => {
+          const current = localStorage.getItem('cfg_theme') || 'system';
+          if (current === 'system') { setTheme(e.matches ? 'dark' : 'light'); }
+        });
+      } else { setTheme(pref); }
+    }
+    
+    function getTokenOrRedirect() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'login.html';
+        return null;
       }
+      return token;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Llama a la función de aplicación del tema.
-      applyThemePreference(); 
-    });
+    // --- Renderizado ---
+    function createProductCard(item) {
+        const date = new Date(item.fecha_creacion).toLocaleDateString('es-ES', { 
+            day: 'numeric', month: 'short' 
+        });
+        const time = new Date(item.fecha_creacion).toLocaleTimeString('es-ES', { 
+            hour: '2-digit', minute: '2-digit' 
+        });
 
-    // --- Oferta modal ---
+        const post = document.createElement('article');
+        post.className = 'post';
+        post.dataset.itemId = item.id;
+        post.dataset.itemName = item.descripcion.substring(0, 30);
+
+        post.innerHTML = `
+            <header class="post-head">
+                <div class="avatar" aria-hidden="true"></div>
+                <div>
+                    <div class="username">${item.username}</div>
+                    <div class="muted" style="font-size:12px">${item.ubicacion || 'Ubicación desconocida'} · ${date} ${time}</div>
+                </div>
+            </header>
+
+            <div class="post-media" aria-label="Imagen del producto">
+                <div class="ph">
+                    <img src="${item.foto}" alt="${item.descripcion}" onerror="this.onerror=null; this.src='img/placeholder.jpg';" />
+                </div>
+            </div>
+
+            <div class="product-header">
+                <span class="item-name">${item.descripcion.substring(0, 50)}...</span>
+                <span class="item-price">PVP: ${parseFloat(item.precio).toFixed(2).replace('.', ',')} €</span>
+            </div>
+
+            <div class="post-actions">
+                <div class="left-actions">
+                    <button class="action like" aria-label="Me gusta" title="Me gusta" data-likes="${item.likes_count}">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+                    </button>
+                    <button class="action comment" aria-label="Comentar" title="Ver ofertas" data-offers="${item.ofertas_count}">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+                    </button>
+                    <button class="action share" aria-label="Compartir" title="Compartir">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+                    </button>
+                </div>
+                <div class="right-actions">
+                    <button class="offer-btn" data-default="${(parseFloat(item.precio) * 0.75).toFixed(2)}" title="Enviar oferta" data-product-id="${item.id}">Ofertar</button>
+                    <button class="action bookmark" aria-label="Guardar" title="Guardar">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="post-meta">
+                <div><b>Descripción</b> ${item.descripcion}</div>
+            </div>
+        `;
+        return post;
+    }
+
+    async function loadProducts(token) {
+        const feed = document.getElementById('product-feed');
+        const status = document.getElementById('feed-status');
+        feed.innerHTML = '';
+        status.textContent = 'Cargando productos...';
+        feed.appendChild(status);
+
+        try {
+            const res = await fetch(API_BASE + ENDPOINT, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const products = await res.json();
+            feed.innerHTML = ''; // Limpiar el estado de carga
+            
+            if (products.length === 0) {
+                feed.innerHTML = '<p style="text-align:center; color:var(--muted);">No hay productos en venta.</p>';
+            } else {
+                products.forEach(p => feed.appendChild(createProductCard(p)));
+            }
+        } catch (err) {
+            console.error('Error al cargar productos:', err);
+            feed.innerHTML = '<p style="color:red; text-align:center;">Error al cargar la tienda.</p>';
+        }
+    }
+
+    // --- Lógica de Oferta (Backend) ---
+    async function submitOffer(productId, amount, token) {
+        const offerMsg = document.getElementById('offerMsg');
+        offerMsg.className = 'msg';
+        offerMsg.textContent = 'Enviando oferta...';
+
+        try {
+            const res = await fetch(API_BASE + `${ENDPOINT}/${productId}/ofertas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ cantidad: amount })
+            });
+
+            const data = await res.json();
+            
+            if (!res.ok) {
+                offerMsg.className = 'msg error';
+                offerMsg.textContent = data.error || 'Error al enviar la oferta.';
+                return false;
+            }
+
+            offerMsg.className = 'msg success';
+            offerMsg.textContent = '¡Oferta enviada correctamente!';
+            return true;
+
+        } catch (err) {
+            offerMsg.className = 'msg error';
+            offerMsg.textContent = 'Error de conexión con el servidor.';
+            return false;
+        }
+    }
+
+
+    // --- Interacciones y Modales ---
     const dialog = document.getElementById('offerDialog');
     const offerForm = document.getElementById('offerForm');
     const offerInput = document.getElementById('offerInput');
     const offerItem = document.getElementById('offerItem');
     const cancelOffer = document.getElementById('cancelOffer');
+    let lastOfferBtn = null;
 
-    let lastOfferBtn = null; // botón que abrió el modal
+    function initOfferModal(token) {
+        // Abrir modal al pulsar cualquier .offer-btn
+        document.getElementById('product-feed').addEventListener('click', (e) => {
+            const btn = e.target.closest('.offer-btn');
+            if (!btn) return;
+            
+            lastOfferBtn = btn;
+            currentProductId = btn.dataset.productId;
 
-    // Abrir modal al pulsar cualquier .offer-btn
-    document.querySelectorAll('.offer-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        lastOfferBtn = btn;
-        const article = btn.closest('.post');
-        const itemName = article?.dataset.item || 'Artículo';
-        const def = parseFloat(btn.dataset.default || '1.00');
+            const article = btn.closest('.post');
+            const itemName = article?.querySelector('.item-name')?.textContent || 'Artículo';
 
-        offerItem.textContent = itemName;
-        offerInput.value = def.toFixed(2);
+            const priceText = article?.querySelector('.item-price')?.textContent;
+            let originalPrice = 0;
+            if (priceText) {
+                const cleanedPrice = priceText.replace('PVP:', '').replace('€', '').trim().replace(',', '.');
+                originalPrice = parseFloat(cleanedPrice);
+            }
+            const def = (originalPrice * 0.75).toFixed(2);
 
-        if (typeof dialog.showModal === 'function') {
-          dialog.showModal();
-        } else {
-          // Fallback muy básico si <dialog> no existe (navegadores antiguos)
-          dialog.setAttribute('open', '');
-        }
-        offerInput.focus();
-        offerInput.select();
-      });
-    });
 
-    // Cerrar modal sin cambios
-    cancelOffer.addEventListener('click', () => {
-      dialog.close();
-    });
+            offerItem.textContent = itemName;
+            offerInput.value = def > 0 ? def : '0.10'; 
+            document.getElementById('offerMsg').textContent = ''; 
 
-    // Confirmar oferta -> actualizar botón
-    offerForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const value = parseFloat(offerInput.value);
-      if (isNaN(value) || value < 0.10) {
-        offerInput.focus();
-        return;
-      }
-      if (lastOfferBtn) {
-        lastOfferBtn.textContent = `Ofertado ${value.toFixed(2)} €`;
-        lastOfferBtn.classList.add('offered');
-        lastOfferBtn.dataset.default = value.toFixed(2);
-        lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${value.toFixed(2)} euros`);
-      }
-      dialog.close();
-    });
+            if (typeof dialog.showModal === 'function') {
+                dialog.showModal();
+            }
+            offerInput.focus();
+            offerInput.select();
+        });
 
-    // Cerrar con click fuera del modal-card
-    dialog.addEventListener('click', (e) => {
-      const rect = offerForm.getBoundingClientRect();
-      const inDialog = (
-        e.clientX >= rect.left && e.clientX <= rect.right &&
-        e.clientY >= rect.top && e.clientY <= rect.bottom
-      );
-      if (!inDialog) dialog.close();
+        // Confirmar oferta -> actualizar botón y backend
+        offerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(offerInput.value);
+
+            if (isNaN(amount) || amount < 0.10) {
+                offerInput.focus();
+                return;
+            }
+
+            const success = await submitOffer(currentProductId, amount, token);
+            
+            if (success && lastOfferBtn) {
+                lastOfferBtn.textContent = `Ofertado ${amount.toFixed(2)} €`;
+                lastOfferBtn.classList.add('offered');
+                lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${amount.toFixed(2)} euros`);
+                setTimeout(() => dialog.close(), 1500); 
+            } else if (success) {
+                 setTimeout(() => dialog.close(), 1500);
+            }
+        });
+
+        cancelOffer.addEventListener('click', () => dialog.close());
+    }
+
+
+    // --- INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        applyThemePreference(); 
+
+        const token = getTokenOrRedirect();
+        if (!token) return;
+
+        loadProducts(token);
+        initOfferModal(token);
+
+        // Lógica para ver ofertas (comentarios)
+        document.getElementById('product-feed').addEventListener('click', (e) => {
+            const btn = e.target.closest('.action.comment');
+            if (!btn) return;
+            alert('Cargar modal de ofertas recibidas (Pendiente de implementar).');
+        });
+
+        // Lógica de like/bookmark (se mantiene estática por ahora)
+        document.getElementById('product-feed').addEventListener('click', (e) => {
+            const btn = e.target.closest('.action:not(.comment)');
+            if (!btn) return;
+
+            const action = btn.getAttribute('aria-label');
+            if (action === 'Me gusta' || action === 'Guardar') {
+                btn.classList.toggle('active');
+            }
+        });
     });
   </script>
 </body>

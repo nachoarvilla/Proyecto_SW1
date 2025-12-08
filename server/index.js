@@ -831,6 +831,65 @@ app.get('/api/tienda-extraescolar/:id/ofertas', auth, async (req, res) => {
   }
 });
 
+// ------------- TIENDA: listar ofertas recibidas por el usuario --------------------------
+app.get('/api/tienda/ofertas-recibidas', auth, async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        // 1. Obtener ofertas de la Tienda Escolar
+        const [ofertasEscolar] = await db.query(
+            `SELECT 
+                o.id AS oferta_id,
+                o.cantidad,
+                o.fecha_creacion,
+                u.username AS comprador_username,
+                u.foto_perfil AS comprador_foto,
+                t.id AS producto_id,
+                t.descripcion AS producto_descripcion,
+                t.precio AS producto_precio,
+                'escolar' AS tipo_tienda
+             FROM ofertas_tienda_escolar o
+             JOIN tienda_escolar t ON o.producto_id = t.id
+             JOIN users u ON o.comprador_id = u.id
+             WHERE t.user_id = ?
+             ORDER BY o.fecha_creacion DESC`,
+            [userId]
+        );
+
+        // 2. Obtener ofertas de la Tienda Extraescolar
+        const [ofertasExtraescolar] = await db.query(
+            `SELECT 
+                o.id AS oferta_id,
+                o.cantidad,
+                o.fecha_creacion,
+                u.username AS comprador_username,
+                u.foto_perfil AS comprador_foto,
+                t.id AS producto_id,
+                t.descripcion AS producto_descripcion,
+                t.precio AS producto_precio,
+                'extraescolar' AS tipo_tienda
+             FROM ofertas_tienda_extraescolar o
+             JOIN tienda_extraescolar t ON o.producto_id = t.id
+             JOIN users u ON o.comprador_id = u.id
+             WHERE t.user_id = ?
+             ORDER BY o.fecha_creacion DESC`,
+            [userId]
+        );
+
+        // Combinar y devolver los resultados
+        const todasLasOfertas = [...ofertasEscolar, ...ofertasExtraescolar];
+        
+        // Opcional: ordenar por fecha si se desea
+        todasLasOfertas.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+
+        res.json(todasLasOfertas);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error al obtener las ofertas recibidas" });
+    }
+});
+
 // -----------------------------------------------------
 // 💡 NUEVA RUTA: BÚSQUEDA DE USUARIOS
 // -----------------------------------------------------
