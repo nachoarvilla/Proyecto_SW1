@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ConoCEU — Ofertas Recibidas</title>
   <link rel="stylesheet" href="css/style_ofertas.css">
-  <link rel="stylesheet" href="css/perfil.css"> </head>
+  <link rel="stylesheet" href="css/perfil.css"> 
+</head>
 <body>
   <div class="app-frame">
     <header class="topbar">
@@ -26,7 +27,9 @@
 
     <div class="page-title">Ofertas Recibidas</div>
     
-    <main class="layout" style="grid-template-columns: minmax(0, 800px);">
+    <main class="layout" style="grid-template-columns: 1fr minmax(0, 800px) 1fr;">
+        <div></div>
+
         <section class="card offers-container">
             <h3>Ofertas sobre tus productos en venta</h3>
 
@@ -40,8 +43,7 @@
                             <th>Oferta</th>
                             <th>PVP Original</th>
                             <th>Fecha</th>
-                            <th>Acciones</th>
-                        </tr>
+                            </tr>
                     </thead>
                     <tbody id="offers-list">
                         </tbody>
@@ -50,6 +52,8 @@
             </div>
             
         </section>
+        
+        <div></div>
     </main>
   </div>
 
@@ -99,15 +103,7 @@
             <td class="offer-amount">${parseFloat(offer.cantidad).toFixed(2)} €</td>
             <td class="original-price">${parseFloat(offer.producto_precio).toFixed(2)} €</td>
             <td>${offerDate} ${offerTime}</td>
-            <td>
-                <button class="btn-action accept" data-offer-id="${offer.oferta_id}" title="Aceptar oferta">
-                    <svg viewBox="0 0 24 24" class="icon-small"><path d="M5 13l4 4L19 7"/></svg>
-                </button>
-                <button class="btn-action reject" data-offer-id="${offer.oferta_id}" title="Rechazar oferta">
-                    <svg viewBox="0 0 24 24" class="icon-small"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
-            </td>
-        `;
+            `;
         return row;
     }
 
@@ -129,8 +125,11 @@
             const offers = await res.json();
             LOADING_STATUS.style.display = 'none';
 
+            // Ajustar el colspan de la tabla para que coincida con el número de columnas (6)
+            const colspan = 6; 
+
             if (offers.length === 0) {
-                TABLE_BODY.innerHTML = '<tr><td colspan="7" style="text-align: center;">No has recibido ninguna oferta por tus productos.</td></tr>';
+                TABLE_BODY.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center;">No has recibido ninguna oferta por tus productos.</td></tr>`;
             } else {
                 offers.forEach(offer => TABLE_BODY.appendChild(createOfferRow(offer)));
             }
@@ -151,19 +150,8 @@
 
         loadReceivedOffers(token);
         
-        // Lógica para botones de Aceptar/Rechazar (Placeholder)
-        TABLE_BODY.addEventListener('click', (e) => {
-            const btn = e.target.closest('.btn-action');
-            if (!btn) return;
-            
-            const offerId = btn.dataset.offerId;
-            const action = btn.classList.contains('accept') ? 'aceptada' : 'rechazada';
-
-            alert(`La oferta #${offerId} ha sido marcada como ${action}. (Lógica de backend pendiente)`);
-
-            // Eliminar fila (solo visualmente por ahora)
-            btn.closest('tr').remove();
-        });
+        // La lógica de click para Aceptar/Rechazar ya no es necesaria ni funcional.
+        // Se mantiene la tabla solo como visualización.
     });
   </script>
 </body>

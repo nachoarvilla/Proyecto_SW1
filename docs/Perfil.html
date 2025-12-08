@@ -64,7 +64,8 @@
 
             <div class="profile-actions">
               <button class="btn btn-primary" id="btn-edit-profile">Editar perfil</button>
-              <button class="btn" id="btn-publications">Publicaciones</button>
+              
+              <a href="Publicaciones.html" class="btn" id="btn-publications">Publicaciones</a>
               
               <a href="ofertas_tienda.html" class="btn" id="btn-received-offers">
                 Ofertas (<span id="offers-count">0</span>)
@@ -201,11 +202,9 @@
       initialsSpan.textContent = initials.toUpperCase();
     }
     
-    // 💡 NUEVA FUNCIÓN PARA OBTENER EL NÚMERO DE OFERTAS (Opcional, si tienes la ruta optimizada)
     async function loadOffersCount(token) {
         const countElement = document.getElementById('offers-count');
         try {
-            // Usamos la ruta combinada que acabas de crear para contar las ofertas.
             const res = await fetch(API_BASE + '/api/tienda/ofertas-recibidas', {
                 method: 'GET',
                 headers: { 'Authorization': 'Bearer ' + token }
@@ -231,7 +230,6 @@
         return;
       }
       
-      // Cargar el conteo de ofertas en paralelo
       loadOffersCount(token); 
 
       try {
@@ -336,6 +334,14 @@
         });
       }
 
+      // 💡 CAMBIO: El botón Publicaciones ahora es un <a>, por lo que el listener solo es para el placeholder.
+      const publicationsBtn = document.getElementById('btn-publications');
+      if (publicationsBtn && publicationsBtn.tagName === 'BUTTON') { // Si es un botón viejo
+          publicationsBtn.addEventListener('click', () => {
+              window.location.href = 'Publicaciones.html';
+          });
+      }
+
       // Editar perfil -> Configuración
       const editBtn = document.getElementById('btn-edit-profile');
       if (editBtn) {
@@ -343,12 +349,6 @@
           window.location.href = 'Configuracion.html';
         });
       }
-
-      // 💡 REDIRECCIONES DE TIENDA: Mantener placeholders
-      document.getElementById('btn-publications').addEventListener('click', () => {
-        alert('La sección de publicaciones estará disponible próximamente.');
-      });
-      // El botón de ofertas y mi tienda ya redirigen directamente (href)
     });
   </script>
 </body>
