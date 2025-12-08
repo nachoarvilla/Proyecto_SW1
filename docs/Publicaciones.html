@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/style_publicaciones.css" />
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <nav class="nav">
       <a href="index.html" class="logo">ConoCEU</a>
@@ -36,9 +35,7 @@
     </nav>
   </header>
 
-  <!-- Contenido -->
   <main class="wrap">
-    <!-- Lado izquierdo: Anuncio -->
     <aside class="panel ad">
       <h3>Anuncio</h3>
       <div class="video-wrapper">
@@ -56,12 +53,9 @@
       </div>
     </aside>
 
-    <!-- Centro: Feed -->
     <section class="feed">
-      <!-- Botón nueva publicación -->
       <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
 
-      <!-- Modal nueva publicación -->
       <div id="modalNuevaPub" class="modal hidden">
         <div class="modal-content">
           <div class="modal-header">
@@ -86,12 +80,10 @@
         </div>
       </div>
 
-      <!-- Loader / mensajes -->
       <div id="loader" class="loader hidden">Cargando...</div>
       <div id="feedContenido"></div>
     </section>
 
-    <!-- Lado derecho: Buscador -->
     <aside class="panel search">
       <h3>Buscar alumno</h3>
       <div class="searchbar">
@@ -107,75 +99,23 @@
     </aside>
   </main>
 
-  <!-- Estilos mínimos para modal/botón -->
-  <style>
-    .new-post-btn {
-      position: fixed; right: 20px; bottom: 20px;
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--accent); color: #fff; border: none;
-      font-size: 26px; font-weight: 700;
-      box-shadow: var(--shadow); cursor: pointer; z-index: 50;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .new-post-btn:hover { transform: scale(1.05); }
-
-    .modal {
-      position: fixed; inset: 0; background: rgba(15,23,42,0.45);
-      display:flex;align-items:center;justify-content:center;
-      z-index:100;
-    }
-    .modal.hidden { display:none; }
-    .modal-content {
-      background: var(--panel); border-radius: var(--radius);
-      box-shadow: var(--shadow); width: 100%; max-width: 480px;
-      max-height: 80vh; overflow:auto;
-    }
-    .modal-header {
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid var(--line);
-    }
-    .close-modal {
-      border:none;background:transparent;font-size:24px;cursor:pointer;
-      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-    }
-    .form-group { padding:16px 20px; }
-    .form-group label { display:block;margin-bottom:6px;font-weight:600; }
-    .form-group input,.form-group textarea {
-      width:100%;padding:10px 12px;border-radius:8px;
-      border:1px solid var(--line);font-size:14px;
-    }
-    .btn-primary {
-      margin:0 20px 20px;width:calc(100% - 40px);
-      padding:12px;border-radius:10px;border:none;
-      background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
-    }
-    .loader { padding:40px;text-align:center;color:var(--muted); }
-    .comentarios-modal {
-      background:var(--panel);border-radius:var(--radius);
-      box-shadow:var(--shadow);width:100%;max-width:480px;
-      max-height:80vh;overflow:auto;
-    }
-    .comentarios-header {
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid var(--line);
-    }
-    .form-comentario {
-      display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);
-    }
-    .form-comentario input {
-      flex:1;padding:8px 10px;border-radius:999px;
-      border:1px solid var(--line);
-    }
-    .form-comentario button {
-      border:none;border-radius:999px;padding:8px 14px;
-      background:var(--accent);color:#fff;cursor:pointer;
-    }
-    .comentario { padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px; }
-    .comentario small { display:block;color:var(--muted);font-size:12px; }
-  </style>
-
   <script>
     const API_BASE = 'https://conoceu-backend.onrender.com';
+
+    // 💡 Lógica de tema (asegura consistencia)
+    function applyThemePreference(prefFromStorage) {
+      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+      function setTheme(theme) { document.documentElement.dataset.theme = theme; }
+      if (pref === 'system') {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        setTheme(mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', e => {
+          const current = localStorage.getItem('cfg_theme') || 'system';
+          if (current === 'system') { setTheme(e.matches ? 'dark' : 'light'); }
+        });
+      } else { setTheme(pref); }
+    }
+    applyThemePreference(); 
 
     function getToken() {
       return localStorage.getItem('token');
@@ -222,8 +162,12 @@
     list.addEventListener('click', e => {
       const li = e.target.closest('li');
       if (!li) return;
-      alert('Abrir perfil de: ' + li.textContent.trim());
-      // window.location.href = 'Perfil.html?user=' + li.dataset.userId;
+      
+      // Redirigir a info_usuario.html con el ID
+      const userId = li.dataset.userId;
+      if (userId) {
+        window.location.href = 'info_usuario.html?id=' + userId;
+      }
     });
 
     // ====== Publicaciones ======
