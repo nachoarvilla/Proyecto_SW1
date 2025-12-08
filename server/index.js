@@ -890,37 +890,6 @@ app.get('/api/tienda/ofertas-recibidas', auth, async (req, res) => {
     }
 });
 
-// ------------- PERFIL: obtener datos de OTRO usuario por ID ------------------------
-app.get('/api/users/:id', auth, async (req, res) => {
-  const targetId = req.params.id;
-  
-  // Opcional: Asegurar que el ID es un número válido
-  if (isNaN(parseInt(targetId))) {
-    return res.status(400).json({ error: "ID de usuario inválido" });
-  }
-
-  try {
-    // Seleccionar solo campos públicos, excluyendo el email y el hash de contraseña
-    const [rows] = await db.query(
-      `SELECT id, username, nombre, apellido, fecha_nacimiento, edad,
-              foto_perfil, grado, curso, pais, ciudad, created_at, intereses
-       FROM users
-       WHERE id = ?`,
-      [targetId]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
-    }
-
-    res.json(rows[0]);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error al obtener perfil del usuario" });
-  }
-});
-
 // -----------------------------------------------------
 // 💡 NUEVA RUTA: BÚSQUEDA DE USUARIOS
 // -----------------------------------------------------
