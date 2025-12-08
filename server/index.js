@@ -35,6 +35,175 @@ function auth(req, res, next) {
     return res.status(401).json({ error: "Token inválido" });
   }
 }
+// Middleware de autenticación de admin (Se mantiene)
+function isAdmin(req, res, next) {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "No tienes permisos de administrador." });
+  }
+  next();
+}
+
+module.exports = isAdmin;
+
+
+//funciones propias al admin
+
+// ADMIN: listar usuarios
+app.get('/api/admin/users', auth, isAdmin, async (req, res) => {
+  try {
+    const search = req.query.search || "";
+    const [rows] = await db.query(
+      `SELECT id, username, email, nombre, apellido, created_at, role
+       FROM users
+       WHERE username LIKE ? OR email LIKE ?
+       ORDER BY created_at DESC`,
+      [`%${search}%`, `%${search}%`]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error obteniendo usuarios" });
+  }
+});
+
+// ADMIN: eliminar cualquier usuario
+app.delete('/api/admin/users/:id', auth, isAdmin, async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "DELETE FROM users WHERE id = ?",
+      [userId]
+    );
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Usuario no encontrado" });
+
+    res.json({ message: "Usuario eliminado por administrador" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error eliminando usuario" });
+  }
+});
+
+// ADMIN: cambiar rol de un usuario
+app.put('/api/admin/users/:id/role', auth, isAdmin, async (req, res) => {
+  const userId = req.params.id;
+  const { role } = req.body;
+
+  if (!['admin', 'user'].includes(role))
+    return res.status(400).json({ error: "Rol inválido" });
+
+  try {
+    const [result] = await db.query(
+      "UPDATE users SET role = ? WHERE id = ?",
+      [role, userId]
+    );
+
+    res.json({ message: "Rol actualizado correctamente" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error actualizando rol" });
+  }
+});
+
+// ADMIN: listar todas las publicaciones
+app.get('/api/admin/publicaciones', auth, isAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT p.id, p.foto, p.texto, p.fecha_creacion, u.username
+       FROM publicaciones p
+       JOIN users u ON p.user_id = u.id
+       ORDER BY p.fecha_creacion DESC`
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: "Error obteniendo publicaciones" });
+  }
+});
+
+// ADMIN: eliminar publicación
+app.delete('/api/admin/publicaciones/:id', auth, isAdmin, async (req, res) => {
+  const pubId = req.params.id;
+
+  try {
+    const [result] = await db.query(
+      "DELETE FROM publicaciones WHERE id = ?",
+      [pubId]
+    );
+
+    if (!result.affectedRows)
+      return res.status(404).json({ error: "Publicación no encontrada" });
+
+    res.json({ message: "Publicación eliminada" });
+
+  } catch (err) {
+    res.status(500).json({ error: "Error eliminando publicación" });
+  }
+});
+
+// ADMIN: listar productos escolares + extraescolares
+app.get('/api/admin/productos', auth, isAdmin, async (req, res) => {
+  try {
+    const [escolar] = await db.query(
+      `SELECT id, descripcion, precio, user_id, 'escolar' AS tipo FROM tienda_escolar`
+    );
+    const [extra] = await db.query(
+      `SELECT id, descripcion, precio, user_id, 'extraescolar' AS tipo FROM tienda_extraescolar`
+    );
+
+    res.json([...escolar, ...extra]);
+  } catch (err) {
+    res.status(500).json({ error: "Error obteniendo productos" });
+  }
+});
+
+
+// ADMIN: eliminar producto escolar
+app.delete('/api/admin/tienda-escolar/:id', auth, isAdmin, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await db.query("DELETE FROM tienda_escolar WHERE id = ?", [id]);
+    res.json({ message: "Producto escolar eliminado" });
+  } catch (err) {
+    res.status(500).json({ error: "Error eliminando producto escolar" });
+  }
+});
+
+// ADMIN: eliminar producto extraescolar
+app.delete('/api/admin/tienda-extraescolar/:id', auth, isAdmin, async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await db.query("DELETE FROM tienda_extraescolar WHERE id = ?", [id]);
+    res.json({ message: "Producto extraescolar eliminado" });
+  } catch (err) {
+    res.status(500).json({ error: "Error eliminando producto extraescolar" });
+  }
+});
+
+
+// ADMIN: ver el dashboard de la plataforma
+app.get('/api/admin/stats', auth, isAdmin, async (req, res) => {
+  try {
+    const [[{ totalUsuarios }]] = await db.query("SELECT COUNT(*) AS totalUsuarios FROM users");
+    const [[{ totalPublicaciones }]] = await db.query("SELECT COUNT(*) AS totalPublicaciones FROM publicaciones");
+    const [[{ totalChats }]] = await db.query("SELECT COUNT(*) AS totalChats FROM chats");
+
+    res.json({
+      usuarios: totalUsuarios,
+      publicaciones: totalPublicaciones,
+      chats: totalChats,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "Error obteniendo estadísticas" });
+  }
+});
+
+
 
 // Helper: comprobar si un usuario pertenece a un chat (Se mantiene)
 async function userIsMemberOfChat(chatId, userId) {
@@ -142,8 +311,8 @@ app.post('/api/register', async (req, res) => {
     const sql = `
       INSERT INTO users
         (username, email, password_hash, nombre, apellido, fecha_nacimiento,
-         edad, foto_perfil, grado, curso, pais, ciudad)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         edad, foto_perfil, grado, curso, pais, ciudad, role)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
     `;
 
     await db.query(sql, [
@@ -158,7 +327,8 @@ app.post('/api/register', async (req, res) => {
       grado || null,
       curso || null,
       pais || null,
-      ciudad || null
+      ciudad || null,
+      role || 'user'
     ]);
 
     return res.json({ message: "Usuario registrado correctamente" });
@@ -196,7 +366,8 @@ app.post('/api/login', async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        username: user.username
+        username: user.username,
+        role: user.role
       },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
