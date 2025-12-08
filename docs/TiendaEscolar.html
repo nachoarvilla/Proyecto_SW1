@@ -29,16 +29,18 @@
   </header>
 
   <main class="wrap">
-
-    <section class="feed" id="product-feed">
-      <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
-      
+    
+    <aside class="col-side-left">
       <a href="crear_nuevo_producto_Escolar.html" class="new-post-btn" title="Crear nuevo producto">
         <svg viewBox="0 0 24 24" class="icon">
           <path d="M12 5v14M5 12h14"></path>
         </svg>
+        <span>Vender Material</span>
       </a>
+    </aside>
 
+    <section class="feed" id="product-feed">
+      <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
     </section>
 
     <aside class="panel search">
@@ -82,7 +84,7 @@
   <script>
     const API_BASE = 'https://conoceu-backend.onrender.com';
     const ENDPOINT = '/api/tienda-escolar';
-    let currentProductId = null; // ID del producto al que se está ofertando
+    let currentProductId = null;
 
     // --- Funciones de Tema/Token ---
     function applyThemePreference(prefFromStorage) {
@@ -109,7 +111,6 @@
 
     // --- Renderizado ---
     function createProductCard(item) {
-        // Aseguramos que la fecha se muestre formateada
         const date = new Date(item.fecha_creacion).toLocaleDateString('es-ES', { 
             day: 'numeric', month: 'short' 
         });
@@ -120,7 +121,7 @@
         const post = document.createElement('article');
         post.className = 'post';
         post.dataset.itemId = item.id;
-        post.dataset.itemName = item.descripcion.substring(0, 30); // Usar descripción para nombre
+        post.dataset.itemName = item.descripcion.substring(0, 30);
 
         post.innerHTML = `
             <header class="post-head">
@@ -194,13 +195,6 @@
             } else {
                 products.forEach(p => feed.appendChild(createProductCard(p)));
             }
-            
-            // Reinsertar el botón de creación si se eliminó al vaciar el feed
-            const createBtn = document.querySelector('.new-post-btn');
-            if (createBtn && !feed.contains(createBtn)) {
-                feed.appendChild(createBtn);
-            }
-
         } catch (err) {
             console.error('Error al cargar productos:', err);
             feed.innerHTML = '<p style="color:red; text-align:center;">Error al cargar la tienda.</p>';
@@ -263,11 +257,9 @@
             const article = btn.closest('.post');
             const itemName = article?.querySelector('.item-name')?.textContent || 'Artículo';
 
-            // Usar una fórmula simple para sugerir una oferta inicial (75% del precio original)
             const priceText = article?.querySelector('.item-price')?.textContent;
             let originalPrice = 0;
             if (priceText) {
-                // Limpiar "PVP:" y "€" y reemplazar coma por punto
                 const cleanedPrice = priceText.replace('PVP:', '').replace('€', '').trim().replace(',', '.');
                 originalPrice = parseFloat(cleanedPrice);
             }
@@ -275,8 +267,8 @@
 
 
             offerItem.textContent = itemName;
-            offerInput.value = def > 0 ? def : '0.10'; // Asegurar un valor mínimo
-            document.getElementById('offerMsg').textContent = ''; // Limpiar mensaje previo
+            offerInput.value = def > 0 ? def : '0.10'; 
+            document.getElementById('offerMsg').textContent = ''; 
 
             if (typeof dialog.showModal === 'function') {
                 dialog.showModal();
@@ -301,7 +293,6 @@
                 lastOfferBtn.textContent = `Ofertado ${amount.toFixed(2)} €`;
                 lastOfferBtn.classList.add('offered');
                 lastOfferBtn.setAttribute('aria-label', `Oferta enviada de ${amount.toFixed(2)} euros`);
-                // Pequeña pausa para que el usuario vea el mensaje de éxito antes de cerrar
                 setTimeout(() => dialog.close(), 1500); 
             } else if (success) {
                  setTimeout(() => dialog.close(), 1500);
@@ -314,7 +305,7 @@
 
     // --- INIT ---
     document.addEventListener('DOMContentLoaded', () => {
-        applyThemePreference(); // Aplicar tema
+        applyThemePreference(); 
 
         const token = getTokenOrRedirect();
         if (!token) return;

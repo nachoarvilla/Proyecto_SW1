@@ -35,16 +35,18 @@
   </header>
 
   <main class="wrap">
-
-    <section class="feed" id="product-feed">
-      <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
-      
+    
+    <aside class="col-side-left">
       <a href="crear_nuevo_producto_Extraescolar.html" class="new-post-btn" title="Crear nuevo producto">
         <svg viewBox="0 0 24 24" class="icon">
           <path d="M12 5v14M5 12h14"></path>
         </svg>
+        <span>Vender Material</span>
       </a>
+    </aside>
 
+    <section class="feed" id="product-feed">
+      <p style="text-align:center; color:var(--muted);" id="feed-status">Cargando productos...</p>
     </section>
 
     <aside class="panel search">
@@ -198,12 +200,6 @@
                 feed.innerHTML = '<p style="text-align:center; color:var(--muted);">No hay productos en venta.</p>';
             } else {
                 products.forEach(p => feed.appendChild(createProductCard(p)));
-            }
-            
-            // Reinsertar el botón de creación si se eliminó al vaciar el feed
-            const createBtn = document.querySelector('.new-post-btn');
-            if (createBtn && !feed.contains(createBtn)) {
-                feed.appendChild(createBtn);
             }
 
         } catch (err) {
