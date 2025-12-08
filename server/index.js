@@ -437,6 +437,36 @@ app.get('/api/publicaciones', auth, async (req, res) => {
   }
 });
 
+// ------------- PUBLICACIONES: formulario para crear nueva (datos del usuario logueado) ---
+app.get('/api/publicaciones/nueva', auth, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT id, username, nombre, apellido, foto_perfil, grado, ciudad 
+       FROM users WHERE id = ?`, 
+      [req.user.id]
+    );
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error obteniendo datos usuario' });
+  }
+});
+
+// ------------- COMENTARIOS: contar para mostrar en feed ---
+app.get('/api/publicaciones/:id/comentarios/count', auth, async (req, res) => {
+  const publicacionId = req.params.id;
+  try {
+    const [rows] = await db.query(
+      'SELECT COUNT(*) as total FROM comentarios WHERE publicacion_id = ?', 
+      [publicacionId]
+    );
+    res.json({ count: rows[0].total });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error contando comentarios' });
+  }
+});
+
 // ------------- COMENTARIOS: crear comentario en una publicación --------
 app.post('/api/publicaciones/:id/comentarios', auth, async (req, res) => {
   const publicacionId = req.params.id;

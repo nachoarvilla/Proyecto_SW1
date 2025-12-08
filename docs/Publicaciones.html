@@ -14,8 +14,6 @@
       <div class="nav-center">
         <span>Novedades</span>
         <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
-          ircle cx="12" cy="12" r="10" stroke-width="2"></circle>
-        </svg>
       </div>
       <div class="nav-actions">
         <a href="Chats.html" class="icon-btn" aria-label="Mensajes" title="Mensajes">
@@ -30,7 +28,7 @@
         </a>
         <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
           <svg class="icon" viewBox="0 0 24 24">
-            ircle cx="12" cy="8" r="4"></circle>
+            <rcle cx="12" cy="8" r="4"></circle>
             <path d="M4 21a8 8 0 0 1 16 0"></path>
           </svg>
         </a>
@@ -44,123 +42,52 @@
     <aside class="panel ad">
       <h3>Anuncio</h3>
       <div class="video-wrapper">
-        <video
-          class="ad-video"
-          src="anuncios/AnuncioNike.mp4"
-          playsinline
-          controls
-          muted
-          loop
-          autoplay
-          preload="metadata"
-          poster="anuncios/poster_anuncio.jpg">
-        </video>
+        <video class="ad-video" src="anuncios/AnuncioNike.mp4" playsinline controls muted loop autoplay preload="metadata" poster="anuncios/poster_anuncio.jpg"></video>
       </div>
     </aside>
 
-    <!-- Centro: Feed -->
+    <!-- Centro: Feed + Crear publicación -->
     <section class="feed">
-      <!-- (las publicaciones de prueba se sustituirán por las del backend) -->
-      <article class="post" data-post-id="1">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">nombreDeUsuario</div>
-            <div class="muted" style="font-size:12px">Facultad de Informática · hace 2 h</div>
-          </div>
-        </header>
-        <div class="post-media" aria-label="Imagen de la publicación">
-          <div class="ph">
-            <img src="img/publicacion_nuevo logo ceu.png" alt="Logo de Publicaciones de ConoCEU" />
-          </div>
-        </div>
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-              </svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-              </svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="post-meta">
-          <div><b><span class="likes">128</span> Me gusta</b></div>
-          <div><b>nombreDeUsuario</b> ¡Hola CEU! Aquí esta el nuevo logo del <b>CEU</b>. #bienvenidos</div>
-          <div class="muted">Ver los 9 comentarios</div>
-        </div>
-      </article>
+      <!-- Botón flotante para nueva publicación -->
+      <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
 
-      <article class="post">
-        <header class="post-head">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="username">otraPersona</div>
-            <div class="muted" style="font-size:12px">Argentina · hace 1 d</div>
+      <!-- Modal crear publicación (oculto por defecto) -->
+      <div id="modalNuevaPub" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Crear publicación</h3>
+            <button class="close-modal">&times;</button>
           </div>
-        </header>
-        <div class="post-media" aria-label="Imagen de la publicación">
-          <div class="ph">
-            <img src="img/Publicacion_messi ballon de oro.jpg" alt="Maqueta de un pabellón" />
-          </div>
+          <form id="formNuevaPub">
+            <div class="form-group">
+              <label>Foto (URL)</label>
+              <input type="url" id="fotoPub" placeholder="https://ejemplo.com/imagen.jpg" required />
+            </div>
+            <div class="form-group">
+              <label>Texto (opcional)</label>
+              <textarea id="textoPub" maxlength="500" placeholder="¿Qué estás pensando?"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Ubicación (opcional)</label>
+              <input type="text" id="ubicacionPub" placeholder="Madrid, España" />
+            </div>
+            <button type="submit" class="btn-primary">Publicar</button>
+          </form>
         </div>
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-              </svg>
-            </button>
-            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-              </svg>
-            </button>
-            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="post-meta">
-          <div><b><span class="likes">42</span> Me gusta</b></div>
-          <div><b>otraPersona</b> VISCA BARCA</div>
-        </div>
-      </article>
+      </div>
+
+      <!-- Aquí se cargarán las publicaciones dinámicamente -->
+      <div id="loader" class="loader hidden">Cargando...</div>
     </section>
 
     <!-- Lado derecho: Buscador -->
     <aside class="panel search">
       <h3>Buscar alumno</h3>
       <div class="searchbar">
-        <input id="buscar" type="text" placeholder="Buscar alumno" value="M" aria-label="Buscar alumno" />
+        <input id="buscar" type="text" placeholder="Buscar alumno" />
         <span class="magnify" aria-hidden="true">
           <svg class="icon" viewBox="0 0 24 24">
-            ircle cx="11" cy="11" r="7"></circle>
+            <rcle cx="11" cy="11" r="7"></circle>
             <path d="M21 21l-4-4"></path>
           </svg>
         </span>
@@ -169,229 +96,317 @@
     </aside>
   </main>
 
-  <!-- Interacción -->
+  <style>
+    /* Modal y botón nueva publicación */
+    .new-post-btn {
+      position: fixed; right: 20px; bottom: 20px;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--accent); color: white; border: none;
+      font-size: 24px; font-weight: bold; box-shadow: var(--shadow);
+      cursor: pointer; z-index: 100; transition: transform 0.2s;
+    }
+    .new-post-btn:hover { transform: scale(1.1); }
+    .modal { 
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); 
+      display: flex; align-items: center; justify-content: center; z-index: 200;
+    }
+    .modal.hidden { display: none; }
+    .modal-content {
+      background: var(--panel); max-width: 500px; width: 90%; max-height: 80vh;
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px; border-bottom: 1px solid var(--line);
+    }
+    .close-modal { 
+      background: none; border: none; font-size: 24px; cursor: pointer; 
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    }
+    .form-group { padding: 0 20px 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px;
+      font-size: 16px; transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus { 
+      outline: none; border-color: var(--accent); 
+    }
+    .btn-primary {
+      width: 100%; padding: 14px; background: var(--accent); color: white;
+      border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+    }
+    .loader { text-align: center; padding: 40px; color: var(--muted); }
+  </style>
+
   <script>
-      function applyThemePreference(prefFromStorage) {
-      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
-
-      function setTheme(theme) {
-          // Establece el atributo data-theme en la etiqueta <html>
-          document.documentElement.dataset.theme = theme;
-      }
-
-      if (pref === 'system') {
-          const mq = window.matchMedia('(prefers-color-scheme: dark)');
-          setTheme(mq.matches ? 'dark' : 'light');
-          mq.addEventListener('change', e => {
-              const current = localStorage.getItem('cfg_theme') || 'system';
-              if (current === 'system') {
-                  setTheme(e.matches ? 'dark' : 'light');
-              }
-          });
-      } else {
-          setTheme(pref);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // Llama a la función de aplicación del tema.
-      applyThemePreference(); 
-    });
-
-    // Interacciones de los botones de cada post
-    const posts = document.querySelectorAll('.post');
-
-    posts.forEach(post => {
-      post.addEventListener('click', (e) => {
-        const btn = e.target.closest('.action');
-        if (!btn) return;
-
-        const action = btn.dataset.action;
-
-        if (action === 'like') {
-          btn.classList.toggle('active');
-          const likesEl = post.querySelector('.likes');
-          if (likesEl) {
-            let n = parseInt(likesEl.textContent, 10);
-            likesEl.textContent = btn.classList.contains('active') ? (n + 1) : Math.max(0, n - 1);
-          }
-        }
-
-        if (action === 'bookmark') {
-          btn.classList.toggle('active');
-        }
-
-        if (action === 'comment') {
-          alert('Abrir modal de comentarios (pendiente de integrar).');
-        }
-
-        if (action === 'share') {
-          navigator.clipboard?.writeText(location.href).then(() => {
-            btn.classList.add('active');
-            setTimeout(() => btn.classList.remove('active'), 500);
-          });
-        }
-      });
-    });
-
-    // Buscador de alumnos (demo)
-    const alumnos = [
-      'Manuel X','Manolo Y','Miguel Z','María P','Marcos Q','Marta L',
-      'Andrea V','Lucía R','Javier S','Carmen T'
-    ];
-    const input = document.getElementById('buscar');
-    const list  = document.getElementById('resultados');
-
-    function render(query = '') {
-      const q = query.trim().toLowerCase();
-      const items = alumnos.filter(n => n.toLowerCase().includes(q)).slice(0, 8);
-      // CORREGIDO: plantillas con backticks
-      list.innerHTML = items.map(n => `<li tabindex="0">${n}</li>`).join('');
-    }
-
-    input.addEventListener('input', e => render(e.target.value));
-    list.addEventListener('click', (e) => {
-      const li = e.target.closest('li');
-      if (!li) return;
-      alert('Abrir perfil: ' + li.textContent);
-    });
-
-    // Estado inicial con “M”
-    render(input.value);
-
-    // ==================== BACKEND PUBLICACIONES ====================
-
     const API_BASE = 'https://conoceu-backend.onrender.com';
 
     function getToken() {
       return localStorage.getItem('token');
     }
 
-    async function cargarPublicaciones() {
+    function redirectToLogin() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
+
+    // ==================== BUSCADOR ====================
+    const input = document.getElementById('buscar');
+    const list = document.getElementById('resultados');
+
+    async function buscarAlumnos(query = '') {
+      const q = query.trim();
       const token = getToken();
-      if (!token) {
-        console.warn('No hay token, no se cargan publicaciones');
+      if (!q || !token) {
+        list.innerHTML = '';
         return;
       }
-
       try {
-        const res = await fetch(API_BASE + '/api/publicaciones?limit=20', {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
+        const res = await fetch(`${API_BASE}/api/users/search?q=${encodeURIComponent(q)}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         });
-
-        if (!res.ok) {
-          console.error('Error HTTP', res.status);
-          return;
-        }
-
-        const publicaciones = await res.json();
-
-        const feed = document.querySelector('.feed');
-        // Quitamos las publicaciones de prueba
-        feed.innerHTML = '';
-
-        publicaciones.forEach(p => {
-          const article = document.createElement('article');
-          article.className = 'post';
-          article.dataset.postId = p.id;
-
-          article.innerHTML = `
-            <header class="post-head">
-              <div class="avatar" aria-hidden="true">
-                ${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}">` : ''}
-              </div>
-              <div>
-                <div class="username">${p.username}</div>
-                <div class="muted" style="font-size:12px">
-                  ${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}
-                </div>
-              </div>
-            </header>
-            <div class="post-media" aria-label="Imagen de la publicación">
-              <div class="ph">
-                <img src="${p.foto}" alt="Publicación de ${p.username}" />
-              </div>
-            </div>
-            <div class="post-actions">
-              <div class="left-actions">
-                <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
-                  <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-                  </svg>
-                </button>
-                <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
-                  <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-                  </svg>
-                </button>
-                <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
-                  <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-                  </svg>
-                </button>
-              </div>
-              <div class="right-actions">
-                <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
-                  <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div class="post-meta">
-              <div><b><span class="likes">${p.likes_count ?? 0}</span> Me gusta</b></div>
-              <div><b>${p.username}</b> ${p.texto || ''}</div>
-              <div class="muted">Comentarios: ${p.comments_count ?? 0}</div>
-            </div>
-          `;
-
-          feed.appendChild(article);
-        });
-
-        // Reusar la lógica de interacción en los nuevos posts
-        const nuevosPosts = document.querySelectorAll('.post');
-        nuevosPosts.forEach(post => {
-          post.addEventListener('click', (e) => {
-            const btn = e.target.closest('.action');
-            if (!btn) return;
-
-            const action = btn.dataset.action;
-
-            if (action === 'like') {
-              btn.classList.toggle('active');
-              const likesEl = post.querySelector('.likes');
-              if (likesEl) {
-                let n = parseInt(likesEl.textContent, 10);
-                likesEl.textContent = btn.classList.contains('active') ? (n + 1) : Math.max(0, n - 1);
-              }
-            }
-
-            if (action === 'bookmark') {
-              btn.classList.toggle('active');
-            }
-
-            if (action === 'comment') {
-              alert('Abrir modal de comentarios (pendiente de integrar).');
-            }
-
-            if (action === 'share') {
-              navigator.clipboard?.writeText(location.href).then(() => {
-                btn.classList.add('active');
-                setTimeout(() => btn.classList.remove('active'), 500);
-              });
-            }
-          });
-        });
-
+        if (!res.ok) { list.innerHTML = ''; return; }
+        const users = await res.json();
+        list.innerHTML = users.map(u => `
+          <li tabindex="0" data-user-id="${u.id}">
+            ${u.username ? '@' + u.username : ''} ${u.nombre || ''} ${u.apellido || ''}
+          </li>
+        `).join('');
       } catch (err) {
-        console.error('Error cargando publicaciones', err);
+        console.error('Error búsqueda', err);
+        list.innerHTML = '';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', cargarPublicaciones);
+    input.addEventListener('input', e => buscarAlumnos(e.target.value));
+    list.addEventListener('click', e => {
+      const li = e.target.closest('li');
+      if (!li) return;
+      alert('Ir a perfil: ' + li.textContent.trim());
+    });
+
+    // ==================== PUBLICACIONES ====================
+    const feed = document.querySelector('.feed');
+    const loader = document.getElementById('loader');
+
+    async function cargarPublicaciones() {
+      const token = getToken();
+      if (!token) return;
+
+      loader.classList.remove('hidden');
+      try {
+        const res = await fetch(`${API_BASE}/api/publicaciones?limit=20`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const publicaciones = await res.json();
+        loader.classList.add('hidden');
+        feed.innerHTML = '';
+
+        for (const p of publicaciones) {
+          const article = crearPost(p);
+          feed.appendChild(article);
+        }
+        engancharEventosPosts();
+      } catch (err) {
+        loader.classList.add('hidden');
+        console.error('Error publicaciones:', err);
+        feed.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Error cargando publicaciones</div>';
+      }
+    }
+
+    function crearPost(p) {
+      const article = document.createElement('article');
+      article.className = 'post';
+      article.dataset.postId = p.id;
+      article.innerHTML = `
+        <header class="post-head">
+          <div class="avatar">${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}">` : ''}</div>
+          <div>
+            <div class="username">${p.username}</div>
+            <div class="muted" style="font-size:12px">${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}</div>
+          </div>
+        </header>
+        <div class="post-media">
+          <div class="ph"><img src="${p.foto}" alt="Publicación" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOGY4Ii8+PHRleHQgeD0iNTAlIiB5PSI5MCUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiPkltYWdlIG5vIGVuY29udHJhPC90ZXh0Pjwvc3ZnPg=='"/></div>
+        </div>
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" data-action="like">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path></svg>
+            </button>
+            <button class="action comment" data-action="comment">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path></svg>
+            </button>
+            <button class="action share" data-action="share">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path></svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="action bookmark" data-action="bookmark">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3V3Z"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div><b><span class="likes">${p.likes_count || 0}</span> Me gusta</b></div>
+          <div><b>${p.username}</b> ${p.texto || ''}</div>
+          <div class="muted comentarios-link" data-post-id="${p.id}">Comentarios: ${p.comments_count || 0}</div>
+        </div>
+      `;
+      return article;
+    }
+
+    function engancharEventosPosts() {
+      document.querySelectorAll('.post').forEach(post => {
+        post.addEventListener('click', e => {
+          const btn = e.target.closest('.action');
+          if (!btn) return;
+          const action = btn.dataset.action;
+          const postId = post.dataset.postId;
+
+          if (action === 'like') {
+            btn.classList.toggle('active');
+            const likesEl = post.querySelector('.likes');
+            if (likesEl) {
+              let n = parseInt(likesEl.textContent, 10);
+              likesEl.textContent = btn.classList.contains('active') ? n + 1 : Math.max(0, n - 1);
+            }
+          }
+          if (action === 'comment') {
+            abrirComentarios(postId);
+          }
+          if (action === 'share') {
+            navigator.clipboard?.writeText(window.location.href).then(() => {
+              btn.classList.add('active');
+              setTimeout(() => btn.classList.remove('active'), 500);
+            });
+          }
+          if (action === 'bookmark') {
+            btn.classList.toggle('active');
+          }
+        });
+      });
+    }
+
+    // ==================== NUEVA PUBLICACIÓN ====================
+    const btnNuevaPub = document.getElementById('nuevaPublicacion');
+    const modalNuevaPub = document.getElementById('modalNuevaPub');
+    const formNuevaPub = document.getElementById('formNuevaPub');
+    const closeModal = document.querySelector('.close-modal');
+
+    btnNuevaPub.addEventListener('click', () => modalNuevaPub.classList.remove('hidden'));
+    closeModal.addEventListener('click', () => modalNuevaPub.classList.add('hidden'));
+
+    formNuevaPub.addEventListener('submit', async e => {
+      e.preventDefault();
+      const token = getToken();
+      if (!token) return redirectToLogin();
+
+      const formData = {
+        foto: document.getElementById('fotoPub').value,
+        texto: document.getElementById('textoPub').value,
+        ubicacion: document.getElementById('ubicacionPub').value
+      };
+
+      try {
+        const res = await fetch(API_BASE + '/api/publicaciones', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        
+        modalNuevaPub.classList.add('hidden');
+        formNuevaPub.reset();
+        cargarPublicaciones(); // Recargar feed
+      } catch (err) {
+        alert('Error creando publicación: ' + err.message);
+      }
+    });
+
+    // ==================== COMENTARIOS ====================
+    function abrirComentarios(postId) {
+      const comentariosHTML = `
+        <div class="comentarios-modal">
+          <div class="comentarios-header">
+            <h3>Comentarios</h3>
+            <button class="close-comentarios">&times;</button>
+          </div>
+          <div id="lista-comentarios"></div>
+          <form class="form-comentario">
+            <input type="text" id="nuevo-comentario" placeholder="Escribe un comentario..." maxlength="500" required>
+            <button type="submit">Enviar</button>
+          </form>
+        </div>
+      `;
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = comentariosHTML;
+      modal.style.cssText = 'display:flex !important';
+      document.body.appendChild(modal);
+
+      cargarComentarios(postId, modal);
+      modal.querySelector('.close-comentarios').onclick = () => modal.remove();
+      modal.querySelector('.form-comentario').onsubmit = e => enviarComentario(e, postId, modal);
+    }
+
+    async function cargarComentarios(postId, modal) {
+      const token = getToken();
+      const lista = modal.querySelector('#lista-comentarios');
+      try {
+        const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+        const comentarios = await res.json();
+        lista.innerHTML = comentarios.map(c => `
+          <div class="comentario">
+            <strong>${c.username}</strong> ${c.texto}
+            <small>${new Date(c.fecha_creacion).toLocaleString()}</small>
+          </div>
+        `).join('');
+      } catch (err) {
+        lista.innerHTML = '<div>Error cargando comentarios</div>';
+      }
+    }
+
+    async function enviarComentario(e, postId, modal) {
+      e.preventDefault();
+      const texto = document.getElementById('nuevo-comentario').value;
+      const token = getToken();
+      try {
+        const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ texto })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        document.getElementById('nuevo-comentario').value = '';
+        cargarComentarios(postId, modal);
+        cargarPublicaciones(); // Actualizar contador
+      } catch (err) {
+        alert('Error enviando comentario: ' + err.message);
+      }
+    }
+
+    // ==================== INICIALIZACIÓN ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!getToken()) {
+        feed.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Inicia sesión para ver publicaciones</div>';
+        return;
+      }
+      cargarPublicaciones();
+      buscarAlumnos(input.value);
+    });
   </script>
 </body>
 </html>
