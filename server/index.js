@@ -372,6 +372,29 @@ app.delete('/api/account', auth, async (req, res) => {
   }
 });
 
+// ------------- PERFIL PÚBLICO: obtener datos de otro usuario ----------
+app.get('/api/users/:id', auth, async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const [rows] = await db.query(
+      `SELECT id, username, email, nombre, apellido, fecha_nacimiento, edad,
+              foto_perfil, grado, curso, pais, ciudad, created_at
+       FROM users
+       WHERE id = ?`,
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener perfil público" });
+  }
+});
 
 // ------------- PUBLICACIONES: crear ------------------------
 app.post('/api/publicaciones', auth, async (req, res) => {

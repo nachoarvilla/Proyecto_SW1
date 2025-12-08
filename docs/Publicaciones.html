@@ -56,40 +56,129 @@
       </div>
     </aside>
 
-    <!-- Centro: Feed -->
+    <!-- Centro: Feed (publicaciones estáticas de ejemplo) -->
     <section class="feed">
-      <!-- Botón nueva publicación -->
-      <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
-
-      <!-- Modal nueva publicación -->
-      <div id="modalNuevaPub" class="modal hidden">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3>Crear publicación</h3>
-            <button class="close-modal">&times;</button>
+      <!-- Publicación de prueba -->
+      <article class="post" data-post-id="1">
+        <header class="post-head">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="username">nombreDeUsuario</div>
+            <div class="muted" style="font-size:12px">Facultad de Informática · hace 2 h</div>
           </div>
-          <form id="formNuevaPub">
-            <div class="form-group">
-              <label>Foto (URL)</label>
-              <input type="url" id="fotoPub" placeholder="https://ejemplo.com/imagen.jpg" required />
-            </div>
-            <div class="form-group">
-              <label>Texto (opcional)</label>
-              <textarea id="textoPub" maxlength="500" placeholder="¿Qué estás pensando?"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Ubicación (opcional)</label>
-              <input type="text" id="ubicacionPub" placeholder="Madrid, España" />
-            </div>
-            <button type="submit" class="btn-primary">Publicar</button>
-          </form>
+        </header>
+        <div class="post-media" aria-label="Imagen de la publicación">
+          <div class="ph">
+            <img src="img/publicacion_nuevo logo ceu.png" alt="Logo de Publicaciones de ConoCEU" />
+          </div>
         </div>
-      </div>
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
+              </svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div><b><span class="likes">128</span> Me gusta</b></div>
+          <div><b>nombreDeUsuario</b> ¡Hola CEU! Aquí esta el nuevo logo del <b>CEU</b>. #bienvenidos</div>
+          <div class="muted">Ver los 9 comentarios</div>
+        </div>
+      </article>
 
-      <!-- Loader / mensajes -->
-      <div id="loader" class="loader hidden">Cargando...</div>
-      <div id="feedContenido"></div>
+      <!-- Otra publicación (duplicable) -->
+      <article class="post">
+        <header class="post-head">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="username">otraPersona</div>
+            <div class="muted" style="font-size:12px">Argentina · hace 1 d</div>
+          </div>
+        </header>
+        <div class="post-media" aria-label="Imagen de la publicación">
+          <div class="ph">
+            <img src="img/Publicacion_messi ballon de oro.jpg" alt="Maqueta de un pabellón" />
+          </div>
+        </div>
+        <div class="post-actions">
+          <div class="left-actions">
+            <button class="action like" aria-label="Me gusta" title="Me gusta" data-action="like">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
+              </svg>
+            </button>
+            <button class="action comment" aria-label="Comentar" title="Comentar" data-action="comment">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
+              </svg>
+            </button>
+            <button class="action share" aria-label="Compartir" title="Compartir" data-action="share">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="right-actions">
+            <button class="action bookmark" aria-label="Guardar" title="Guardar" data-action="bookmark">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="post-meta">
+          <div><b><span class="likes">42</span> Me gusta</b></div>
+          <div><b>otraPersona</b> VISCA BARCA </div>
+        </div>
+      </article>
     </section>
+
+    <!-- Botón para crear publicación -->
+    <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
+
+    <!-- Modal nueva publicación -->
+    <div id="modalNuevaPub" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Crear publicación</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="formNuevaPub">
+          <div class="form-group">
+            <label>Foto (URL)</label>
+            <input type="url" id="fotoPub" placeholder="https://ejemplo.com/imagen.jpg" required />
+          </div>
+          <div class="form-group">
+            <label>Texto (opcional)</label>
+            <textarea id="textoPub" maxlength="500" placeholder="¿Qué estás pensando?"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Ubicación (opcional)</label>
+            <input type="text" id="ubicacionPub" placeholder="Madrid, España" />
+          </div>
+          <button type="submit" class="btn-primary">Publicar</button>
+        </form>
+      </div>
+    </div>
 
     <!-- Lado derecho: Buscador -->
     <aside class="panel search">
@@ -125,6 +214,7 @@
       z-index:100;
     }
     .modal.hidden { display:none; }
+
     .modal-content {
       background: var(--panel); border-radius: var(--radius);
       box-shadow: var(--shadow); width: 100%; max-width: 480px;
@@ -149,31 +239,9 @@
       padding:12px;border-radius:10px;border:none;
       background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
     }
-    .loader { padding:40px;text-align:center;color:var(--muted); }
-    .comentarios-modal {
-      background:var(--panel);border-radius:var(--radius);
-      box-shadow:var(--shadow);width:100%;max-width:480px;
-      max-height:80vh;overflow:auto;
-    }
-    .comentarios-header {
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid var(--line);
-    }
-    .form-comentario {
-      display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);
-    }
-    .form-comentario input {
-      flex:1;padding:8px 10px;border-radius:999px;
-      border:1px solid var(--line);
-    }
-    .form-comentario button {
-      border:none;border-radius:999px;padding:8px 14px;
-      background:var(--accent);color:#fff;cursor:pointer;
-    }
-    .comentario { padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px; }
-    .comentario small { display:block;color:var(--muted);font-size:12px; }
   </style>
 
+  <!-- Interacción -->
   <script>
     const API_BASE = 'https://conoceu-backend.onrender.com';
 
@@ -182,31 +250,82 @@
     }
 
     function redirectToLogin() {
-      localStorage.removeItem('token');
       window.location.href = 'login.html';
     }
 
-    // ====== Buscador de alumnos (usa /api/users/search?username=) ======
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = getToken();
+      if (!token) {
+        redirectToLogin();
+      }
+    });
+
+    // Interacciones de los botones de cada post (estáticas)
+    const posts = document.querySelectorAll('.post');
+
+    posts.forEach(post => {
+      post.addEventListener('click', (e) => {
+        const btn = e.target.closest('.action');
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+
+        if (action === 'like') {
+          btn.classList.toggle('active');
+          const likesEl = post.querySelector('.likes');
+          if (likesEl) {
+            let n = parseInt(likesEl.textContent, 10);
+            likesEl.textContent = btn.classList.contains('active') ? (n + 1) : Math.max(0, n - 1);
+          }
+        }
+
+        if (action === 'bookmark') {
+          btn.classList.toggle('active');
+        }
+
+        if (action === 'comment') {
+          alert('Abrir modal de comentarios (pendiente de integrar).');
+        }
+
+        if (action === 'share') {
+          navigator.clipboard?.writeText(location.href).then(() => {
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 500);
+          });
+        }
+      });
+    });
+
+    // Buscador de alumnos (BD)
     const input = document.getElementById('buscar');
     const list  = document.getElementById('resultados');
 
     async function buscarAlumnos(query = '') {
       const q = query.trim();
       const token = getToken();
+
       if (!q || !token) {
         list.innerHTML = '';
         return;
       }
+
       try {
         const res = await fetch(
           `${API_BASE}/api/users/search?username=${encodeURIComponent(q)}`,
-          { headers: { 'Authorization': 'Bearer ' + token } }
+          {
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          }
         );
+
         if (!res.ok) {
           list.innerHTML = '';
           return;
         }
+
         const users = await res.json();
+
         list.innerHTML = users.map(u => `
           <li tabindex="0" data-user-id="${u.id}">
             ${u.username ? '@' + u.username : ''} ${u.nombre || ''} ${u.apellido || ''}
@@ -219,151 +338,41 @@
     }
 
     input.addEventListener('input', e => buscarAlumnos(e.target.value));
-    list.addEventListener('click', e => {
+
+    list.addEventListener('click', (e) => {
       const li = e.target.closest('li');
       if (!li) return;
-      alert('Abrir perfil de: ' + li.textContent.trim());
-      // window.location.href = 'Perfil.html?user=' + li.dataset.userId;
+      const userId = li.dataset.userId;
+      window.location.href = 'PerfilUsuario.html?id=' + encodeURIComponent(userId);
     });
 
-    // ====== Publicaciones ======
-    const feedWrapper = document.getElementById('feedContenido');
-    const loader = document.getElementById('loader');
+    buscarAlumnos('');
 
-    function crearPost(p) {
-      const article = document.createElement('article');
-      article.className = 'post';
-      article.dataset.postId = p.id;
-
-      article.innerHTML = `
-        <header class="post-head">
-          <div class="avatar">
-            ${p.foto_perfil ? `<img src="${p.foto_perfil}" alt="${p.username}" style="width:100%;height:100%;object-fit:cover;border-radius:999px;">` : ''}
-          </div>
-          <div>
-            <div class="username">${p.username}</div>
-            <div class="muted" style="font-size:12px">
-              ${p.ubicacion || ''} · ${new Date(p.fecha_creacion).toLocaleString()}
-            </div>
-          </div>
-        </header>
-        <div class="post-media">
-          <div class="ph">
-            <img src="${p.foto}" alt="Publicación de ${p.username}"
-                 onerror="this.style.display='none'">
-          </div>
-        </div>
-        <div class="post-actions">
-          <div class="left-actions">
-            <button class="action like" data-action="like">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M12 21s-6-3.35-8.5-6.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 8.5 8.5C18 17.65 12 21 12 21Z"></path>
-              </svg>
-            </button>
-            <button class="action comment" data-action="comment">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.5-4.5A4 4 0 0 1 5 6h12a4 4 0 0 1 4 4v5Z"></path>
-              </svg>
-            </button>
-            <button class="action share" data-action="share">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M22 12 13 5v4C6 9 3 13 2 20c2.5-3.5 6-5 11-5v4l9-7Z"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="right-actions">
-            <button class="action bookmark" data-action="bookmark">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M6 3h12v18l-6-3-6 3V3Z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div class="post-meta">
-          <div><b><span class="likes">${p.likes_count ?? 0}</span> Me gusta</b></div>
-          <div><b>${p.username}</b> ${p.texto || ''}</div>
-          <div class="muted comentarios-link" data-post-id="${p.id}">
-            Comentarios: ${p.comments_count ?? 0}
-          </div>
-        </div>
-      `;
-      return article;
-    }
-
-    function engancharEventosPosts() {
-      document.querySelectorAll('.post').forEach(post => {
-        post.addEventListener('click', e => {
-          const btn = e.target.closest('.action');
-          if (!btn) return;
-          const action = btn.dataset.action;
-          const postId = post.dataset.postId;
-
-          if (action === 'like') {
-            btn.classList.toggle('active');
-            const likesEl = post.querySelector('.likes');
-            if (likesEl) {
-              let n = parseInt(likesEl.textContent, 10);
-              likesEl.textContent = btn.classList.contains('active') ? n + 1 : Math.max(0, n - 1);
-            }
-          }
-          if (action === 'bookmark') btn.classList.toggle('active');
-          if (action === 'share') {
-            navigator.clipboard?.writeText(location.href).then(() => {
-              btn.classList.add('active');
-              setTimeout(() => btn.classList.remove('active'), 500);
-            });
-          }
-          if (action === 'comment') abrirComentarios(postId);
-        });
-      });
-    }
-
-    async function cargarPublicaciones() {
-      const token = getToken();
-      if (!token) return;
-
-      loader.classList.remove('hidden');
-      feedWrapper.innerHTML = '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/publicaciones?limit=20`, {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-
-        const publicaciones = await res.json();
-        loader.classList.add('hidden');
-
-        if (!publicaciones.length) {
-          feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Todavía no hay publicaciones. Crea la primera con el botón “+”.</div>';
-          return;
-        }
-
-        publicaciones.forEach(p => {
-          const art = crearPost(p);
-          feedWrapper.appendChild(art);
-        });
-        engancharEventosPosts();
-      } catch (err) {
-        loader.classList.add('hidden');
-        console.error('Error cargando publicaciones', err);
-        feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Error cargando publicaciones</div>';
-      }
-    }
-
-    // ====== Nueva publicación ======
+    // Nueva publicación
     const btnNuevaPub = document.getElementById('nuevaPublicacion');
     const modalNuevaPub = document.getElementById('modalNuevaPub');
     const formNuevaPub = document.getElementById('formNuevaPub');
     const closeModal = document.querySelector('.close-modal');
 
-    btnNuevaPub.addEventListener('click', () => modalNuevaPub.classList.remove('hidden'));
-    closeModal.addEventListener('click', () => modalNuevaPub.classList.add('hidden'));
+    btnNuevaPub.addEventListener('click', () => {
+      if (!getToken()) {
+        redirectToLogin();
+        return;
+      }
+      modalNuevaPub.classList.remove('hidden');
+    });
 
-    formNuevaPub.addEventListener('submit', async e => {
+    closeModal.addEventListener('click', () => {
+      modalNuevaPub.classList.add('hidden');
+    });
+
+    formNuevaPub.addEventListener('submit', async (e) => {
       e.preventDefault();
       const token = getToken();
-      if (!token) return redirectToLogin();
+      if (!token) {
+        redirectToLogin();
+        return;
+      }
 
       const payload = {
         foto: document.getElementById('fotoPub').value,
@@ -380,97 +389,21 @@
           },
           body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        modalNuevaPub.classList.add('hidden');
-        formNuevaPub.reset();
-        cargarPublicaciones();
-      } catch (err) {
-        alert('Error creando publicación');
-      }
-    });
 
-    // ====== Comentarios ======
-    function abrirComentarios(postId) {
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = `
-        <div class="comentarios-modal">
-          <div class="comentarios-header">
-            <h3>Comentarios</h3>
-            <button class="close-comentarios">&times;</button>
-          </div>
-          <div id="lista-comentarios"></div>
-          <form class="form-comentario">
-            <input type="text" id="nuevo-comentario" placeholder="Escribe un comentario..." maxlength="500" required>
-            <button type="submit">Enviar</button>
-          </form>
-        </div>
-      `;
-      document.body.appendChild(modal);
-
-      modal.querySelector('.close-comentarios').onclick = () => modal.remove();
-      modal.querySelector('.form-comentario').onsubmit = e => enviarComentario(e, postId, modal);
-      cargarComentarios(postId, modal);
-    }
-
-    async function cargarComentarios(postId, modal) {
-      const token = getToken();
-      const cont = modal.querySelector('#lista-comentarios');
-      cont.innerHTML = 'Cargando...';
-      try {
-        const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const comentarios = await res.json();
-        if (!comentarios.length) {
-          cont.innerHTML = '<div class="muted" style="padding:12px 16px;">Sé el primero en comentar.</div>';
+        if (!res.ok) {
+          console.error('Error creando publicación', res.status);
+          alert('Error creando publicación');
           return;
         }
-        cont.innerHTML = comentarios.map(c => `
-          <div class="comentario">
-            <strong>${c.username}</strong> ${c.texto}
-            <small>${new Date(c.fecha_creacion).toLocaleString()}</small>
-          </div>
-        `).join('');
+
+        modalNuevaPub.classList.add('hidden');
+        formNuevaPub.reset();
+        // Si queréis, se puede recargar para ver el efecto
+        // location.reload();
       } catch (err) {
-        cont.innerHTML = '<div style="padding:12px 16px;">Error cargando comentarios</div>';
+        console.error(err);
+        alert('Error creando publicación');
       }
-    }
-
-    async function enviarComentario(e, postId, modal) {
-      e.preventDefault();
-      const token = getToken();
-      const inputComentario = modal.querySelector('#nuevo-comentario');
-      const texto = inputComentario.value.trim();
-      if (!texto) return;
-
-      try {
-        const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ texto })
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        inputComentario.value = '';
-        cargarComentarios(postId, modal);
-        cargarPublicaciones(); // actualizar contador
-      } catch (err) {
-        alert('Error enviando comentario');
-      }
-    }
-
-    // ====== Inicialización ======
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!getToken()) {
-        feedWrapper.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Inicia sesión para ver publicaciones.</div>';
-        return;
-      }
-      cargarPublicaciones();
-      buscarAlumnos(input.value);
     });
   </script>
 </body>
