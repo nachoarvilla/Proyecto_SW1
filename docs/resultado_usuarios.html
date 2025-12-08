@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ConoCEU — Buscar Usuarios</title>
+  <link rel="stylesheet" href="css/style_chats.css">
+</head>
+<body class="ch-page">
+  <header class="ch-header">
+    <a href="index.html" class="ch-brand" aria-label="Ir a inicio">
+      <img src="img/logoceu.png" alt="Logo CEU" class="ch-logo">
+      <span class="ch-brand-cono">Cono</span><span class="ch-brand-ceu">CEU</span>
+    </a>
+
+    <h1 class="ch-title">Buscar Usuarios</h1>
+
+    <nav class="ch-actions" aria-label="Acciones">
+      <a class="ch-iconbtn" href="Chats.html" aria-label="Ir a chats">
+        <img src="img/Chats.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Notificaciones.html" aria-label="Ir a notificaciones">
+        <img src="img/Campanita.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
+        <img src="img/Perfil.png" alt="" class="ch-icon">
+      </a>
+    </nav>
+  </header>
+
+  <main class="ch-layout" style="grid-template-columns: 1fr;">
+    <section class="ch-panel" aria-label="Búsqueda de usuario">
+      <header class="ch-panel-hd">
+        <strong>Buscar usuario por Username</strong>
+      </header>
+      <form id="search-form" class="ch-input" onsubmit="searchUser(event)">
+        <input type="search" id="username-search" placeholder="Escribe un nombre de usuario..." aria-label="Buscar usuario" required>
+        <button type="submit">Buscar</button>
+      </form>
+      
+      <div class="ch-thread">
+        <p id="search-status" style="text-align: center; color: var(--muted);">Escribe un username y pulsa buscar.</p>
+        <div id="results-list" class="ch-list" style="padding: 12px 0;">
+          </div>
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    function applyThemePreference(prefFromStorage) {
+        const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+
+        function setTheme(theme) {
+            // Establece el atributo data-theme en la etiqueta <html>
+            document.documentElement.dataset.theme = theme;
+        }
+
+        if (pref === 'system') {
+            const mq = window.matchMedia('(prefers-color-scheme: dark)');
+            setTheme(mq.matches ? 'dark' : 'light');
+            mq.addEventListener('change', e => {
+                const current = localStorage.getItem('cfg_theme') || 'system';
+                if (current === 'system') {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        } else {
+            setTheme(pref);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // Llama a la función de aplicación del tema.
+    applyThemePreference(); 
+    });
+
+    // URL base de tu backend
+    const BASE_URL = 'https://conoceu-backend.onrender.com';
+
+    // Función de utilidad para obtener el token
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    // Crea un botón de usuario para el resultado de la búsqueda
+    function createUserItem(user) {
+        const button = document.createElement('button');
+        button.className = 'ch-item';
+        button.innerHTML = `
+            <img src="${user.foto_perfil || 'img/Perfil.png'}" alt="" class="ch-item-avatar">
+            <span>${user.username} (${user.nombre} ${user.apellido})</span>
+        `;
+        button.addEventListener('click', () => createChat(user.id, user.username));
+        return button;
+    }
+
+    // Maneja la búsqueda de usuarios
+    async function searchUser(event) {
+      event.preventDefault();
+      const username = document.getElementById('username-search').value.trim();
+      const resultsList = document.getElementById('results-list');
+      const searchStatus = document.getElementById('search-status');
+      resultsList.innerHTML = '';
+      searchStatus.textContent = 'Buscando...';
+
+      if (!username) {
+        searchStatus.textContent = "Escribe un username y pulsa buscar.";
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/users/search?username=${username}`, {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        
+        if (response.status === 401) {
+            alert('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+            window.location.href = 'Login.html'; // Asume que tienes una página de login
+            return;
+        }
+
+        const users = await response.json();
+        
+        if (users.length === 0) {
+          searchStatus.textContent = `No se encontraron usuarios con el username "${username}".`;
+        } else {
+          searchStatus.textContent = `Resultados para "${username}":`;
+          users.forEach(user => resultsList.appendChild(createUserItem(user)));
+        }
+
+      } catch (error) {
+        console.error('Error al buscar usuarios:', error);
+        searchStatus.textContent = 'Error al buscar usuarios en el servidor.';
+      }
+    }
+
+    // Crea el chat privado
+    async function createChat(destinatario_id, username) {
+        if (!confirm(`¿Quieres iniciar un chat privado con ${username}?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/chats/privado`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}` 
+                },
+                body: JSON.stringify({ destinatario_id })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert(`Chat privado creado con ${username} (ID: ${result.chat_id}).`);
+                window.location.href = 'Chats.html'; // Redirige a la página principal de chats
+            } else {
+                const error = await response.json();
+                alert(`Error creando chat: ${error.error}`);
+            }
+
+        } catch (error) {
+            console.error('Error al crear el chat:', error);
+            alert('Error de conexión al crear el chat.');
+        }
+    }
+  </script>
+</body>
+</html>

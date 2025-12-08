@@ -109,6 +109,34 @@
   </main>
 
   <script>
+
+    function applyThemePreference(prefFromStorage) {
+      const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';
+
+      function setTheme(theme) {
+          // Establece el atributo data-theme en la etiqueta <html>
+          document.documentElement.dataset.theme = theme;
+      }
+
+      if (pref === 'system') {
+          const mq = window.matchMedia('(prefers-color-scheme: dark)');
+          setTheme(mq.matches ? 'dark' : 'light');
+          mq.addEventListener('change', e => {
+              const current = localStorage.getItem('cfg_theme') || 'system';
+              if (current === 'system') {
+                  setTheme(e.matches ? 'dark' : 'light');
+              }
+          });
+      } else {
+          setTheme(pref);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Llama a la función de aplicación del tema.
+      applyThemePreference(); 
+    });
+
     // Toggle leído/no leído por item
     const list = document.getElementById('notifList');
     list.addEventListener('click', (e) => {
