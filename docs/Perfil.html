@@ -5,35 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ConoCEU · Perfil</title>
   <link rel="stylesheet" href="css/perfil.css" />
+  <link rel="stylesheet" href="css/style_chats.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Gochi+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="app-frame">
-    <header class="topbar">
-      <div class="window-dots">
-        <span></span><span></span><span></span>
-      </div>
-
-      <a href="index.html" class="brand">
-        <span class="brand-primary">Cono</span><span class="brand-accent">CEU</span>
+    <header class="ch-header">
+    <a href="index.html" class="ch-brand" aria-label="Ir a inicio">
+      <span class="ch-brand-cono">Cono</span><span class="ch-brand-ceu">CEU</span>
+    </a>
+    <div class="nav-center" onclick="location.reload()">
+      <h1 class="ch-title">Perfil</h1>
+      <img src="img/logoceu.png" alt="Logo CEU" class="ch-logo">
+    </div>
+    <nav class="ch-actions" aria-label="Acciones">
+      <a class="ch-iconbtn" aria-label="Chats" href="Chats.html">
+        <img src="img/Chats.png" alt="" class="ch-icon">
       </a>
+      <a class="ch-iconbtn" href="Notificaciones.html" aria-label="Ir a notificaciones">
+        <img src="img/Campanita.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
+        <img src="img/Perfil.png" alt="" class="ch-icon">
+      </a>
+    </nav>
+  </header>
 
-      <div class="top-actions">
-        <a href="Chats.html" class="icon-btn" aria-label="Chats" title="Chats">
-          <img src="img/Chats.png" alt="" class="icon">
-        </a>
-        <a href="Notificaciones.html" class="icon-btn" aria-label="Notificaciones" title="Notificaciones">
-          <img src="img/Campanita.png" alt="" class="icon">
-        </a>
-        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
-          <img src="img/Perfil.png" alt="" class="icon">
-        </a>
-      </div>
-    </header>
-
-    <div class="page-title">Perfil</div>
+    <div class="page-title">Mi cuenta</div>
 
     <main class="layout">
       <aside class="col-side">

@@ -5,33 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ConoCEU · Publicaciones</title>
   <link rel="stylesheet" href="css/style_publicaciones.css" />
+  <link rel="stylesheet" href="css/style_chats.css">
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a href="index.html" class="logo">ConoCEU</a>
-      <div class="nav-center">
-        <span>Novedades</span>
-        <img src="img/logoceu.png" alt="Logo CEU" class="logo-ceu">
-      </div>
-      <div class="nav-actions">
-        <a href="Chats.html" class="icon-btn" aria-label="Mensajes" title="Mensajes">
-          <svg class="icon" viewBox="0 0 24 24">
-            <path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.5-5A8 8 0 1 1 21 12Z"></path>
-          </svg>
-        </a>
-        <a href="Notificaciones.html" class="icon-btn" aria-label="Notificaciones" title="Notificaciones">
-          <svg class="icon" viewBox="0 0 24 24">
-            <path d="M15 17H4l2-3v-4a6 6 0 1 1 12 0v4l2 3h-5"></path>
-          </svg>
-        </a>
-        <a href="Perfil.html" class="icon-btn" aria-label="Perfil" title="Perfil">
-          <svg class="icon" viewBox="0 0 24 24">
-            <rcle cx="12" cy="8" r="4"></circle>
-            <path d="M4 21a8 8 0 0 1 16 0"></path>
-          </svg>
-        </a>
-      </div>
+  <header class="ch-header">
+    <a href="index.html" class="ch-brand" aria-label="Ir a inicio">
+      <span class="ch-brand-cono">Cono</span><span class="ch-brand-ceu">CEU</span>
+    </a>
+    <div class="nav-center" onclick="location.reload()">
+      <h1 class="ch-title">Novedades</h1>
+      <img src="img/logoceu.png" alt="Logo CEU" class="ch-logo">
+    </div>
+    <nav class="ch-actions" aria-label="Acciones">
+      <a class="ch-iconbtn" aria-label="Chats" href="Chats.html">
+        <img src="img/Chats.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Notificaciones.html" aria-label="Ir a notificaciones">
+        <img src="img/Campanita.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
+        <img src="img/Perfil.png" alt="" class="ch-icon">
+      </a>
     </nav>
   </header>
 

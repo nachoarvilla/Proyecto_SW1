@@ -43,7 +43,8 @@ body.ch-page{
 .ch-brand{ justify-self:start; display:inline-flex; align-items:center; gap:10px; text-decoration:none }
 .ch-logo{ width:34px; height:34px; object-fit:contain }
 .ch-brand-cono,.ch-brand-ceu{ font-weight:900; font-size:28px; letter-spacing:.2px }
-.ch-brand-cono{ color:var(--brand) } .ch-brand-ceu{ color:#0f172a }
+.ch-brand-cono{ color:#0f172a }
+.ch-brand-ceu{ color:var(--brand) }
 .ch-title{ margin:0; justify-self:center; font-size:28px; font-weight:800; letter-spacing:.3px }
 .ch-actions{ justify-self:end; display:flex; align-items:center; gap:10px }
 .ch-iconbtn{
@@ -53,6 +54,25 @@ body.ch-page{
 }
 .ch-iconbtn:hover{ background:#f4f6fa }
 .ch-icon{ width:var(--icon-size); height:var(--icon-size); display:block }
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.ch-logo {
+    height: 40px;
+    width: auto;
+}
+
+.ch-brand {
+    display: flex;
+    gap: 0;
+}
+
 
 /* Layout */
 .ch-layout{
