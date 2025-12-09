@@ -7,27 +7,27 @@
 
   <!-- Usa SOLO este CSS para evitar conflictos -->
   <link rel="stylesheet" href="css/style_aboutus.css">
+  <link rel="stylesheet" href="css/style_chats.css" />
 </head>
 <body class="aboutus-page">
   <!-- Header -->
-  <header class="au-header" role="banner">
-    <!-- logo CEU + marca (click -> Inicio) -->
-    <a href="index.html" class="au-brand" aria-label="Ir a inicio">
-      <img src="img/logoceu.png" alt="Logo CEU" class="au-logo">
-      <span class="au-brand-cono">ConoCEU
+  <header class="ch-header">
+    <a href="index.html" class="ch-brand" aria-label="Ir a inicio">
+      <span class="ch-brand-cono">Cono</span><span class="ch-brand-ceu">CEU</span>
     </a>
-
-    <h1 class="au-title">Sobre nosotros</h1>
-
-    <nav class="au-actions" aria-label="Acciones">
-        <a class="au-iconbtn" href="Chats.html" aria-label="Ir a chats">
-        <img src="img/Chats.png" alt="Chats" class="au-icon">
-        </a>
-      <a class="au-iconbtn" href="Notificaciones.html" aria-label="Ir a notificaciones">
-        <img src="img/Campanita.png" alt="Notificaciones" class="au-icon">
+    <div class="nav-center" onclick="location.reload()">
+      <h1 class="ch-title">About us</h1>
+      <img src="img/logoceu.png" alt="Logo CEU" class="ch-logo">
+    </div>
+    <nav class="ch-actions" aria-label="Acciones">
+      <a class="ch-iconbtn" aria-label="Chats" href="Chats.html">
+        <img src="img/Chats.png" alt="" class="ch-icon">
       </a>
-      <a class="au-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
-        <img src="img/Perfil.png" alt="" class="au-icon">
+      <a class="ch-iconbtn" href="Notificaciones.html" aria-label="Ir a notificaciones">
+        <img src="img/Campanita.png" alt="" class="ch-icon">
+      </a>
+      <a class="ch-iconbtn" href="Perfil.html" aria-label="Ir a perfil">
+        <img src="img/Perfil.png" alt="" class="ch-icon">
       </a>
     </nav>
   </header>
