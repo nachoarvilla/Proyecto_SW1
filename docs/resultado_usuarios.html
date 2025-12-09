@@ -119,7 +119,17 @@
             return;
         }
 
-        const users = await response.json();
+        const data = await response.json();
+        
+        // 💡 CORRECCIÓN: Asegurar que 'data' es un array antes de usar forEach
+        if (!response.ok || !Array.isArray(data)) {
+            // Si el backend devuelve un error (ej. 400, 500) o un objeto no array.
+            const errorMsg = data.error || 'Respuesta de búsqueda inválida o error en el servidor.';
+            searchStatus.textContent = `Error al buscar: ${errorMsg}`;
+            return;
+        }
+
+        const users = data; // Ahora sabemos que es un array
         
         if (users.length === 0) {
           searchStatus.textContent = `No se encontraron usuarios con el username "${username}".`;
