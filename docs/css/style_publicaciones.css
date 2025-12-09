@@ -23,16 +23,17 @@ body {
 }
 
 /* =======================================================
-   🟦 GRID PRINCIPAL (MISMA QUE TIENDA)
+   🟦 GRID PRINCIPAL (AHORA UNA SOLA COLUMNA CENTRADA)
 ========================================================== */
 .wrap {
-  max-width: 1300px;
+  max-width: 900px; /* Nuevo ancho máximo para centrar el feed */
   margin: 24px auto;
   padding: 0 18px;
-  display: grid;
+  display: flex; /* Usamos flexbox para centrar y apilar el feed y el anuncio */
+  flex-direction: column;
   gap: 22px;
-  grid-template-columns: 260px minmax(0, 1fr); /* por defecto 2 columnas */
 }
+/* No necesitamos media queries de grid para desktop/tablet */
 
 
 /* =======================================================
@@ -62,30 +63,20 @@ video {
 }
 
 
-/* --- Limitar el panel de anuncio para que no sea "ilimitado" --- */
+/* --- Limitar el panel de anuncio para que se muestre en el flujo --- */
 .panel.ad {
-  position: sticky;
-  top: 90px;
-  z-index: 8;
-
-  height: 200px;                 /* 🔥 ALTURA FIJA QUE OCUPA TODO EL PANEL */
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  background: var(--panel);
-  border-radius: var(--radius);
-  padding: 16px;
-
-  overflow: hidden;              /* evita el espacio blanco */
+  position: static; /* Ya no es sticky, es parte del flujo normal del feed */
+  height: auto;
+  
+  /* Ajustar la altura para que el video tenga buena presencia */
+  padding-bottom: 24px;
 }
 
 /* Wrapper: controla la apariencia del vídeo y su contenedor */
 .video-wrapper {
   width: 100%;
-  /* mantenemos ratio pero limitamos altura real */
   aspect-ratio: 16/9;
-  max-height: calc(420px - 48px); /* deja espacio para el título / paddings */
+  max-height: 400px; /* Limite visual */
   position: relative;
   overflow: hidden;
   border-radius: 12px;
@@ -101,36 +92,34 @@ video {
   height: 100%;
   display: block;
   border: 0;
-  object-fit: cover;    /* mantiene recorte limpio */
+  object-fit: cover;
 }
 
-/* En pantallas pequeñas reducir la altura límite */
-@media (max-width: 900px) {
-  .panel.ad {
-    max-height: 320px;
-  }
-  .video-wrapper {
-    max-height: calc(320px - 48px);
-  }
-}
-
+/* En pantallas pequeñas el video mantiene la relación 16/9 */
 @media (max-width: 520px) {
   .panel.ad {
-    position: static;   /* para móviles el anuncio va encima como bloque normal */
-    max-height: none;
+    padding-bottom: 16px;
   }
-  .video-wrapper { aspect-ratio: 16/9; max-height: none; }
+  .video-wrapper { 
+    max-height: none; 
+  }
 }
 
 
 /* =======================================================
-   🟩 BOTÓN NUEVA PUBLICACIÓN (igual que Tienda)
+   🟩 BOTÓN NUEVA PUBLICACIÓN (Ajustado a la nueva estructura)
 ========================================================== */
 
 .new-post-btn {
+    /* Mantenemos FIXED para que siga al scroll */
     position: fixed;
     top: 95px;            /* Ajusta según altura del header */
-    right: 150px;
+    
+    /* Calculamos la posición derecha para que esté a la derecha del feed centrado */
+    /* Ancho máximo del wrap: 900px. Ancho de la ventana: 100vw.
+       Mitad del ancho de la ventana - mitad del ancho del wrap + margen del botón (18px)
+       calc(50vw + 450px - 18px) - 18px */
+    right: calc(50vw - 450px + 18px);
 
     display: flex;
     align-items: center;
@@ -148,6 +137,11 @@ video {
     cursor: pointer;
     box-shadow: var(--shadow);
     z-index: 9999;
+    
+    /* Esconder el botón si la pantalla es muy pequeña y no cabe */
+    @media (max-width: 950px) {
+        right: 18px; /* Si no cabe, lo fijamos a la derecha de la pantalla */
+    }
 }
 
 .new-post-btn:hover {
@@ -160,7 +154,8 @@ video {
    🟨 TARJETA DE PUBLICACIÓN (POST)
 ========================================================== */
 .post {
-  max-width: 700px;
+  /* Eliminamos max-width fijo, el .wrap lo controla */
+  width: 100%;
   background: var(--panel);
   border-radius: var(--radius);
   border: 1px solid var(--line);
@@ -230,34 +225,11 @@ video {
 }
 
 /* =======================================================
-   🔍 BUSCADOR DERECHA
+   🔍 BUSCADOR DERECHA (ELIMINADO - Se dejan solo estilos del modal/comentarios)
 ========================================================== */
 
-.searchbar input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  font-size: 1rem;
-}
+/* Eliminados: .searchbar input, .results, .results li */
 
-.results {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-}
-
-.results li {
-  padding: 10px;
-  border-radius: 12px;
-  background: #f1f4ff;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-.results li:hover {
-  background: #dde7ff;
-}
 
 /* =======================================================
    🟧 MODAL NUEVA PUBLICACIÓN
@@ -330,4 +302,3 @@ video {
   text-align: center;
   color: var(--muted);
 }
-

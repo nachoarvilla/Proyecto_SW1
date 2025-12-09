@@ -81,11 +81,7 @@
       <div id="feedContenido"></div>
     </section>
 
-    <aside class="panel search">
-      <input id="buscar"  />
-      <ul id="resultados" class="result-list"></ul>
-    </aside>
-  </main>
+    </main>
 
 <script src="auth.js"></script>
 <script>
@@ -119,49 +115,8 @@
       window.location.href = 'login.html';
     }
 
-    // ====== Buscador de alumnos (usa /api/users/search?username=) ======
-    const input = document.getElementById('buscar');
-    const list  = document.getElementById('resultados');
+    // Eliminado: Lógica de Buscador de alumnos
 
-    async function buscarAlumnos(query = '') {
-      const q = query.trim();
-      const token = getToken();
-      if (!q || !token) {
-        list.innerHTML = '';
-        return;
-      }
-      try {
-        const res = await fetch(
-          `${API_BASE}/api/users/search?username=${encodeURIComponent(q)}`,
-          { headers: { 'Authorization': 'Bearer ' + token } }
-        );
-        if (!res.ok) {
-          list.innerHTML = '';
-          return;
-        }
-        const users = await res.json();
-        list.innerHTML = users.map(u => `
-          <li tabindex="0" data-user-id="${u.id}">
-            ${u.username ? '@' + u.username : ''} ${u.nombre || ''} ${u.apellido || ''}
-          </li>
-        `).join('');
-      } catch (err) {
-        console.error('Error buscando alumnos', err);
-        list.innerHTML = '';
-      }
-    }
-
-    input.addEventListener('input', e => buscarAlumnos(e.target.value));
-    list.addEventListener('click', e => {
-      const li = e.target.closest('li');
-      if (!li) return;
-      
-      // Redirigir a info_usuario.html con el ID
-      const userId = li.dataset.userId;
-      if (userId) {
-        window.location.href = 'info_usuario.html?id=' + userId;
-      }
-    });
 
     // ====== Publicaciones ======
     const feedWrapper = document.getElementById('feedContenido');
@@ -407,7 +362,6 @@
         return;
       }
       cargarPublicaciones();
-      buscarAlumnos(input.value);
     });
   </script>
 </body>
