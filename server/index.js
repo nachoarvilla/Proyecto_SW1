@@ -204,6 +204,66 @@ app.get('/api/admin/stats', auth, isAdmin, async (req, res) => {
 });
 
 
+//ADMIN : otras funciones del dashboard
+// Estadísticas extendidas (usuarios por día, productos por tipo, top usuarios con más productos)
+app.get("/api/admin/stats/extended", auth, isAdmin, async (req, res) => {
+  try {
+
+    // Nuevos usuarios por día (últimos 7 días)
+    const [usuariosPorDia] = await db.query(`
+      SELECT DATE(created_at) AS fecha, COUNT(*) AS total
+      FROM users
+      WHERE created_at >= CURDATE() - INTERVAL 6 DAY
+      GROUP BY DATE(created_at)
+      ORDER BY fecha ASC
+    `);
+
+    // Productos por categoría (tienda_escolar / tienda_extraescolar)
+    const [prodEscolar] = await db.query(`
+      SELECT 'escolar' AS tipo, COUNT(*) AS total
+      FROM tienda_escolar
+    `);
+
+    const [prodExtraescolar] = await db.query(`
+      SELECT 'extraescolar' AS tipo, COUNT(*) AS total
+      FROM tienda_extraescolar
+    `);
+
+    const productosPorTipo = [
+      { tipo: 'escolar', total: prodEscolar[0]?.total || 0 },
+      { tipo: 'extraescolar', total: prodExtraescolar[0]?.total || 0 }
+    ];
+
+
+    // Top usuarios con más productos publicados (sumando escolar + extraescolar)
+    const [topUsuariosProductos] = await db.query(`
+      SELECT u.username, COALESCE(t.total, 0) AS total
+      FROM users u
+      LEFT JOIN (
+          SELECT user_id, SUM(cnt) AS total FROM (
+              SELECT user_id, COUNT(*) AS cnt FROM tienda_escolar GROUP BY user_id
+              UNION ALL
+              SELECT user_id, COUNT(*) AS cnt FROM tienda_extraescolar GROUP BY user_id
+          ) AS x
+          GROUP BY user_id
+      ) t ON t.user_id = u.id
+      WHERE COALESCE(t.total, 0) > 0
+      ORDER BY t.total DESC
+      LIMIT 5
+    `);
+
+    res.json({
+      usuariosPorDia,
+      productosPorTipo,
+      topUsuariosProductos
+    });
+
+  } catch (err) {
+    console.error("Error en estadísticas extendidas:", err);
+    res.status(500).json({ error: "Error generando estadísticas extendidas" });
+  }
+});
+
 
 // Helper: comprobar si un usuario pertenece a un chat (Se mantiene)
 async function userIsMemberOfChat(chatId, userId) {
