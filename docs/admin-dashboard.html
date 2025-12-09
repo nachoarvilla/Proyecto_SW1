@@ -106,7 +106,6 @@ async function cargarStats() {
     document.getElementById("statChats").textContent = stats.chats;
 }
 
-cargarStats();
 
 async function cargarStatsExtendidas() {
     const token = localStorage.getItem("token");
@@ -126,7 +125,8 @@ async function cargarStatsExtendidas() {
     const listaUsuarios = document.getElementById("listaUsuariosPorDia");
     listaUsuarios.innerHTML = "";
     data.usuariosPorDia.forEach(d => {
-        listaUsuarios.innerHTML += `<li>${d.fecha}: ${d.total} usuarios nuevos</li>`;
+        const fechaLimpia = new Date(d.fecha).toLocaleDateString("es-ES");
+        listaUsuarios.innerHTML += `<li>${fechaLimpia}: ${d.total} usuarios nuevos</li>`;
     });
 
     // Productos por tipo
