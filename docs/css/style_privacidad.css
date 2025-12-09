@@ -123,24 +123,33 @@ a:hover{ text-decoration:underline }
 
 /* ======== Ajustes exclusivos para Política de Privacidad ======== */
 
-body.privacy-page .wrap {
+/* ===== Ajustes SOLO para la página de Política de Privacidad ===== */
+
+body.privacy-page .wrap{
   max-width: 900px;          /* ancho cómodo para leer */
-  margin: 40px auto;         /* CENTRADO EN LA PANTALLA */
-  display: block;            /* elimina las columnas */
+  margin: 40px auto;         /* centra todo el bloque */
   padding: 0 24px;
+  display: block;            /* quitamos el grid de columnas */
 }
 
-body.privacy-page .panel {
+/* Ocultar anuncios en esta página */
+body.privacy-page .ad{
+  display: none;
+}
+
+/* El panel central ocupa todo el ancho disponible */
+body.privacy-page .content{
   width: 100%;
   max-width: 900px;
-  margin: 0 auto 32px auto;   /* centro + separación abajo */
-  padding: 32px;
+  margin: 0 auto;
+  padding: 32px 40px;
 }
 
-body.privacy-page .policy {
+/* Texto de la política más legible y centrado dentro del panel */
+body.privacy-page .policy{
   max-width: 900px;
   margin: 0 auto;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.75;
 }
 
