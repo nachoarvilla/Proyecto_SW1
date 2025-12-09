@@ -358,6 +358,7 @@ app.post('/api/register', async (req, res) => {
     curso,
     pais,
     ciudad
+    // Nota: Si has añadido 'intereses' a la tabla, debes desestructurarlo aquí
   } = req.body;
 
   // Validaciones básicas obligatorias
@@ -368,6 +369,7 @@ app.post('/api/register', async (req, res) => {
   try {
     const password_hash = await bcrypt.hash(password, 10);
 
+    // Los 13 campos de la consulta: username, email, password_hash, nombre, apellido, fecha_nacimiento, edad, foto_perfil, grado, curso, pais, ciudad, role
     const sql = `
       INSERT INTO users
         (username, email, password_hash, nombre, apellido, fecha_nacimiento,
@@ -375,6 +377,7 @@ app.post('/api/register', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
     `;
 
+    // CORRECCIÓN: Se elimina el uso de la variable 'role' no definida y se usa el literal 'user' directamente.
     await db.query(sql, [
       username,
       email,
@@ -388,7 +391,7 @@ app.post('/api/register', async (req, res) => {
       curso || null,
       pais || null,
       ciudad || null,
-      role || 'user'
+      'user' // 💡 Valor fijo para el rol por defecto.
     ]);
 
     return res.json({ message: "Usuario registrado correctamente" });
