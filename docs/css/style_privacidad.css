@@ -120,3 +120,27 @@ body{
 /* Links */
 a{ color:#2563eb; text-decoration:none }
 a:hover{ text-decoration:underline }
+
+/* ======== Ajustes exclusivos para Política de Privacidad ======== */
+
+body.privacy-page .wrap {
+  max-width: 900px;          /* ancho cómodo para leer */
+  margin: 40px auto;         /* CENTRADO EN LA PANTALLA */
+  display: block;            /* elimina las columnas */
+  padding: 0 24px;
+}
+
+body.privacy-page .panel {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 32px auto;   /* centro + separación abajo */
+  padding: 32px;
+}
+
+body.privacy-page .policy {
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+
