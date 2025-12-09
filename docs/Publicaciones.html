@@ -81,11 +81,7 @@
       <div id="feedContenido"></div>
     </section>
 
-    <aside class="panel search">
-      <input id="buscar"  />
-      <ul id="resultados" class="result-list"></ul>
-    </aside>
-  </main>
+    </main>
 
 <script src="auth.js"></script>
 <script>
@@ -119,49 +115,8 @@
       window.location.href = 'login.html';
     }
 
-    // ====== Buscador de alumnos (usa /api/users/search?username=) ======
-    const input = document.getElementById('buscar');
-    const list  = document.getElementById('resultados');
+    // Eliminado: Lógica de Buscador de alumnos
 
-    async function buscarAlumnos(query = '') {
-      const q = query.trim();
-      const token = getToken();
-      if (!q || !token) {
-        list.innerHTML = '';
-        return;
-      }
-      try {
-        const res = await fetch(
-          `${API_BASE}/api/users/search?username=${encodeURIComponent(q)}`,
-          { headers: { 'Authorization': 'Bearer ' + token } }
-        );
-        if (!res.ok) {
-          list.innerHTML = '';
-          return;
-        }
-        const users = await res.json();
-        list.innerHTML = users.map(u => `
-          <li tabindex="0" data-user-id="${u.id}">
-            ${u.username ? '@' + u.username : ''} ${u.nombre || ''} ${u.apellido || ''}
-          </li>
-        `).join('');
-      } catch (err) {
-        console.error('Error buscando alumnos', err);
-        list.innerHTML = '';
-      }
-    }
-
-    input.addEventListener('input', e => buscarAlumnos(e.target.value));
-    list.addEventListener('click', e => {
-      const li = e.target.closest('li');
-      if (!li) return;
-      
-      // Redirigir a info_usuario.html con el ID
-      const userId = li.dataset.userId;
-      if (userId) {
-        window.location.href = 'info_usuario.html?id=' + userId;
-      }
-    });
 
     // ====== Publicaciones ======
     const feedWrapper = document.getElementById('feedContenido');
@@ -328,50 +283,77 @@
 
     // ====== Comentarios ======
     function abrirComentarios(postId) {
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = `
+      const postElement = document.querySelector(`.post[data-post-id="${postId}"]`);
+      if (!postElement) return;
+
+      // Crear el elemento dialog
+      const dialog = document.createElement('dialog');
+      dialog.className = 'modal-dialog';
+      dialog.innerHTML = `
         <div class="comentarios-modal">
-          <div class="comentarios-header">
+          <header class="comentarios-header">
             <h3>Comentarios</h3>
             <button class="close-comentarios">&times;</button>
-          </div>
-          <div id="lista-comentarios"></div>
+          </header>
+          
+          <div id="lista-comentarios" class="lista-comentarios"></div>
+
           <form class="form-comentario">
             <input type="text" id="nuevo-comentario" placeholder="Escribe un comentario..." maxlength="500" required>
-            <button type="submit">Enviar</button>
+            <button type="submit" class="btn-primary">
+              <svg viewBox="0 0 24 24" class="send-icon"><path d="M22 2l-10 10m0 0l-4 4-2-12 14-8z"></path></svg>
+            </button>
           </form>
         </div>
       `;
-      document.body.appendChild(modal);
+      document.body.appendChild(dialog);
 
-      modal.querySelector('.close-comentarios').onclick = () => modal.remove();
-      modal.querySelector('.form-comentario').onsubmit = e => enviarComentario(e, postId, modal);
-      cargarComentarios(postId, modal);
+      // Eventos del modal
+      dialog.querySelector('.close-comentarios').onclick = () => {
+        dialog.close();
+        dialog.remove();
+        // Recargar el feed para actualizar el contador de comentarios si fuera necesario
+        cargarPublicaciones(); 
+      };
+
+      dialog.querySelector('.form-comentario').onsubmit = e => enviarComentario(e, postId, dialog);
+      
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      }
+
+      // Cargar comentarios
+      cargarComentarios(postId, dialog);
     }
 
     async function cargarComentarios(postId, modal) {
       const token = getToken();
       const cont = modal.querySelector('#lista-comentarios');
-      cont.innerHTML = 'Cargando...';
+      cont.innerHTML = '<div class="muted" style="padding:12px 16px;">Cargando...</div>';
       try {
         const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
           headers: { 'Authorization': 'Bearer ' + token }
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const comentarios = await res.json();
+        
         if (!comentarios.length) {
           cont.innerHTML = '<div class="muted" style="padding:12px 16px;">Sé el primero en comentar.</div>';
           return;
         }
+
         cont.innerHTML = comentarios.map(c => `
           <div class="comentario">
-            <strong>${c.username}</strong> ${c.texto}
-            <small>${new Date(c.fecha_creacion).toLocaleString()}</small>
+            <div class="comentario-head">
+              <strong>${c.username}</strong>
+              <small class="muted">${new Date(c.fecha_creacion).toLocaleString()}</small>
+            </div>
+            <div class="comentario-body">${c.texto}</div>
           </div>
         `).join('');
+        
       } catch (err) {
-        cont.innerHTML = '<div style="padding:12px 16px;">Error cargando comentarios</div>';
+        cont.innerHTML = '<div style="padding:12px 16px; color:var(--danger);">Error cargando comentarios</div>';
       }
     }
 
@@ -379,8 +361,13 @@
       e.preventDefault();
       const token = getToken();
       const inputComentario = modal.querySelector('#nuevo-comentario');
+      const btnSubmit = modal.querySelector('.form-comentario button[type="submit"]');
+
       const texto = inputComentario.value.trim();
       if (!texto) return;
+
+      btnSubmit.disabled = true;
+      btnSubmit.style.opacity = '0.5';
 
       try {
         const res = await fetch(`${API_BASE}/api/publicaciones/${postId}/comentarios`, {
@@ -392,11 +379,16 @@
           body: JSON.stringify({ texto })
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
+        
         inputComentario.value = '';
+        inputComentario.focus();
         cargarComentarios(postId, modal);
-        cargarPublicaciones(); // actualizar contador
+        
       } catch (err) {
         alert('Error enviando comentario');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.style.opacity = '1';
       }
     }
 
@@ -407,7 +399,6 @@
         return;
       }
       cargarPublicaciones();
-      buscarAlumnos(input.value);
     });
   </script>
 </body>
