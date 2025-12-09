@@ -203,23 +203,6 @@ app.get('/api/admin/stats', auth, isAdmin, async (req, res) => {
   }
 });
 
-//ADMIN: ver estadísticas de la plataforma
-app.get("/api/admin/stats", auth, isAdmin, async (req, res) => {
-    try {
-        const [usuarios] = await db.query("SELECT COUNT(*) AS total FROM users");
-        const [publicaciones] = await db.query("SELECT COUNT(*) AS total FROM publicaciones");
-        const [chats] = await db.query("SELECT COUNT(*) AS total FROM chats");
-
-        res.json({
-            usuarios: usuarios[0].total,
-            publicaciones: publicaciones[0].total,
-            chats: chats[0].total
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error obteniendo estadísticas" });
-    }
-});
 
 //ADMIN : otras funciones del dashboard
 // Estadísticas extendidas (usuarios por día, productos por tipo, top usuarios con más productos)
