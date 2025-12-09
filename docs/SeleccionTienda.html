@@ -64,6 +64,10 @@
     </main>
   </div>
 
+<script src="auth.js"></script>
+<script>
+  protectPage();
+</script>
   <script>
     function applyThemePreference(prefFromStorage) {
       const pref = prefFromStorage || localStorage.getItem('cfg_theme') || 'system';

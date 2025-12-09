@@ -77,7 +77,13 @@
     <small>© <span id="year"></span> ConoCEU</small>
   </footer>
 
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script src="auth.js"></script>
+<script>
+  protectPage();
+</script>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
   <script>
     // URL base de tu backend
@@ -139,11 +145,6 @@
     function setupSocket() {
       const token = getToken();
       userId = decodeToken();
-      if (!token || !userId) {
-        alert('Necesitas iniciar sesión para usar el chat.');
-        window.location.href = 'Login.html'; // Redirige si no hay token
-        return;
-      }
 
       socket = io(BASE_URL, {
         auth: {

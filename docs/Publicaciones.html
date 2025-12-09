@@ -37,18 +37,21 @@
           class="ad-video"
           src="anuncios/AnuncioNike.mp4"
           playsinline
-          controls
           muted
           loop
+          controls
           autoplay
-          preload="metadata"
+          preload="auto"
+          controlslist="nodownload noplaybackrate"
+          disablepictureinpicture
+          oncontextmenu="return false;"
           poster="anuncios/poster_anuncio.jpg">
         </video>
       </div>
     </aside>
 
     <section class="feed">
-      <button id="nuevaPublicacion" class="new-post-btn" title="Nueva publicación">+</button>
+      <button id="nuevaPublicacion" class="new-post-btn">+ Nueva publicación</button>
 
       <div id="modalNuevaPub" class="modal hidden">
         <div class="modal-content">
@@ -74,24 +77,20 @@
         </div>
       </div>
 
-      <div id="loader" class="loader hidden">Cargando...</div>
+      <div id="loader" class="loader hidden"></div>
       <div id="feedContenido"></div>
     </section>
 
     <aside class="panel search">
-      <h3>Buscar alumno</h3>
-      <div class="searchbar">
-        <input id="buscar" type="text" placeholder="Buscar alumno" aria-label="Buscar alumno" />
-        <span class="magnify" aria-hidden="true">
-          <svg class="icon" viewBox="0 0 24 24">
-            <rcle cx="11" cy="11" r="7"></circle>
-            <path d="M21 21l-4-4"></path>
-          </svg>
-        </span>
-      </div>
-      <ul id="resultados" class="results" aria-live="polite"></ul>
+      <input id="buscar"  />
+      <ul id="resultados" class="result-list"></ul>
     </aside>
   </main>
+
+<script src="auth.js"></script>
+<script>
+  protectPage();
+</script>
 
   <script>
     const API_BASE = 'https://conoceu-backend.onrender.com';

@@ -1,270 +1,333 @@
-/* ===================
-   Diseño general
-==================== */
-:root{
-  --bg:#f6f8fb;
+/* =======================================================
+   🔵 ESTILOS GLOBALMENTE CONSISTENTES CON TIENDA ESCOLAR
+   Adaptado 100% al HTML actual sin modificarlo
+========================================================== */
+
+:root {
+  --bg:#f5f7ff;
   --panel:#ffffff;
-  --ink:#0e1726;
-  --muted:#6b7280;
-  --brand:#2b6cb0;
-  --line:#e5e7eb;
-  --hover:#f1f5f9;
-  --accent:#0ea5e9;
-  --success:#10b981;
-  --danger:#ef4444;
-  --shadow:0 10px 25px rgba(2, 8, 23, .08);
-  --radius:16px;
+  --ink:#1e293b;
+  --muted:#64748b;
+  --line:rgba(0,0,0,.08);
+  --brand:#3b82f6;
+  --radius:18px;
+  --shadow:0 10px 26px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
 }
 
-/* Tema oscuro: Se activa con <html data-theme="dark"> */
-:root[data-theme="dark"]{
-  --bg:#0b1020; --panel:#0f172a; --ink:#e5e7eb; --muted:#94a3b8;
-  --line:#1f2a44; --hover:#0b1224; --brand:#60a5fa; --accent:#38bdf8;
-  --shadow:0 10px 25px rgba(0,0,0,.6);
+/* Fondo global */
+body {
+  position: relative;
+  background: var(--bg);
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
-  /* ELIMINAR LOS GRADIENTES DE LUZ Y SIMPLEMENTE USAR EL FONDO DE LA VARIABLE --bg */
-  background: var(--bg); 
-  color:var(--ink);
-  height: 100%; /* Asegurar que ocupe toda la altura */
+/* =======================================================
+   🟦 GRID PRINCIPAL (MISMA QUE TIENDA)
+========================================================== */
+.wrap {
+  max-width: 1300px;
+  margin: 24px auto;
+  padding: 0 18px;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 260px minmax(0, 1fr); /* por defecto 2 columnas */
 }
 
-/* ===================
-   Header
-==================== */
-.header{
-  position:sticky;top:0;z-index:10;
-  backdrop-filter:saturate(140%) blur(8px);
-  background:rgba(255,255,255,.75);
-  border-bottom:1px solid var(--line);
-}
-.nav{
-  max-width:1200px;margin:0 auto;
-  display:flex;align-items:center;gap:18px;
-  padding:10px 16px;
-}
-.logo{font-weight:800;color:#2b6cb0;font-size:26px}
-.nav-center{margin-inline:auto;display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600}
-.nav-actions{display:flex;align-items:center;gap:10px}
-.icon-btn{
-  border:0;background:transparent;cursor:pointer;
-  padding:8px;border-radius:999px;line-height:0;
-  transition:transform .15s ease, background .15s ease;
-}
-.icon-btn:hover{background:var(--hover);transform:translateY(-1px)}
-.icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
 
-.logo-ceu{
-  width:26px;height:26px;object-fit:contain;display:inline-block;
-  transform:scale(2);transform-origin:center;
+/* =======================================================
+   🟥 PANEL / TARJETAS (IGUAL QUE TIENDA)
+========================================================== */
+
+.panel {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
-/* ===================
-   Layout
-==================== */
-.wrap{
-  max-width:1200px;
-  margin:24px auto;
-  display:grid;
-  /* Mantener la cuadrícula de 3 columnas */
-  grid-template-columns:350px minmax(0,1fr) 300px; 
-  gap:20px;
-  padding:0 16px;
-  padding-left:8px; 
-}
-@media (max-width:1024px){
-  .wrap{grid-template-columns:1fr;}
+.panel h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+  color: var(--ink);
 }
 
-/* ===================
-   Paneles
-==================== */
-.panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+/* Panel de anuncio */
+.ad-video,
+video {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
 }
 
-/* Anuncio (fijo) */
-.ad{
-  position:sticky;top:90px;z-index:8;
-  height:fit-content;
-  display:flex;flex-direction:column;
-  padding:10px;
-  gap:12px;
-  background:var(--panel); /* Asegura el fondo blanco/panel */
-}
-.ad h3{margin:0 0 12px 0}
 
-/* Video anuncio */
-.video-wrapper{
-  margin:0;
-  width:100%;
-  aspect-ratio:16/9;
-  position:relative;
-  overflow:hidden;
-  border-radius:12px;
-  background:#000;
-  box-shadow:var(--shadow);
-}
-.ad-video{
-  position:absolute;
-  inset:0;
-  width:100%;height:100%;
-  display:block;border:0;
-  object-fit:cover;
+/* --- Limitar el panel de anuncio para que no sea "ilimitado" --- */
+.panel.ad {
+  position: sticky;
+  top: 90px;
+  z-index: 8;
+
+  height: 200px;                 /* 🔥 ALTURA FIJA QUE OCUPA TODO EL PANEL */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 16px;
+
+  overflow: hidden;              /* evita el espacio blanco */
 }
 
-/* Buscador (fijo) */
-.search{
-  position:sticky;top:90px;z-index:8;
-  height:fit-content;
-  padding:14px;
-  background:var(--panel); /* Asegura el fondo blanco/panel */
+/* Wrapper: controla la apariencia del vídeo y su contenedor */
+.video-wrapper {
+  width: 100%;
+  /* mantenemos ratio pero limitamos altura real */
+  aspect-ratio: 16/9;
+  max-height: calc(420px - 48px); /* deja espacio para el título / paddings */
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+  box-shadow: var(--shadow);
 }
 
-/* (Eliminado el placeholder viejo) */
-.ad-box{display:none}
-
-/* ===================
-   Feed de publicaciones
-==================== */
-.post{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
+/* Video: que ocupe el wrapper pero sin salirse */
+.ad-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  object-fit: cover;    /* mantiene recorte limpio */
 }
-.post + .post{margin-top:16px}
-.post-head{display:flex;align-items:center;gap:12px;padding:14px 16px}
-.avatar{width:36px;height:36px;border-radius:999px;background:linear-gradient(135deg,#93c5fd,#e9d5ff)}
-.username{font-weight:700}
 
-/* Unificamos post-media: contenedor cuadrado tipo Instagram */
-.post-media{
-  aspect-ratio:1/1;
-  background:linear-gradient(135deg,#e5e7eb,#f8fafc);
-  display:grid;place-items:center;
+/* En pantallas pequeñas reducir la altura límite */
+@media (max-width: 900px) {
+  .panel.ad {
+    max-height: 320px;
+  }
+  .video-wrapper {
+    max-height: calc(320px - 48px);
+  }
 }
-.post-media img{
-  width:100%;height:100%;object-fit:cover;border-radius:4px;
+
+@media (max-width: 520px) {
+  .panel.ad {
+    position: static;   /* para móviles el anuncio va encima como bloque normal */
+    max-height: none;
+  }
+  .video-wrapper { aspect-ratio: 16/9; max-height: none; }
 }
-.post-media .ph{font-size:40px;color:#c4c7cf}
-
-.post-actions{display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
-.left-actions,.right-actions{display:flex;align-items:center;gap:8px}
-.action{
-  border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;
-  padding:8px;border-radius:10px;cursor:pointer;
-  transition:transform .12s ease, background .12s ease, color .12s ease;
-  color:var(--ink); /* Usar variable de tinta */
-}
-.action:hover{background:var(--hover);transform:translateY(-1px)}
-.action.active.like{color:var(--danger)}
-.action.active.bookmark{color:var(--brand)}
-
-.post-meta{padding:0 14px 14px 14px;color:var(--muted);font-size:14px}
-.post-meta b{color:var(--ink)}
 
 
-/* =====================================
-   ESTILOS DE MODAL Y BOTÓN (MOVIDOS DEL HTML)
-   ===================================== */
+/* =======================================================
+   🟩 BOTÓN NUEVA PUBLICACIÓN (igual que Tienda)
+========================================================== */
 
-/* Botón nueva publicación */
 .new-post-btn {
-  position: fixed; right: 20px; bottom: 20px;
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--accent); color: #fff; border: none;
-  font-size: 26px; font-weight: 700;
-  box-shadow: var(--shadow); cursor: pointer; z-index: 50;
-  display:flex;align-items:center;justify-content:center;
-}
-.new-post-btn:hover { transform: scale(1.05); }
+    position: fixed;
+    top: 95px;            /* Ajusta según altura del header */
+    right: 150px;
 
-/* Modal de publicación/comentarios */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    z-index: 9999;
+}
+
+.new-post-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+
+/* =======================================================
+   🟨 TARJETA DE PUBLICACIÓN (POST)
+========================================================== */
+.post {
+  max-width: 700px;
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Cabecera del post */
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ddd;
+}
+
+.username {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Imagen */
+.post-media {
+  width: 100%;
+  background: #eaf0ff;
+  display: grid;
+  place-items: center;
+}
+
+.post-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Acciones */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+
+.action {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Meta */
+.post-meta {
+  padding: 12px 16px;
+  font-size: 0.9rem;
+}
+
+/* =======================================================
+   🔍 BUSCADOR DERECHA
+========================================================== */
+
+.searchbar input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  font-size: 1rem;
+}
+
+.results {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.results li {
+  padding: 10px;
+  border-radius: 12px;
+  background: #f1f4ff;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.results li:hover {
+  background: #dde7ff;
+}
+
+/* =======================================================
+   🟧 MODAL NUEVA PUBLICACIÓN
+========================================================== */
+
 .modal {
-  position: fixed; inset: 0; background: rgba(15,23,42,0.45);
-  display:flex;align-items:center;justify-content:center;
-  z-index:100;
-}
-.modal.hidden { display:none; }
-.modal-content, .comentarios-modal { /* Estilos generales del contenedor del modal */
-  background: var(--panel); border-radius: var(--radius);
-  box-shadow: var(--shadow); width: 100%; max-width: 480px;
-  max-height: 80vh; overflow:auto;
-}
-
-.modal-header, .comentarios-header {
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 20px;border-bottom:1px solid var(--line);
-}
-.close-modal, .close-comentarios {
-  border:none;background:transparent;font-size:24px;cursor:pointer;
-  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-  color:var(--ink); /* Asegurar que la X se vea en modo oscuro */
-}
-
-/* Formularios dentro del modal */
-.form-group { padding:16px 20px; }
-.form-group label { display:block;margin-bottom:6px;font-weight:600; }
-.form-group input,.form-group textarea {
-  width:100%;padding:10px 12px;border-radius:8px;
-  border:1px solid var(--line);font-size:14px;
-  background:var(--panel); /* Asegurar el color de fondo en ambos temas */
-  color:var(--ink);
-}
-.btn-primary {
-  margin:0 20px 20px;width:calc(100% - 40px);
-  padding:12px;border-radius:10px;border:none;
-  background:var(--accent);color:#fff;font-weight:600;cursor:pointer;
-}
-
-/* Loader */
-.loader { padding:40px;text-align:center;color:var(--muted); }
-
-/* Comentarios */
-.form-comentario {
-  display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);
-}
-.form-comentario input {
-  flex:1;padding:8px 10px;border-radius:999px;
-  border:1px solid var(--line);
-  background:var(--panel); /* Asegurar el fondo */
-  color:var(--ink);
-}
-.form-comentario button {
-  border:none;border-radius:999px;padding:8px 14px;
-  background:var(--accent);color:#fff;cursor:pointer;
-}
-.comentario { padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px; }
-.comentario strong { color:var(--ink); }
-.comentario small { display:block;color:var(--muted);font-size:12px; }
-
-
-/* ===================
-   Buscador de alumnos
-==================== */
-.search h3{margin:0 0 10px 0}
-.searchbar{position:relative}
-.searchbar input{
+  position: fixed;
+  top: 0;
+  left: 0;
   width:100%;
-  padding:10px 40px 10px 14px;
-  border-radius:999px;border:1px solid var(--line);
-  outline:none;background:var(--panel);transition:box-shadow .15s ease,border-color .15s ease;
-  color:var(--ink);
+  height:100%;
+  background: rgba(0,0,0,0.4);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
 }
-.searchbar input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(14,165,233,.15)}
-.searchbar .magnify{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#475569}
-.results{list-style:none;margin:10px 0 0 0;padding:0;max-height:220px;overflow:auto}
-.results li{padding:8px 10px;border-radius:10px}
-.results li:hover{background:var(--hover)}
 
-.muted{color:var(--muted)}
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 380px;
+  max-width: 92%;
+  box-shadow: var(--shadow);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  float: right;
+}
+
+.form-group {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input,
+.form-group textarea {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.btn-primary {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  background: var(--brand);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #2b6be7;
+}
+
+.loader {
+  margin: 20px;
+  text-align: center;
+  color: var(--muted);
+}
+

@@ -17,6 +17,13 @@ function getUserRole() {
     return payload ? payload.role : null;
 }
 
+function protectPage() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "login.html";
+    }
+}
+
 function isAdmin() {
     return getUserRole() === "admin";
 }
@@ -53,4 +60,8 @@ function protectAdminPage() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", insertAdminButton);
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.SHOW_ADMIN_BUTTON) insertAdminButton();
+});
+
+    
