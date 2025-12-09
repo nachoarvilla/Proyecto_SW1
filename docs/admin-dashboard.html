@@ -38,6 +38,7 @@
 <body>
 
 <div class="sidebar">
+    <a href="index.html" class="btn btn-primary">Volver a Conoceu</a>
     <h2>Admin</h2>
     <a href="admin-dashboard.html">Dashboard</a>
     <a href="admin-usuarios.html">Usuarios</a>
@@ -49,29 +50,50 @@
     <h1>Dashboard general</h1>
 
     <div class="cards">
-        <div class="card-mini">
-            <h3>Usuarios</h3>
-            <p id="statUsuarios">-</p>
-        </div>
-        <div class="card-mini">
-            <h3>Publicaciones</h3>
-            <p id="statPublicaciones">-</p>
-        </div>
-        <div class="card-mini">
-            <h3>Chats</h3>
-            <p id="statChats">-</p>
-        </div>
+    <div class="card-mini">
+        <h3>Usuarios</h3>
+        <p id="statUsuarios">-</p>
     </div>
+    <div class="card-mini">
+        <h3>Publicaciones</h3>
+        <p id="statPublicaciones">-</p>
+    </div>
+    <div class="card-mini">
+        <h3>Chats</h3>
+        <p id="statChats">-</p>
+    </div>
+</div>
+
+
+<div class="card" style="margin-top:20px;">
+    <h2>Nuevos usuarios por día (7 días)</h2>
+    <ul id="listaUsuariosPorDia"></ul>
+</div>
+
+<div class="card">
+    <h2>Productos por categoría</h2>
+    <ul id="listaProductosPorTipo"></ul>
+</div>
+
+<div class="card">
+    <h2>Top usuarios con más productos publicados</h2>
+    <table style="width:100%;">
+        <thead><tr><th>Usuario</th><th>Total</th></tr></thead>
+        <tbody id="tablaTopUsuarios"></tbody>
+    </table>
+</div>
+
 </div>
 
 <script src="auth.js"></script>
 <script>
 protectAdminPage();
+const API = "https://conoceu-backend.onrender.com";
 
 async function cargarStats() {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:3000/api/admin/stats", {
+    const res = await fetch(API + "/api/admin/stats", {
         headers: {
             "Authorization": "Bearer " + token
         }
@@ -85,6 +107,51 @@ async function cargarStats() {
 }
 
 cargarStats();
+
+async function cargarStatsExtendidas() {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API + "/api/admin/stats/extended", {
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    if (!res.ok) {
+        console.error("Error obteniendo estadísticas extendidas");
+        return;
+    }
+
+    const data = await res.json();
+
+    //Usuarios nuevos por día
+    const listaUsuarios = document.getElementById("listaUsuariosPorDia");
+    listaUsuarios.innerHTML = "";
+    data.usuariosPorDia.forEach(d => {
+        listaUsuarios.innerHTML += `<li>${d.fecha}: ${d.total} usuarios nuevos</li>`;
+    });
+
+    // Productos por tipo
+    const listaProductos = document.getElementById("listaProductosPorTipo");
+    listaProductos.innerHTML = "";
+    data.productosPorTipo.forEach(p => {
+        listaProductos.innerHTML += `<li>${p.tipo}: ${p.total} productos</li>`;
+    });
+
+    // Top usuarios con más productos
+    const tablaTop = document.getElementById("tablaTopUsuarios");
+    tablaTop.innerHTML = "";
+    data.topUsuariosProductos.forEach(u => {
+        tablaTop.innerHTML += `
+            <tr>
+              <td>${u.username}</td>
+              <td>${u.total}</td>
+            </tr>`;
+    });
+}
+
+// Ejecutar al cargar
+cargarStats();
+cargarStatsExtendidas();
+
 </script>
 
 </body>
